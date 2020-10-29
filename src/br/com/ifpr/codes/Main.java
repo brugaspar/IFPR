@@ -28,8 +28,6 @@ public class Main {
   }
 
   public void menu() throws Exception {
-    // BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
     String option = "";
 
     while(!option.equals("5")) {
