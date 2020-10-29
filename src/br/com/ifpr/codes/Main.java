@@ -30,19 +30,19 @@ public class Main {
   public void menu() throws Exception {
     String option = "";
 
-    while(!option.equals("5")) {
-			System.out.println("\n---------------------------");
-			System.out.println("[1] Cadastrar novo vôo");
-			System.out.println("[2] Listar vôos existentes");
-			System.out.println("[3] Consultar vôo");
-			System.out.println("[4] Listar companhias");
+    while (!option.equals("5")) {
+      System.out.println("\n---------------------------");
+      System.out.println("[1] Cadastrar novo vôo");
+      System.out.println("[2] Listar vôos existentes");
+      System.out.println("[3] Consultar vôo");
+      System.out.println("[4] Listar companhias");
       System.out.println("[5] Sair");
       System.out.println("---------------------------");
       System.out.print("--> ");
 
       option = this.scanner.nextLine();
 
-      switch(option) {
+      switch (option) {
         case "1":
           newFlight();
           break;
@@ -104,11 +104,11 @@ public class Main {
 
       System.out.println("\n------- Passageiros -------");
 
-      for(int i = 0; i < 10; i++) {
+      for (int i = 0; i < 10; i++) {
         System.out.print("\nInforme o nome: [Vazio para sair] ");
         String passengerName = this.scanner.nextLine();
 
-        if(passengerName.equals("")) {
+        if (passengerName.equals("")) {
           break;
         }
 
@@ -117,7 +117,7 @@ public class Main {
         passenger.setName(passengerName);
 
         System.out.print("Informe o documento: ");
-        passenger.setDocNumber(this.scanner.nextLine());        
+        passenger.setDocNumber(this.scanner.nextLine());
 
         System.out.print("Informe a nacionalidade: ");
         passenger.setNacionality(this.scanner.nextLine());
@@ -131,7 +131,7 @@ public class Main {
       }
 
       this.airline.setVetFlights(flight);
-    } catch(Exception err) {
+    } catch (Exception err) {
       System.out.println("ERROR: " + err);
     }
   }
@@ -146,7 +146,7 @@ public class Main {
   }
 
   public void clearBuffer(Scanner scanner) {
-    if(scanner.hasNextLine()) {
+    if (scanner.hasNextLine()) {
       scanner.nextLine();
     }
   }
