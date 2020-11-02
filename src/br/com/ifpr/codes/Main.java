@@ -105,14 +105,15 @@ public class Main {
       System.out.println("\n------- Passageiros -------");
 
       for (int i = 0; i < 10; i++) {
+        Passenger passenger = new Passenger();
+
         System.out.print("\nInforme o nome: [Vazio para sair] ");
+
         String passengerName = this.scanner.nextLine();
 
         if (passengerName.equals("")) {
           break;
         }
-
-        Passenger passenger = new Passenger();
 
         passenger.setName(passengerName);
 
