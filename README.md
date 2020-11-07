@@ -2,8 +2,7 @@
 
 ### Aula - 26/10/2020
 
-<div style="border: 2px solid black; height: 90px; padding: 0 15px">
-  <h5>Exercício sobre Vetor de Objetos</h5>
-
+<div style="border: 2px solid black; height: 50px; padding: 15px">
+  <b>Exercício sobre Vetor de Objetos</b>
   <p>Exercício está na classe <b>Main</b></p>
 </div>
