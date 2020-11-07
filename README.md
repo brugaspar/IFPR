@@ -5,5 +5,5 @@
 <div style="border: 2px solid black; height: 90px; padding: 0 15px">
   <h5>Exercício sobre Vetor de Objetos</h5>
 
-  Exercício está na classe <b>Main</b>
+  <p>Exercício está na classe <b>Main</b></p>
 </div>
