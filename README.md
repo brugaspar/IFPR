@@ -1,14 +1,10 @@
-## Getting Started
+## Orientação a Objetos II - Humberto Beneduzzi
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+### Aula - 07/11/2020
 
-## Folder Structure
+<div style="border: 2px solid black; height: 120px; padding: 0 15px">
+  <h5>Collection e ArrayList</h5>
+  Conceitos de Java Collection e ArrayList
 
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-## Dependency Management
-
-The `JAVA DEPENDENCIES` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-pack/blob/master/release-notes/v0.9.0.md#work-with-jar-files-directly).
+  Exemplos contidos na classe <b>CollectionExample</b>
+</div>
