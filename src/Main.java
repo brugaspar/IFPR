@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Pets {
-  ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+public class Main {
+  ArrayList<Pet> list = new ArrayList<Pet>();
   Scanner scanner;
 
   public static void main(String[] args) {
-    Pets main = new Pets();
+    Main main = new Main();
 
     main.menu();
   }
@@ -41,34 +41,33 @@ public class Pets {
   }
 
   public void newPet() {
-    ArrayList<String> pets = new ArrayList<String>();
-
-    String name, type, color, age;
+    Pet pet = new Pet();
 
     this.scanner.nextLine();
 
     System.out.println("\nNome: ");
-    name = this.scanner.nextLine();
+    pet.setName(this.scanner.nextLine());
 
     System.out.println("\nTipo: ");
-    type = this.scanner.nextLine();
+    pet.setType(this.scanner.nextLine());
 
     System.out.println("\nCor: ");
-    color = this.scanner.nextLine();
+    pet.setColor(this.scanner.nextLine());
 
     System.out.println("\nIdade: ");
-    age = this.scanner.nextLine();
+    pet.setAge(this.scanner.nextInt());
 
-    pets.add("Nome: " + name + "; Tipo: " + type + "; Cor: " + color + "; Idade: " + age);
-
-    this.list.add(pets);
+    this.list.add(pet);
   }
 
   public void listPets() {
     System.out.println("\nListagem de pets:\n");
 
-    for (ArrayList<String> pet : list) {
-      System.out.println(pet);
+    for (Pet pet : list) {
+      String petData = "\nNome: " + pet.getName() + " | Tipo: " + pet.getType() + " | Cor: " + pet.getColor()
+          + " | Idade: " + pet.getAge();
+
+      System.out.println(petData);
     }
   }
 }
