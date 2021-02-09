@@ -195,7 +195,7 @@ public class ManageVehicle {
     System.out.println("\nPressione [Enter] para continuar...");
     scanner.nextLine();
 
-    boolean deleted = vehicleDAO.delete(vehicle);
+    boolean deleted = vehicleDAO.delete(vehicle.getId());
 
     if (deleted) {
       System.out.println("Excluído com sucesso!");

@@ -157,7 +157,7 @@ public class DAOVehicle {
     return result;
   }
 
-  public boolean delete(Vehicle vehicle) {
+  public boolean delete(int id) {
     boolean result = false;
 
     try {
@@ -167,7 +167,7 @@ public class DAOVehicle {
 
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-      preparedStatement.setInt(1, vehicle.getId());
+      preparedStatement.setInt(1, id);
 
       preparedStatement.execute();
       preparedStatement.close();
