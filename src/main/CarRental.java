@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import controllers.ManageCustomer;
 import controllers.ManageVehicle;
-import view.VehicleView;
+import view.CustomerView;
 
 public class CarRental {
   public static void main(String[] args) {
-       new VehicleView().setVisible(true);
+       new CustomerView().setVisible(true);
 //    CarRental rental = new CarRental();
 
 //    rental.menu

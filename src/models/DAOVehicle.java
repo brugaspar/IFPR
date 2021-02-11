@@ -39,15 +39,14 @@ public class DAOVehicle {
 
       String sql = "INSERT INTO vehicle VALUES (NULL, ?, ?, ?, ?)";
 
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-      preparedStatement.setString(1, vehicle.getBrand());
-      preparedStatement.setString(2, vehicle.getModel());
-      preparedStatement.setString(3, vehicle.getChassis());
-      preparedStatement.setInt(4, vehicle.getYear());
-
-      preparedStatement.execute();
-      preparedStatement.close();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, vehicle.getBrand());
+            preparedStatement.setString(2, vehicle.getModel());
+            preparedStatement.setString(3, vehicle.getChassis());
+            preparedStatement.setInt(4, vehicle.getYear());
+            
+            preparedStatement.execute();
+        }
 
       result = true;
     } catch (SQLException e) {
@@ -67,16 +66,15 @@ public class DAOVehicle {
 
       String sql = "UPDATE vehicle SET brand = ?, model = ?, chassis = ?, year = ? WHERE id = ?";
 
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-      preparedStatement.setString(1, vehicle.getBrand());
-      preparedStatement.setString(2, vehicle.getModel());
-      preparedStatement.setString(3, vehicle.getChassis());
-      preparedStatement.setInt(4, vehicle.getYear());
-      preparedStatement.setInt(5, vehicle.getId());
-
-      preparedStatement.execute();
-      preparedStatement.close();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, vehicle.getBrand());
+            preparedStatement.setString(2, vehicle.getModel());
+            preparedStatement.setString(3, vehicle.getChassis());
+            preparedStatement.setInt(4, vehicle.getYear());
+            preparedStatement.setInt(5, vehicle.getId());
+            
+            preparedStatement.execute();
+        }
 
       result = true;
     } catch (SQLException e) {
@@ -89,7 +87,7 @@ public class DAOVehicle {
   }
 
   public ArrayList<Vehicle> index() {
-    ArrayList<Vehicle> results = new ArrayList<Vehicle>();
+    ArrayList<Vehicle> results = new ArrayList<>();
 
     try {
       connect();
@@ -97,22 +95,21 @@ public class DAOVehicle {
       String sql = "SELECT * FROM vehicle";
 
       statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(sql);
-
-      while (resultSet.next()) {
-        Vehicle vehicle = new Vehicle();
-
-        vehicle.setId(resultSet.getInt("id"));
-        vehicle.setBrand(resultSet.getString("brand"));
-        vehicle.setModel(resultSet.getString("model"));
-        vehicle.setChassis(resultSet.getString("chassis"));
-        vehicle.setYear(resultSet.getInt("year"));
-
-        results.add(vehicle);
-      }
-
-      statement.close();
-      resultSet.close();
+        try (ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+                
+                vehicle.setId(resultSet.getInt("id"));
+                vehicle.setBrand(resultSet.getString("brand"));
+                vehicle.setModel(resultSet.getString("model"));
+                vehicle.setChassis(resultSet.getString("chassis"));
+                vehicle.setYear(resultSet.getInt("year"));
+                
+                results.add(vehicle);
+            }
+            
+            statement.close();
+        }
     } catch (SQLException e) {
       System.out.println("SQLException when selecting vehicles: " + e.getMessage());
     } finally {
@@ -123,7 +120,7 @@ public class DAOVehicle {
   }
 
   public ArrayList<Vehicle> show(Vehicle vehicle) {
-    ArrayList<Vehicle> result = new ArrayList<Vehicle>();
+    ArrayList<Vehicle> result = new ArrayList<>();
 
     try {
       connect();
@@ -132,22 +129,21 @@ public class DAOVehicle {
 
       statement = connection.createStatement();
 
-      ResultSet resultSet = statement.executeQuery(sql);
-
-      while (resultSet.next()) {
-        Vehicle storedVehicle = new Vehicle();
-
-        storedVehicle.setId(resultSet.getInt("id"));
-        storedVehicle.setBrand(resultSet.getString("brand"));
-        storedVehicle.setModel(resultSet.getString("model"));
-        storedVehicle.setChassis(resultSet.getString("chassis"));
-        storedVehicle.setYear(resultSet.getInt("year"));
-
-        result.add(storedVehicle);
-      }
-
-      statement.close();
-      resultSet.close();
+        try (ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                Vehicle storedVehicle = new Vehicle();
+                
+                storedVehicle.setId(resultSet.getInt("id"));
+                storedVehicle.setBrand(resultSet.getString("brand"));
+                storedVehicle.setModel(resultSet.getString("model"));
+                storedVehicle.setChassis(resultSet.getString("chassis"));
+                storedVehicle.setYear(resultSet.getInt("year"));
+                
+                result.add(storedVehicle);
+            }
+            
+            statement.close();
+        }
     } catch (SQLException e) {
       System.out.println("SQLException when selecting vehicle: " + e.getMessage());
     } finally {
@@ -157,6 +153,44 @@ public class DAOVehicle {
     return result;
   }
 
+    public ArrayList<Vehicle> findByFilter(String field, String filter) {
+    ArrayList<Vehicle> results = new ArrayList<>();
+
+    if(!field.equals("brand") && !field.equals("model")) {
+        return results;
+    }
+    
+    try {
+      connect();
+
+      String sql = "SELECT * FROM vehicle " + " where " + field + " like '%" + filter + "%'";
+
+      statement = connection.createStatement();
+      
+        try (ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+
+                vehicle.setId(resultSet.getInt("id"));
+                vehicle.setBrand(resultSet.getString("brand"));
+                vehicle.setModel(resultSet.getString("model"));
+                vehicle.setChassis(resultSet.getString("chassis"));
+                vehicle.setYear(resultSet.getInt("year"));
+
+                results.add(vehicle);
+            }
+
+            statement.close();
+        }
+    } catch (SQLException e) {
+      System.out.println("SQLException when selecting vehicles: " + e.getMessage());
+    } finally {
+      disconnect();
+    }
+
+    return results;
+  }
+  
   public boolean delete(int id) {
     boolean result = false;
 
@@ -165,12 +199,11 @@ public class DAOVehicle {
 
       String sql = "DELETE FROM vehicle WHERE id = ?";
 
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-      preparedStatement.setInt(1, id);
-
-      preparedStatement.execute();
-      preparedStatement.close();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            
+            preparedStatement.execute();
+        }
 
       result = true;
     } catch (SQLException e) {

@@ -122,6 +122,44 @@ public class DAOCustomer {
     return results;
   }
 
+    public ArrayList<Customer> findByFilter(String field, String filter) {
+    ArrayList<Customer> results = new ArrayList<>();
+
+    if(!field.equals("name") && !field.equals("email")) {
+        return results;
+    }
+    
+    try {
+      connect();
+
+      String sql = "SELECT * FROM customer " + " where " + field + " like '%" + filter + "%'";
+
+      statement = connection.createStatement();
+      
+        try (ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
+                Customer customer = new Customer();
+
+                customer.setId(resultSet.getInt("id"));
+                customer.setName(resultSet.getString("name"));
+                customer.setEmail(resultSet.getString("email"));
+                customer.setPhone(resultSet.getString("phone"));
+                customer.setDocNumber(resultSet.getString("docNumber"));
+
+                results.add(customer);
+            }
+
+            statement.close();
+        }
+    } catch (SQLException e) {
+      System.out.println("SQLException when selecting customers: " + e.getMessage());
+    } finally {
+      disconnect();
+    }
+
+    return results;
+  }  
+  
   public ArrayList<Customer> show(Customer customer) {
     ArrayList<Customer> result = new ArrayList<Customer>();
 
@@ -157,7 +195,7 @@ public class DAOCustomer {
     return result;
   }
 
-  public boolean delete(Customer customer) {
+  public boolean delete(int id) {
     boolean result = false;
 
     try {
@@ -167,7 +205,7 @@ public class DAOCustomer {
 
       PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-      preparedStatement.setInt(1, customer.getId());
+      preparedStatement.setInt(1, id);
 
       preparedStatement.execute();
       preparedStatement.close();

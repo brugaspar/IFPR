@@ -189,7 +189,7 @@ public class ManageCustomer {
     System.out.println("\nPressione [Enter] para continuar...");
     scanner.nextLine();
 
-    boolean deleted = customerDAO.delete(customer);
+    boolean deleted = customerDAO.delete(customer.getId());
 
     if (deleted) {
       System.out.println("Excluído com sucesso!");

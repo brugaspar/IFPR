@@ -3,24 +3,24 @@ package view;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
-import models.Vehicle;
+import models.Customer;
 
 public class TableModel extends AbstractTableModel {
     public static final int COLUMN_ID = 0;
-    public static final int COLUMN_BRAND = 1;
-    public static final int COLUMN_MODEL = 2;
-    public static final int COLUMN_CHASSIS = 3;
-    public static final int COLUMN_YEAR = 4;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_EMAIL = 2;
+    public static final int COLUMN_PHONE = 3;
+    public static final int COLUMN_DOCUMENT = 4;
     
-    public ArrayList<Vehicle> vehiclesList;
+    public ArrayList<Customer> customersList;
     
-    public TableModel(ArrayList<Vehicle> vehiclesArr) {
-        vehiclesList = new ArrayList<Vehicle>(vehiclesArr);
+    public TableModel(ArrayList<Customer> customersArray) {
+        customersList = new ArrayList<>(customersArray);
     } 
     
     @Override
     public int getRowCount() {
-        return vehiclesList.size();
+        return customersList.size();
     }
 
     @Override
@@ -30,26 +30,26 @@ public class TableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Vehicle vehicle = vehiclesList.get(rowIndex);
+        Customer customer = customersList.get(rowIndex);
         
         if(columnIndex == COLUMN_ID) {
-            return vehicle.getId();
+            return customer.getId();
         } 
         
-        if(columnIndex == COLUMN_BRAND) {
-            return vehicle.getBrand();
+        if(columnIndex == COLUMN_NAME) {
+            return customer.getName();
         } 
         
-        if(columnIndex == COLUMN_MODEL) {
-            return vehicle.getModel();
+        if(columnIndex == COLUMN_EMAIL) {
+            return customer.getEmail();
         } 
         
-        if(columnIndex == COLUMN_CHASSIS) {
-            return vehicle.getChassis();
+        if(columnIndex == COLUMN_PHONE) {
+            return customer.getPhone();
         } 
         
-        if(columnIndex == COLUMN_YEAR) {
-            return vehicle.getYear();
+        if(columnIndex == COLUMN_DOCUMENT) {
+            return customer.getDocNumber();
         } 
         
         return "";
@@ -61,20 +61,20 @@ public class TableModel extends AbstractTableModel {
             return "Código";
         } 
         
-        if(columnIndex == COLUMN_BRAND) {
-            return "Marca";
+        if(columnIndex == COLUMN_NAME) {
+            return "Nome";
         } 
         
-        if(columnIndex == COLUMN_MODEL) {
-            return "Modelo";
+        if(columnIndex == COLUMN_EMAIL) {
+            return "E-mail";
         } 
         
-        if(columnIndex == COLUMN_CHASSIS) {
-            return "Chassis";
+        if(columnIndex == COLUMN_PHONE) {
+            return "Telefone";
         } 
         
-        if(columnIndex == COLUMN_YEAR) {
-            return "Ano";
+        if(columnIndex == COLUMN_DOCUMENT) {
+            return "Documento";
         } 
         
         return "";
