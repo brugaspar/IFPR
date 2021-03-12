@@ -35,7 +35,7 @@
     CONTEUDO DA PAGINA 
   -->
   <main class="container">
-    <a class="btn btn-primary active" role="button" href="">
+    <a class="btn btn-primary active" role="button" href="/movies/new">
     <i class="bi bi-plus-square"></i>
     Filme
     </a>
@@ -54,12 +54,12 @@
       </thead>
       <tbody>
       <!-- usando o thymeleaf para iterar na lista de filmes -->
-        <tr th:each="filme: ${filmeList}">
-          <td th:text="${filme.filmeId}"/>
-          <td th:text="${filme.nome}"/>
-          <td th:text="${filme.ano}"/>
-          <td th:text="${filme.categoria}"/>
-          <td><a th:href="@{/filmes/delete/{id}(id=${filme.filmeId})}">
+        <tr th:each="movie: ${moviesList}">
+          <td th:text="${movie.id}"/>
+          <td th:text="${movie.name}"/>
+          <td th:text="${movie.year}"/>
+          <td th:text="${movie.category}"/>
+          <td><a th:href="@{/movies/delete/{id}(id=${movie.id})}">
             <i class="bi bi-dash-circle" title="delete"></i>
           </a></td>
         </tr>
