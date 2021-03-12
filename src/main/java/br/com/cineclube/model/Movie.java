@@ -16,6 +16,19 @@ public class Movie {
 	private String category;
 	private Float score;
 
+	public Movie(String name, Float score, Integer year, String category) {
+		this.name = name;
+		this.year = year;
+		this.score = score;
+		this.category = category;
+	}
+
+	public Movie() {
+
+	}
+
+	public void setId(Long id) { this.id = id; }
+
 	public long getId() {
 		return id;
 	}

@@ -1,36 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
-  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-  <link th:href="@{/css/app.css}" rel="stylesheet" />
-  <title>CineClube</title>
-</head>
+<div th:replace="head :: head"></div>
 <body>
   <!-- 
     BARRA DE NAVEGACAO 
   -->
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-	  <div class="container-fluid">
-	    <a class="navbar-brand" href="#">CineClube</a>
-	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-	      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
-	    <div class="collapse navbar-collapse" id="navbarCollapse">
-	      <ul class="navbar-nav me-auto mb-2 mb-md-0">
-	        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/movies/list">Filmes</a></li>
-	        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/peoples/list">Pessoas</a></li>
-	      </ul>
-	      <form class="d-flex">
-	        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-	        <button class="btn btn-outline-success" type="submit">Search</button>
-	      </form>
-	    </div>
-	  </div>
-	</nav>
+    <div th:replace="menu :: menu"></div>
   <!-- 
     CONTEUDO DA PAGINA 
   -->
@@ -41,6 +16,22 @@
     </a>
         
     <div class="bg-light p-5 rounded">
+        <div class="row">
+            <form action="" method="POST">
+                <div class="mb-2">
+                    <label class="form-label">Filtrar por categoria:</label>
+                </div>
+                <div class="mb-2">
+                    <select class="form-select" name="cat" required="required">
+                        <option value="">Selecionar categoria...</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <button class="btn btn-success" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+
       <h2>Filmes + Séries disponíveis</h2>
       <table class="table table-striped table-bordered table-hover">
       <thead>
@@ -56,7 +47,9 @@
       <!-- usando o thymeleaf para iterar na lista de filmes -->
         <tr th:each="movie: ${moviesList}">
           <td th:text="${movie.id}"/>
-          <td th:text="${movie.name}"/>
+          <td>
+              <a th:href="@{/movies/edit/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
+          </td>
           <td th:text="${movie.year}"/>
           <td th:text="${movie.category}"/>
           <td><a th:href="@{/movies/delete/{id}(id=${movie.id})}">
