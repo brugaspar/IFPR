@@ -27,6 +27,11 @@
           <input type="text" th:field="${people.name}" class="form-control" id="nome" placeholder="Nome..."
           autocomplete="off" required>
         </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="nascimento">Idade</label>
+          <input type="date" th:field="${people.birthday}" class="form-control" id="nascimento" placeholder="dd/mm/aaaa" required>
+        </div>
         <div class="mb-3">
           <button type="submit" class="btn btn-primary mt-3">Adicionar</button>
         </div>

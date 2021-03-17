@@ -22,6 +22,7 @@
         <tr>
           <th>ID</th>
           <th>Nome</th>
+          <th>Idade</th>
           <th>#</th>
         </tr>
       </thead>
@@ -32,6 +33,7 @@
           <td>
             <a th:href="@{/peoples/edit/{id}(id=${people.id})}" th:text="${people.name}"></a>
           </td>
+          <td th:text="${people.birthday}"/>
           <td><a th:href="@{/peoples/delete/{id}(id=${people.id})}">
             <i class="bi bi-dash-circle" title="delete"></i>
           </a></td>
