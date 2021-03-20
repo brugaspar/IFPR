@@ -2,20 +2,21 @@ package br.com.cineclube.controller;
 
 import br.com.cineclube.dao.MovieRepository;
 import br.com.cineclube.model.Movie;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/movies")
 public class MovieController {
 
-  @Autowired
-  MovieRepository repository;
+  final MovieRepository repository;
+
+  public MovieController(MovieRepository repository) {
+    this.repository = repository;
+  }
 
   @RequestMapping("/new")
   public String newForm(Model model) {
