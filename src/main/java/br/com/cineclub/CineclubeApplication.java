@@ -1,4 +1,4 @@
-package br.com.cineclube;
+package br.com.cineclub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="head :: head"></div>
+
+<body>
+  <div th:replace="menu :: menu"></div>
+
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1>Filmes + Séries</h1>
+
+      <div th:switch="${movie.id>0}">
+      	<p th:case="${true}">Atualização Cadastral</p>
+      	<p th:case="*">Novo Cadastro</p>
+      </div>
+
+      <form th:object="${movie}" action="/movies/save" method="POST">
+		<input type="hidden" th:field="${movie.id}" th:if="${movie.id}">
+
+		<h4>Elenco:</h4>
+
+        <label for="cast" hidden></label>
+
+        <select id="cast" name="cast" th:field="*{persons}" multiple="multiple" class="form-control select2-single">
+          <option th:each="actor : ${movie.persons}" th:value="${actor.id}" th:text="${actor.name}"></option>
+        </select>
+
+        <div class="mb-3">
+          <label class="form-label" for="name">Nome</label>
+
+          <input
+              id="name"
+              type="text"
+              th:field="*{name}"
+              class="form-control"
+              placeholder="Nome do movie"
+              th:errorclass="inputError"
+              autocomplete="off"
+          >
+
+          <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">campo invalido</span>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label class="form-label" for="releaseDate">Data lançamento</label>
+
+            <input
+                id="releaseDate"
+                type="text"
+                th:field="${movie.releaseDate}"
+                class="form-control"
+                placeholder="dd/MM/yyyy"
+                autocomplete="off"
+            >
+
+            <span class="error" th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}">campo invalido</span>
+          </div>
+
+           <div class="col">
+            <label class="form-label" for="category">Categoria</label>
+
+            <select th:field="${movie.category}" class="form-select" id="category">
+              <option value="">Selecione uma categoria</option>
+              <option th:each="cat: ${categories}" th:text="${cat.getName()}" th:value="${cat.getName()}" ></option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <p th:switch="${movie.id>0}">
+            <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+            <button type="submit" th:case="*" class="btn btn-primary" th:text="Adicionar"></button>
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <script>
+    $("#cast").select2({
+      ajax: {
+        url: "/api/cast",
+        dataType: "json",
+        delay: 250,
+        processResults: (response) => {
+          return {
+            results: response
+          }
+        },
+        cache: false
+      }
+    });
+  </script>
+</body>
+</html>

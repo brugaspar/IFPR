@@ -1,66 +1,80 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div th:replace="head :: head"></div>
-<body>
-  <!-- 
-    BARRA DE NAVEGACAO 
-  -->
-    <div th:replace="menu :: menu"></div>
-  <!-- 
-    CONTEUDO DA PAGINA 
-  -->
-  <main class="container">
-    <a class="btn btn-primary active" role="button" href="/movies/new">
-    <i class="bi bi-plus-square"></i>
-    Filme
-    </a>
-        
-    <div class="bg-light p-5 rounded">
-        <div class="row">
-            <form action="" method="POST">
-                <div class="mb-2">
-                    <label class="form-label">Filtrar por categoria:</label>
-                </div>
-                <div class="mb-2">
-                    <select class="form-select" name="cat" required="required">
-                        <option value="">Selecionar categoria...</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <button class="btn btn-success" type="submit">Buscar</button>
-                </div>
-            </form>
-        </div>
 
-      <h2>Filmes + Séries disponíveis</h2>
-      <table class="table table-striped table-bordered table-hover">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Lançamento</th>
-          <th>Categoria</th>
-          <th>#</th>
-        </tr>
-      </thead>
-      <tbody>
-      <!-- usando o thymeleaf para iterar na lista de filmes -->
-        <tr th:each="movie: ${moviesList}">
-          <td th:text="${movie.id}"/>
-          <td>
-              <a th:href="@{/movies/edit/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
-          </td>
-          <td th:text="${movie.year}"/>
-          <td th:text="${movie.category}"/>
-          <td><a th:href="@{/movies/delete/{id}(id=${movie.id})}">
-            <i class="bi bi-dash-circle" title="delete"></i>
-          </a></td>
-        </tr>
-      </tbody>
-      </table>
+<div th:replace="head :: head"></div>
+
+<body>
+  <div th:replace="menu :: menu"></div>
+
+  <main class="container">
+    <a class="btn btn-primary active" role="button" th:href="@{/movies/new}">
+      <i class="bi bi-plus-square"></i>
+      Filme
+    </a>
+
+    <div class="bg-light p-5 rounded">
+      <h3>Gerenciar Filmes + Séries</h3>
+
+      <div class="row">
+        <form th:action="@{/movies/category}" method="POST">
+	        <div class="mb-2">
+	          <label class="form-label" for="category">Filtrar por categoria: <span th:text="${category}"></span></label>
+	        </div>
+
+	        <div class="mb-2"> 
+	          <select id="category" class="form-select" th:name="cat" required="required" onchange="this.form.submit()">
+	            <option th:text="${category}" th:value="${category}"></option>
+	            <option th:each="cat: ${categories}" th:text="${cat.getName()}" th:value="${cat}" ></option>
+	          </select>
+	        </div>
+
+	        <div class="mb-4">
+	          <button class="btn btn-success" type="submit">Buscar</button>
+	        </div>
+        </form>
+      </div>
       
+      <div class="row">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Lançamento</th>
+            <th>Nota</th>
+            <th>Categoria</th>
+            <th>#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="movie: ${movieList}">
+            <td th:text="${movie.id}"></td>
+            <td>
+              <a th:href="@{/movies/edit/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
+            </td>
+            <td th:text="${{movie.releaseDate}}"></td>
+            <td th:text="${{movie.score}}"></td>
+            <td th:text="${movie.category}"></td>
+            <td><a th:href="@{/movies/delete/{id}(id=${movie.id})}">
+              <i class="bi bi-dash-circle" title="delete"></i>
+            </a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
     </div>
   </main>
+
   <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

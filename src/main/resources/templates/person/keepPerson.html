@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="head :: head"></div>
+
+<body>
+<div th:replace="menu :: menu"></div>
+
+<main class="container">
+  <div class="bg-light p-5 rounded">
+    <h3>Gerenciar Pessoas</h3>
+
+    <div th:switch="${person.id>0}">
+      <p th:case="${true}">Atualização Cadastral</p>
+      <p th:case="*">Novo Cadastro</p>
+    </div>
+
+    <form th:object="${person}" action="/persons/save" method="POST">
+      <input type="hidden" th:field="${person.id}" th:if="${person.id}">
+
+      <p th:each="movie: ${person.movies}" style="margin-bottom: 5px;">
+        <label>
+          <input
+              type="checkbox"
+              name="movies"
+              th:value="${movie.id}"
+              checked="checked"
+              th:text="${movie.name}"
+              onclick="return false;"
+              style="margin-right: 10px;"
+          >
+        </label>
+      </p>
+
+      <div class="mb-3">
+        <label class="form-label" for="name">Nome</label>
+
+        <input
+            id="name"
+            type="text"
+            th:field="*{name}"
+            class="form-control"
+            placeholder="Nome"
+            th:errorclass="inputError"
+            autocomplete="off"
+        >
+
+        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Campo inválido</span>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label class="form-label" for="birthday">Nascimento</label>
+
+          <input
+              id="birthday"
+              type="text"
+              th:field="${person.birthday}"
+              class="form-control"
+              placeholder="dd/MM/yyyy"
+          >
+
+          <span class="error" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Campo inválido</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <p th:switch="${person.id>0}">
+          <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+          <button type="submit" th:case="*" class="btn btn-primary" th:text="Adicionar"></button>
+        </p>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
