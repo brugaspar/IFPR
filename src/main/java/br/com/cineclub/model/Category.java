@@ -1,29 +1,59 @@
 package br.com.cineclub.model;
 
-public enum Category {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-  ACTION("Ação"),
-  ADVENTURE("Aventura"),
-  ANIMATION("Animação"),
-  BIOGRAPHY("Biografia"),
-  COMEDY("Comédia"),
-  CRIME("Crime"),
-  DRAMA("Drama"),
-  DOCUMENTARY("Documentário"),
-  FANTASY("Fantasia"),
-  MISTERY("Mistério"),
-  HORROR("Terror"),
-  ROMANCE("Romance"),
-  SCIFI("Ficção Científica");
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Set;
 
-  private final String name;
+@Entity
+public class Category {
 
-  Category(String name) {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
+  @NotBlank(message = "Campo obrigatório")
+  @Size(min = 3, max = 50, message = "Campo deve conter entre {min} e {max} carácteres")
+  @Column(unique = true, nullable = false)
+  @JsonProperty("text")
+  private String name;
+
+  @JsonIgnore
+  @ManyToMany(mappedBy = "categories")
+  private Set<Movie> movies;
+
+  public Category() {}
+
+  public Category(String name) {
     this.name = name;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Set<Movie> getMovies() {
+    return movies;
+  }
+
+  public void setMovies(Set<Movie> movies) {
+    this.movies = movies;
   }
 
 }

@@ -53,10 +53,10 @@ public class PersonController {
   }
 
   @PostMapping("/save")
-  public String save(@Valid Person pessoa, BindingResult result, Model model) {
+  public String save(@Valid Person person, BindingResult result, Model model) {
     if (result.hasErrors()) return "person/keepPerson";
 
-    personRepository.save(pessoa);
+    personRepository.save(person);
 
     return "redirect:/persons/list";
   }

@@ -33,7 +33,7 @@ public class Person {
   @JsonProperty("text")
   private String name;
 
-  @Past
+  @Past(message = "Deve ser uma data no passado")
   @DateTimeFormat(pattern = "dd/MM/yyyy")
   @NotNull(message = "Campo obrigatório")
   private LocalDate birthday;

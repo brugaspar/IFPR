@@ -30,11 +30,9 @@ public class Movie {
   private String name;
 
   @NotNull(message = "Campo obrigatório")
-  @Past
   @DateTimeFormat(pattern = "dd/MM/yyyy")
   private LocalDate releaseDate;
 
-  @NotBlank(message = "Campo obrigatório")
   private String category;
 
   private Float score;
@@ -42,6 +40,10 @@ public class Movie {
   @ManyToMany
   @JoinTable(name = "movie_person", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "person_id")})
   private Set<Person> persons;
+
+  @ManyToMany
+  @JoinTable(name = "movie_category", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
+  private Set<Category> categories;
 
   public Movie() {
   }
@@ -101,4 +103,11 @@ public class Movie {
     this.persons = persons;
   }
 
+  public Set<Category> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(Set<Category> categories) {
+    this.categories = categories;
+  }
 }
