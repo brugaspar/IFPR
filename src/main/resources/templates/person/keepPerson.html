@@ -49,6 +49,15 @@
 
       <div class="row">
         <div class="col">
+          <label class="form-label">Popularidade: </label>
+          <span class="moviedb" th:if="${person.id != null && person.personDB.popularity != null}" th:text="${person.personDB.popularity}"></span>
+        </div>
+      </div>
+
+      <img width="100" height="100" th:if="${person.id != null && person.personDB.profile_path != null}" th:src="${person.personDB.profile_path}">
+
+      <div class="row">
+        <div class="col">
           <label class="form-label" for="birthday">Nascimento</label>
 
           <input

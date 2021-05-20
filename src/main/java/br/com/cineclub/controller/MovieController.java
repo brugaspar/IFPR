@@ -5,6 +5,10 @@ import javax.validation.Valid;
 
 import br.com.cineclub.dao.CategoryRepository;
 import br.com.cineclub.model.Category;
+import br.com.cineclub.model.MovieDB;
+import br.com.cineclub.model.WrapperMovieSearch;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import br.com.cineclub.dao.MovieRepository;
 import br.com.cineclub.model.Movie;
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequestMapping("/movies")
@@ -21,6 +26,12 @@ public class MovieController {
 
   final MovieRepository movieRepository;
   final CategoryRepository categoryRepository;
+
+  @Value("${api.moviedb.key}")
+  private String apiKey;
+
+  @Autowired
+  private RestTemplate apiRequest;
 
   public MovieController(MovieRepository movieRepository, CategoryRepository categoryRepository) {
     this.movieRepository = movieRepository;
@@ -51,6 +62,15 @@ public class MovieController {
     Movie movie = movieRepository.getOne(id);
 
     model.addAttribute("movie", movie);
+
+    String movieUrl =
+            "https://api.themoviedb.org/3/search/movie?api_key=" +  apiKey +
+                    "&query=" + movie.getName() + "&year=" + movie.getReleaseDate().getYear();
+
+    WrapperMovieSearch searchResult = apiRequest.getForObject(movieUrl, WrapperMovieSearch.class);
+    assert searchResult != null;
+    MovieDB moviedb = searchResult.getResults().get(0);
+    movie.setMovieDB(moviedb);
 
     return "movie/keepMovie";
   }

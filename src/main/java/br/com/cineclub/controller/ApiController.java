@@ -1,14 +1,16 @@
 package br.com.cineclub.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.cineclub.dao.CategoryRepository;
+import br.com.cineclub.dao.MovieRepository;
 import br.com.cineclub.model.Category;
+import br.com.cineclub.model.Movie;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import br.com.cineclub.dao.PersonRepository;
 import br.com.cineclub.model.Person;
 
@@ -18,10 +20,12 @@ public class ApiController {
 
   final PersonRepository personRepository;
   final CategoryRepository categoryRepository;
+  final MovieRepository movieRepository;
 
-  public ApiController(PersonRepository personRepository, CategoryRepository categoryRepository) {
+  public ApiController(PersonRepository personRepository, CategoryRepository categoryRepository, MovieRepository movieRepository) {
     this.personRepository = personRepository;
     this.categoryRepository = categoryRepository;
+    this.movieRepository = movieRepository;
   }
 
   @GetMapping("/cast")
@@ -40,6 +44,38 @@ public class ApiController {
     }
 
     return categoryRepository.findByNameIgnoreCaseContaining(query);
+  }
+
+  @GetMapping(value = "/movies")
+  Iterable<Movie> getMovies() {
+    return movieRepository.findAll();
+  }
+
+  @GetMapping("/person/{id}")
+  Optional<Person> getPerson(@PathVariable Long id) {
+    return personRepository.findById(id);
+  }
+
+  @GetMapping(value = "/persons")
+  Iterable<Person> getPersons() {
+    return personRepository.findAll();
+  }
+
+  @PostMapping("/persons")
+  Person postPerson(@RequestBody Person person) {
+    personRepository.save(person);
+    return person;
+  }
+
+  @PutMapping("/persons/{id}")
+  ResponseEntity<Person> putPerson(@PathVariable Long id, @RequestBody Person person) {
+    Person p = personRepository.save(person);
+    return new ResponseEntity<>(person, HttpStatus.CREATED);
+  }
+
+  @DeleteMapping("/persons/{id}")
+  void deletePerson(@PathVariable Long id) {
+    personRepository.deletePerson(id);
   }
 
 }

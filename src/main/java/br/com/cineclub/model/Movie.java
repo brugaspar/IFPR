@@ -2,19 +2,13 @@ package br.com.cineclub.model;
 
 import java.time.LocalDate;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -23,6 +17,9 @@ public class Movie {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+
+  @Transient
+  private MovieDB movieDB;
 
   @NotBlank(message = "Campo obrigatório")
   @Size(min = 1, max = 50, message = "Campo deve conter entre {min} e {max} carácteres")
@@ -38,6 +35,7 @@ public class Movie {
   private Float score;
 
   @ManyToMany
+  @JsonSerialize(using = PersonListSerializer.class)
   @JoinTable(name = "movie_person", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "person_id")})
   private Set<Person> persons;
 
@@ -85,6 +83,14 @@ public class Movie {
 
   public void setReleaseDate(LocalDate releaseDate) {
     this.releaseDate = releaseDate;
+  }
+
+  public MovieDB getMovieDB() {
+    return movieDB;
+  }
+
+  public void setMovieDB(MovieDB movieDB) {
+    this.movieDB = movieDB;
   }
 
   public Long getId() {

@@ -43,6 +43,13 @@
 
         <div class="row">
           <div class="col">
+            <label class="form-label">Resumo: </label>
+            <span class="moviedb" th:if="${movie.id != null && movie.movieDB.overview != null}" th:text="${movie.movieDB.overview}"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
             <label class="form-label" for="releaseDate">Data lançamento</label>
 
             <input

@@ -28,20 +28,14 @@ public class DataLoaderHelper {
     movieList.add(new Movie("Alien", 10f, LocalDate.of(1979, 1, 1), CategoryEnum.SCIFI.name()));
     movieList.add(new Movie("Chernobyl", 9.40f, LocalDate.of(2019, 1, 21), CategoryEnum.SCIFI.name()));
     movieList.add(new Movie("Terminator", 8.11f, LocalDate.of(1984, 1, 21), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Breaking Bad", 10f, LocalDate.of(2008, 1, 21), CategoryEnum.CRIME.name()));
-    movieList.add(new Movie("Game of Thrones", 9.3f, LocalDate.of(2011, 1, 21), CategoryEnum.ACTION.name()));
     movieList.add(new Movie("Star Wars: Episode I", 6.5f, LocalDate.of(1999, 1, 21), CategoryEnum.SCIFI.name()));
     movieList.add(new Movie("The Thirteenth Floor", 7.10f, LocalDate.of(1999, 1, 21), CategoryEnum.SCIFI.name()));
     movieRepository.saveAll(movieList);
 
     List<Person> personList = new ArrayList<>();
-    personList.add(new Person("Leonard Skin", LocalDate.of(1944, 4, 8)));
-    personList.add(new Person("Jake Skin", LocalDate.of(1999, 11, 28)));
-    personList.add(new Person("Arnold Shuartz", LocalDate.of(1962, 11, 15)));
-    personList.add(new Person("Kate Blan", LocalDate.of(2008, 5, 1)));
-    personList.add(new Person("Anne Silver", LocalDate.of(1981, 6, 20)));
-    personList.add(new Person("Athena Greek", LocalDate.of(2012, 8, 10)));
-    personList.add(new Person("Artemis Greek", LocalDate.of(1980, 1, 1)));
+    personList.add(new Person("Mark Hamill", LocalDate.of(1944, 4, 8)));
+    personList.add(new Person("Harrison Ford", LocalDate.of(1999, 11, 28)));
+    personList.add(new Person("Arnold Schwarzenegger", LocalDate.of(1962, 11, 15)));
     personRepository.saveAll(personList);
 
     List<Category> categoryList = new ArrayList<>();

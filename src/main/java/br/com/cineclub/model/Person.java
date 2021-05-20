@@ -27,6 +27,17 @@ public class Person {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  public PersonDB getPersonDB() {
+    return personDB;
+  }
+
+  public void setPersonDB(PersonDB personDB) {
+    this.personDB = personDB;
+  }
+
+  @Transient
+  private PersonDB personDB;
+
   @NotBlank(message = "Campo obrigatório")
   @Size(min = 3, max = 50, message = "Campo deve conter entre {min} e {max} carácteres")
   @Column(nullable = false)
