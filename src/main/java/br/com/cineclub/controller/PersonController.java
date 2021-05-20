@@ -55,18 +55,19 @@ public class PersonController {
 
   @GetMapping("/edit/{id}")
   public String edit(@PathVariable Long id, Model model) {
-    Person p = personRepository.findById(id).get();
-    model.addAttribute("person", p);
+    Person person = personRepository.findById(id).get();
+    model.addAttribute("person", person);
 
     String personUrl =
-            "https://api.themoviedb.org/3/search/person?api_key=" +  apiKey +
-                    "&query=" + p.getName();
+            "https://api.themoviedb.org/3/search/person?api_key=" +  apiKey + "&language=pt-BR" +
+                    "&query=" + person.getName();
 
     WrapperPersonSearch searchResult = apiRequest.getForObject(personUrl, WrapperPersonSearch.class);
     assert searchResult != null;
-    PersonDB  persondb = searchResult.getResults().get(0);
 
-    p.setPersonDB(persondb);
+    PersonDB personDB = searchResult.getResults().size() != 0 ? searchResult.getResults().get(0) : null;
+
+    person.setPersonDB(personDB);
 
     return "person/keepPerson";
   }

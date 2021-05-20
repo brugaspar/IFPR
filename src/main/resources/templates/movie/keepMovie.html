@@ -17,13 +17,15 @@
       <form th:object="${movie}" action="/movies/save" method="POST">
 		<input type="hidden" th:field="${movie.id}" th:if="${movie.id}">
 
-		<h4>Elenco:</h4>
-
-        <label for="cast" hidden></label>
-
-        <select id="cast" name="cast" th:field="*{persons}" multiple="multiple" class="form-control select2-single">
-          <option th:each="actor : ${movie.persons}" th:value="${actor.id}" th:text="${actor.name}"></option>
-        </select>
+        <img
+            width="150"
+            height="200"
+            th:if="${movie.id != null && movie.movieDB != null}"
+            th:src="${movie.movieDB.poster_path}"
+            alt="Poster Image"
+            src=""
+            class="mt-1 mb-3"
+        >
 
         <div class="mb-3">
           <label class="form-label" for="name">Nome</label>
@@ -41,10 +43,18 @@
           <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Campo inválido</span>
         </div>
 
-        <div class="row">
+        <div class="mb-3">
+          <label class="form-label" for="cast">Elenco</label>
+
+          <select id="cast" name="cast" th:field="*{persons}" multiple="multiple" class="form-control select2-single">
+            <option th:each="actor : ${movie.persons}" th:value="${actor.id}" th:text="${actor.name}"></option>
+          </select>
+        </div>
+
+        <div class="row" th:if="${movie.id != null && movie.movieDB != null}">
           <div class="col">
-            <label class="form-label">Resumo: </label>
-            <span class="moviedb" th:if="${movie.id != null && movie.movieDB.overview != null}" th:text="${movie.movieDB.overview}"></span>
+            <label class="form-label">Resumo</label>
+            <span class="moviedb"  th:text="${movie.movieDB.overview}"></span>
           </div>
         </div>
 
@@ -73,7 +83,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 mt-3">
           <p th:switch="${movie.id>0}">
             <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
             <button type="submit" th:case="*" class="btn btn-primary" th:text="Adicionar"></button>

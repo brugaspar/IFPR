@@ -10,11 +10,12 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+  List<Category> findByOrderByNameAsc();
+
   List<Category> findByNameIgnoreCaseContaining(String query);
 
   @Transactional
   @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query("delete from Category p where p.id = :id")
   void deleteCategory(Long id);
-
 }

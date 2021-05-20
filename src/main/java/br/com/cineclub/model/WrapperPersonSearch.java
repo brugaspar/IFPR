@@ -7,8 +7,12 @@ public class WrapperPersonSearch {
   private List<PersonDB> results;
 
   public List<PersonDB> getResults() {
-    results.sort( (f1,f2) -> Integer.compare(f2.getPopularity(), f1.getPopularity()) );
-    return results;
+    if(results != null) {
+      results.sort( (f1,f2) -> Integer.compare(f2.getPopularity(), f1.getPopularity()) );
+      return results;
+    }
+
+    return null;
   }
 
   public void setResults(List<PersonDB> results) {

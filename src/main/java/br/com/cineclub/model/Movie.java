@@ -1,11 +1,10 @@
 package br.com.cineclub.model;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Movie {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Transient
@@ -40,17 +39,17 @@ public class Movie {
   private Set<Person> persons;
 
   @ManyToMany
+  @JsonSerialize(using = CategoryListSerializer.class)
   @JoinTable(name = "movie_category", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
   private Set<Category> categories;
 
   public Movie() {
   }
 
-  public Movie(String name, Float score, LocalDate releaseDate, String category) {
+  public Movie(String name, Float score, LocalDate releaseDate) {
     this.name = name;
     this.releaseDate = releaseDate;
     this.score = score;
-    this.category = category;
   }
 
   public String getName() {

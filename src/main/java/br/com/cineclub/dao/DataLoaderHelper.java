@@ -17,53 +17,95 @@ import br.com.cineclub.model.Person;
 @Service
 public class DataLoaderHelper {
 
+  @SuppressWarnings("OptionalGetWithoutIsPresent")
   public static void loadData(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
 
+    List<Category> categoriesList = new ArrayList<>();
+    categoriesList.add(new Category("Comédia"));
+    categoriesList.add(new Category("Ação"));
+    categoriesList.add(new Category("Aventura"));
+    categoriesList.add(new Category("Drama"));
+    categoriesList.add(new Category("Suspense"));
+    categoriesList.add(new Category("Terror"));
+    categoriesList.add(new Category("Ficção Científica"));
+    categoryRepository.saveAll(categoriesList);
+
     List<Movie> movieList = new ArrayList<>();
-    movieList.add(new Movie("Avatar", 7f, LocalDate.of(2009, 1, 28), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Matrix", 9f, LocalDate.of(1999, 1, 1), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Terminator", 8f, LocalDate.of(1984, 1, 1), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Rock", 6f, LocalDate.of(1976, 1, 1), CategoryEnum.ACTION.name()));
-    movieList.add(new Movie("Titanic", 4f, LocalDate.of(1997, 1, 1), CategoryEnum.DRAMA.name()));
-    movieList.add(new Movie("Alien", 10f, LocalDate.of(1979, 1, 1), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Chernobyl", 9.40f, LocalDate.of(2019, 1, 21), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Terminator", 8.11f, LocalDate.of(1984, 1, 21), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("Star Wars: Episode I", 6.5f, LocalDate.of(1999, 1, 21), CategoryEnum.SCIFI.name()));
-    movieList.add(new Movie("The Thirteenth Floor", 7.10f, LocalDate.of(1999, 1, 21), CategoryEnum.SCIFI.name()));
+    movieList.add(new Movie("Avatar", 7f, LocalDate.of(2009, 1, 28)));
+    movieList.add(new Movie("Matrix", 9f, LocalDate.of(1999, 1, 1)));
+    movieList.add(new Movie("Titanic", 4f, LocalDate.of(1997, 1, 1)));
+    movieList.add(new Movie("Star Wars: Episódio I", 6.5f, LocalDate.of(1999, 1, 21)));
+    movieList.add(new Movie("13º Andar", 7.10f, LocalDate.of(1999, 1, 21)));
     movieRepository.saveAll(movieList);
 
     List<Person> personList = new ArrayList<>();
-    personList.add(new Person("Mark Hamill", LocalDate.of(1944, 4, 8)));
-    personList.add(new Person("Harrison Ford", LocalDate.of(1999, 11, 28)));
-    personList.add(new Person("Arnold Schwarzenegger", LocalDate.of(1962, 11, 15)));
+    personList.add(new Person("Sam Worthington", LocalDate.of(1978, 6, 19)));
+    personList.add(new Person("Zoë Saldaña", LocalDate.of(1999, 11, 28)));
+    personList.add(new Person("Keanu Reeves", LocalDate.of(1964, 9, 2)));
+    personList.add(new Person("Laurence Fishburne", LocalDate.of(1961, 7, 30)));
+    personList.add(new Person("Leonardo DiCaprio", LocalDate.of(1974, 11, 11)));
+    personList.add(new Person("Kate Winslet", LocalDate.of(1975, 10, 5)));
+    personList.add(new Person("Natalie Portman", LocalDate.of(1981, 6, 9)));
+    personList.add(new Person("Liam Neeson", LocalDate.of(1952, 6, 7)));
+    personList.add(new Person("Hayden Christensen", LocalDate.of(1981, 4, 19)));
+    personList.add(new Person("Gretchen Mol", LocalDate.of(1972, 11, 8)));
+    personList.add(new Person("Craig Bierko", LocalDate.of(1964, 8, 18)));
     personRepository.saveAll(personList);
 
-    List<Category> categoryList = new ArrayList<>();
-    categoryList.add(new Category("Comedy"));
-    categoryList.add(new Category("Action"));
-    categoryList.add(new Category("Drama"));
-    categoryRepository.saveAll(categoryList);
-
+    Movie avatar = movieRepository.findById(1L).get();
     Set<Person> avatarCast = new HashSet<>();
     avatarCast.add(personRepository.findById(1L).get());
     avatarCast.add(personRepository.findById(2L).get());
-    Movie avatar = movieRepository.findById(1L).get();
+    Set<Category> avatarCategories = new HashSet<>();
+    avatarCategories.add(categoryRepository.findById(2L).get());
+    avatarCategories.add(categoryRepository.findById(7L).get());
     avatar.setPersons(avatarCast);
+    avatar.setCategories(avatarCategories);
     movieRepository.save(avatar);
 
     Movie matrix = movieRepository.findById(2L).get();
     Set<Person> matrixCast = new HashSet<>();
-    matrixCast.add(personRepository.findById(1L).get());
+    Set<Category> matrixCategories = new HashSet<>();
+    matrixCategories.add(categoryRepository.findById(2L).get());
+    matrixCategories.add(categoryRepository.findById(7L).get());
     matrixCast.add(personRepository.findById(3L).get());
-    matrixCast.add(personRepository.findById(2L).get());
+    matrixCast.add(personRepository.findById(4L).get());
     matrix.setPersons(matrixCast);
+    matrix.setCategories(matrixCategories);
     movieRepository.save(matrix);
 
-    Movie alien = movieRepository.findById(5L).get();
-    Set<Person> alienCast = new HashSet<>();
-    alienCast.add(personRepository.findById(2L).get());
-    alien.setPersons(alienCast);
-    movieRepository.save(alien);
+    Movie titanic = movieRepository.findById(3L).get();
+    Set<Person> titanicCast = new HashSet<>();
+    Set<Category> titanicCategories = new HashSet<>();
+    titanicCategories.add(categoryRepository.findById(4L).get());
+    titanicCast.add(personRepository.findById(5L).get());
+    titanicCast.add(personRepository.findById(6L).get());
+    titanic.setPersons(titanicCast);
+    titanic.setCategories(titanicCategories);
+    movieRepository.save(titanic);
+
+    Movie starWars = movieRepository.findById(4L).get();
+    Set<Person> starWarsCast = new HashSet<>();
+    Set<Category> starWarsCategories = new HashSet<>();
+    starWarsCategories.add(categoryRepository.findById(3L).get());
+    starWarsCategories.add(categoryRepository.findById(7L).get());
+    starWarsCast.add(personRepository.findById(7L).get());
+    starWarsCast.add(personRepository.findById(8L).get());
+    starWarsCast.add(personRepository.findById(9L).get());
+    starWars.setPersons(starWarsCast);
+    starWars.setCategories(starWarsCategories);
+    movieRepository.save(starWars);
+
+    Movie thirteenFloor = movieRepository.findById(5L).get();
+    Set<Person> thirteenFloorCast = new HashSet<>();
+    Set<Category> thirteenFloorCategories = new HashSet<>();
+    thirteenFloorCategories.add(categoryRepository.findById(5L).get());
+    thirteenFloorCategories.add(categoryRepository.findById(6L).get());
+    thirteenFloorCast.add(personRepository.findById(10L).get());
+    thirteenFloorCast.add(personRepository.findById(11L).get());
+    thirteenFloor.setPersons(thirteenFloorCast);
+    thirteenFloor.setCategories(thirteenFloorCategories);
+    movieRepository.save(thirteenFloor);
 
   }
 
