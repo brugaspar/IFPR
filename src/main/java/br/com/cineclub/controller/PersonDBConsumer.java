@@ -41,7 +41,7 @@ public class PersonDBConsumer {
   }
 
   @GetMapping("/search1person")
-  public PersonDB searchOneMovie(@RequestParam String name){
+  public PersonDB searchOnePerson(@RequestParam String name){
 
     String personUrl =
             "https://api.themoviedb.org/3/search/person?api_key=" +  apiKey + "&query=" + name;

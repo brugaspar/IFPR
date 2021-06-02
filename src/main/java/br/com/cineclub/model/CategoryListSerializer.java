@@ -37,7 +37,7 @@ public class CategoryListSerializer extends StdSerializer<Set<Category>> {
 
   }
 
-  public void serialize_simple_exemple(Set<Category> category, JsonGenerator generator, SerializerProvider provider)
+  public void serialize_simple_example(Set<Category> category, JsonGenerator generator, SerializerProvider provider)
       throws IOException {
     List<String> serializedList = new ArrayList<>();
     for (Category c : category)

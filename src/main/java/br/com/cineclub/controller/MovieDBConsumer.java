@@ -34,19 +34,19 @@ public class MovieDBConsumer {
   @GetMapping("/search")
   public WrapperMovieSearch searchMovie(@RequestParam String title, @RequestParam Integer year){
 
-    String filmeUrl =
+    String movieUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=" +  apiKey + "&query=" + title + "&year=" + year;
 
-    return apiRequest.getForObject(filmeUrl, WrapperMovieSearch.class);
+    return apiRequest.getForObject(movieUrl, WrapperMovieSearch.class);
   }
 
   @GetMapping("/search1")
   public MovieDB searchOneMovie(@RequestParam String title, @RequestParam Integer year){
 
-    String filmeUrl =
+    String movieUrl =
             "https://api.themoviedb.org/3/search/movie?api_key=" +  apiKey + "&query=" + title + "&year=" + year;
 
-    WrapperMovieSearch searchResult = apiRequest.getForObject(filmeUrl, WrapperMovieSearch.class);
+    WrapperMovieSearch searchResult = apiRequest.getForObject(movieUrl, WrapperMovieSearch.class);
     assert searchResult != null;
 
     return searchResult.getResults().get(0);

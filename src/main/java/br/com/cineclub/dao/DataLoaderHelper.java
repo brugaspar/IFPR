@@ -6,20 +6,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import br.com.cineclub.model.Category;
+import br.com.cineclub.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import br.com.cineclub.model.CategoryEnum;
-import br.com.cineclub.model.Movie;
-import br.com.cineclub.model.Person;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class DataLoaderHelper {
+  @Autowired
+  static RestTemplate apiRequest;
+
+  @Value("${api.moviedb.key}")
+  static String apiKey;
 
   @SuppressWarnings("OptionalGetWithoutIsPresent")
   public static void loadData(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
-
     List<Category> categoriesList = new ArrayList<>();
     categoriesList.add(new Category("Comédia"));
     categoriesList.add(new Category("Ação"));
@@ -106,11 +110,11 @@ public class DataLoaderHelper {
     thirteenFloor.setPersons(thirteenFloorCast);
     thirteenFloor.setCategories(thirteenFloorCategories);
     movieRepository.save(thirteenFloor);
-
   }
 
   @Bean
   public CommandLineRunner loader(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
+
     return (args) -> {
       DataLoaderHelper.loadData(movieRepository, personRepository, categoryRepository);
     };
