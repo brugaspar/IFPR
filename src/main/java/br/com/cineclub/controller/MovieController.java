@@ -5,9 +5,11 @@ import javax.validation.Valid;
 
 import br.com.cineclub.dao.CategoryRepository;
 import br.com.cineclub.model.*;
+import br.com.cineclub.tmdb.model.MovieTMDB;
+import br.com.cineclub.tmdb.model.WrapperMovieSearch;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -61,16 +63,15 @@ public class MovieController {
 
     model.addAttribute("movie", movie);
 
-    String movieUrl =
-            "https://api.themoviedb.org/3/search/movie?api_key=" +  apiKey + "&language=pt-BT" +
-                    "&query=" + movie.getName() + "&year=" + movie.getReleaseDate().getYear();
+    String movieUrl = "https://api.themoviedb.org/3/search/movie?api_key=" + apiKey + "&language=pt-BT" + "&query="
+        + movie.getName() + "&year=" + movie.getReleaseDate().getYear();
 
     WrapperMovieSearch searchResult = apiRequest.getForObject(movieUrl, WrapperMovieSearch.class);
     assert searchResult != null;
 
-    MovieDB movieDB = searchResult.getResults().size() != 0 ? searchResult.getResults().get(0) : null;
+    MovieTMDB movieDB = searchResult.getResults().size() != 0 ? searchResult.getResults().get(0) : null;
 
-    movie.setMovieDB(movieDB);
+    movie.setMovieTMDB(movieDB);
 
     return "movie/keepMovie";
   }
@@ -101,15 +102,15 @@ public class MovieController {
     return "redirect:/movies/list";
   }
 
-  @PostMapping(value = "/category")
-  public String filtra(Category cat, Model model) {
-    List<Movie> movies = movieRepository.findByCategory(cat.getName());
-    List<Category> categories = categoryRepository.findAll();
+  // @PostMapping(value = "/category")
+  // public String filtra(Category cat, Model model) {
+  // List<Movie> movies = movieRepository.findByCategory(cat.getName());
+  // List<Category> categories = categoryRepository.findAll();
 
-    model.addAttribute("movieList", movies);
-    model.addAttribute("category", cat.getName());
-    model.addAttribute("categories", categories);
+  // model.addAttribute("movieList", movies);
+  // model.addAttribute("category", cat.getName());
+  // model.addAttribute("categories", categories);
 
-    return "movie/list";
-  }
+  // return "movie/list";
+  // }
 }

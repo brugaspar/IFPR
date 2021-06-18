@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import br.com.cineclub.tmdb.model.MovieTMDB;
+
 @Entity
 public class Movie {
 
@@ -18,7 +20,7 @@ public class Movie {
   private Long id;
 
   @Transient
-  private MovieDB movieDB;
+  private MovieTMDB movieDB;
 
   @NotBlank(message = "Campo obrigatório")
   @Size(min = 1, max = 50, message = "Campo deve conter entre {min} e {max} carácteres")
@@ -29,18 +31,18 @@ public class Movie {
   @DateTimeFormat(pattern = "dd/MM/yyyy")
   private LocalDate releaseDate;
 
-  private String category;
-
   private Float score;
 
   @ManyToMany
   @JsonSerialize(using = PersonListSerializer.class)
-  @JoinTable(name = "movie_person", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "person_id")})
+  @JoinTable(name = "movie_person", joinColumns = { @JoinColumn(name = "movie_id") }, inverseJoinColumns = {
+      @JoinColumn(name = "person_id") })
   private Set<Person> persons;
 
   @ManyToMany
   @JsonSerialize(using = CategoryListSerializer.class)
-  @JoinTable(name = "movie_category", joinColumns = {@JoinColumn(name = "movie_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
+  @JoinTable(name = "movie_category", joinColumns = { @JoinColumn(name = "movie_id") }, inverseJoinColumns = {
+      @JoinColumn(name = "category_id") })
   private Set<Category> categories;
 
   public Movie() {
@@ -60,14 +62,6 @@ public class Movie {
     this.name = name;
   }
 
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
-    this.category = category;
-  }
-
   public Float getScore() {
     return score;
   }
@@ -84,11 +78,11 @@ public class Movie {
     this.releaseDate = releaseDate;
   }
 
-  public MovieDB getMovieDB() {
+  public MovieTMDB getMovieTMDB() {
     return movieDB;
   }
 
-  public void setMovieDB(MovieDB movieDB) {
+  public void setMovieTMDB(MovieTMDB movieDB) {
     this.movieDB = movieDB;
   }
 

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -26,7 +25,8 @@ public class Category {
   @ManyToMany(mappedBy = "categories")
   private Set<Movie> movies;
 
-  public Category() {}
+  public Category() {
+  }
 
   public Category(String name) {
     this.name = name;

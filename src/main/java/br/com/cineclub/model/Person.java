@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import br.com.cineclub.tmdb.model.PersonTMDB;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,16 +29,16 @@ public class Person {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  public PersonDB getPersonDB() {
+  public PersonTMDB getPersonTMDB() {
     return personDB;
   }
 
-  public void setPersonDB(PersonDB personDB) {
+  public void setPersonTMDB(PersonTMDB personDB) {
     this.personDB = personDB;
   }
 
   @Transient
-  private PersonDB personDB;
+  private PersonTMDB personDB;
 
   @NotBlank(message = "Campo obrigatório")
   @Size(min = 3, max = 50, message = "Campo deve conter entre {min} e {max} carácteres")
@@ -118,21 +120,27 @@ public class Person {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
+    if (this == obj)
+      return true;
 
-    if (obj == null) return false;
+    if (obj == null)
+      return false;
 
-    if (getClass() != obj.getClass()) return false;
+    if (getClass() != obj.getClass())
+      return false;
 
     Person otherPerson = (Person) obj;
 
     if (birthday == null) {
-      if (otherPerson.birthday != null) return false;
-    } else if (!birthday.equals(otherPerson.birthday)) return false;
+      if (otherPerson.birthday != null)
+        return false;
+    } else if (!birthday.equals(otherPerson.birthday))
+      return false;
 
     if (name == null) {
       return otherPerson.name == null;
-    } else return name.equals(otherPerson.name);
+    } else
+      return name.equals(otherPerson.name);
   }
 
 }

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,17 +24,15 @@ public class CategoriaDBConsumer {
   @RequestMapping("/categorydb/{id}")
   public CategoryDB getFilmeById(@PathVariable Long id) {
 
-    String movieUrl =
-        "https://api.themoviedb.org/3/genre/" + id + "?api_key=" +  apiKey + "&language=pt-BR";
+    String movieUrl = "https://api.themoviedb.org/3/genre/" + id + "?api_key=" + apiKey + "&language=pt-BR";
 
     return apiRequest.getForObject(movieUrl, CategoryDB.class); // serializado em JSON
   }
 
   @GetMapping("/searchCategory")
-  public WrapperCategorySearch searchCategory(){
+  public WrapperCategorySearch searchCategory() {
 
-    String movieUrl =
-        "https://api.themoviedb.org/3/genre/movie/list?api_key=" +  apiKey + "&language=pt-BR";
+    String movieUrl = "https://api.themoviedb.org/3/genre/movie/list?api_key=" + apiKey + "&language=pt-BR";
 
     return apiRequest.getForObject(movieUrl, WrapperCategorySearch.class);
   }

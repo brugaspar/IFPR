@@ -3,6 +3,9 @@ package br.com.cineclub.controller;
 import javax.validation.Valid;
 
 import br.com.cineclub.model.*;
+import br.com.cineclub.tmdb.model.PersonTMDB;
+import br.com.cineclub.tmdb.model.WrapperPersonSearch;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -58,23 +61,23 @@ public class PersonController {
     Person person = personRepository.findById(id).get();
     model.addAttribute("person", person);
 
-    String personUrl =
-            "https://api.themoviedb.org/3/search/person?api_key=" +  apiKey + "&language=pt-BR" +
-                    "&query=" + person.getName();
+    String personUrl = "https://api.themoviedb.org/3/search/person?api_key=" + apiKey + "&language=pt-BR" + "&query="
+        + person.getName();
 
     WrapperPersonSearch searchResult = apiRequest.getForObject(personUrl, WrapperPersonSearch.class);
     assert searchResult != null;
 
-    PersonDB personDB = searchResult.getResults().size() != 0 ? searchResult.getResults().get(0) : null;
+    PersonTMDB personDB = searchResult.getResults().size() != 0 ? searchResult.getResults().get(0) : null;
 
-    person.setPersonDB(personDB);
+    person.setPersonTMDB(personDB);
 
     return "person/keepPerson";
   }
 
   @PostMapping("/save")
   public String save(@Valid Person person, BindingResult result, Model model) {
-    if (result.hasErrors()) return "person/keepPerson";
+    if (result.hasErrors())
+      return "person/keepPerson";
 
     personRepository.save(person);
 
