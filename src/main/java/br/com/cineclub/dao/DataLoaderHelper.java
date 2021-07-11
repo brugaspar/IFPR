@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +24,7 @@ public class DataLoaderHelper {
   static String apiKey;
 
   @SuppressWarnings("OptionalGetWithoutIsPresent")
-  public static void loadData(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
+  public static void loadData(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
     List<Category> categoriesList = new ArrayList<>();
     categoriesList.add(new Category("Comédia"));
     categoriesList.add(new Category("Ação"));
@@ -110,13 +111,36 @@ public class DataLoaderHelper {
     thirteenFloor.setPersons(thirteenFloorCast);
     thirteenFloor.setCategories(thirteenFloorCategories);
     movieRepository.save(thirteenFloor);
+
+    BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
+
+    User maria = new User();
+    maria.setEmail("maria90@test.org");
+    maria.setPassword(passEncoder.encode("123"));
+    maria.setName("Maria Aparecida");
+    maria.setRoles("ROLE_USER");
+    userRepository.save(maria);
+
+    User admin = new User();
+    admin.setEmail("admin@test.org");
+    admin.setPassword(passEncoder.encode("123"));
+    admin.setName("Admin");
+    admin.setRoles("ROLE_ADMIN");
+    userRepository.save(admin);
+
+    User guest = new User();
+    guest.setEmail("guest@test.org");
+    guest.setPassword(passEncoder.encode("123"));
+    guest.setName("Guest");
+    guest.setRoles("ROLE_GUEST");
+    userRepository.save(guest);
   }
 
   @Bean
-  public CommandLineRunner loader(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository) {
+  public CommandLineRunner loader(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
 
     return (args) -> {
-      DataLoaderHelper.loadData(movieRepository, personRepository, categoryRepository);
+      DataLoaderHelper.loadData(movieRepository, personRepository, categoryRepository, userRepository);
     };
   }
 }

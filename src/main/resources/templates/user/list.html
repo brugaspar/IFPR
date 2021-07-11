@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>User list</title>
+
+<head th:replace="head :: head"></head>
+<body>
+<!--
+  BARRA DE NAVEGACAO
+-->
+<div th:replace="menu :: menu"></div>
+<!--
+  CONTEUDO DA PAGINA
+-->
+<main class="container">
+    <a class="btn btn-primary active" role="button" th:href="@{/users/new}">
+        <i class="bi bi-plus-square"></i>
+        Usuario
+    </a>
+    <div class="bg-light p-5 rounded">
+        <h2>Lista de usuários</h2>
+        <table class="table table-striped table-bordered table-hover" data-toggle="table">
+            <thead>
+            <tr>
+                <th data-sortable="true">ID</th>
+                <th data-sortable="true" data-field="nome">Nome</th>
+                <th data-sortable="true">Email</th>
+                <th data-sortable="true">Permissoes</th>
+                <th>#</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p: ${userList}">
+                <td th:text="${p.id}"></td>
+                <td>
+                    <a th:text="${p.name}"
+                       th:href="@{/users/edit/{id}(id=${p.id})}"></a>
+                </td>
+
+                <td th:text="${{p.email}}"></td>
+
+                <td th:text="${p.roles}"></td>
+
+<!--                <div th:switch="${#authorization.expression('hasRole(''ADMIN'')')}">-->
+<!--                    <a th:case='${true}' th:href="@{/filmes/edit/{id}(id=${filme.id})}" th:text="${filme.nome}"></a>-->
+<!--                    <a th:case="*" th:text="${filme.nome}"></a>-->
+<!--                </div>-->
+
+                <td>
+                    <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/users/delete/{id}(id=${p.id})}">
+                        <i class="bi bi-dash-circle" title="delete"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
+
+</body>
+</html>

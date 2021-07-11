@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="head :: head"></div>
+
+<body>
+<div th:replace="menu :: menu"></div>
+
+<main class="container">
+    <div class="bg-light p-5 rounded">
+        <h3>Gerenciar Pessoas</h3>
+
+        <div th:switch="${user.id>0}">
+            <p th:case="${true}">Atualização Cadastral</p>
+            <p th:case="*">Novo Cadastro</p>
+        </div>
+
+        <form th:object="${user}" action="/users/save" method="POST">
+            <input type="hidden" th:field="${user.id}" th:if="${user.id}">
+
+            <div class="mb-3">
+                <label class="form-label" for="name">Nome</label>
+
+                <input
+                        id="name"
+                        type="text"
+                        th:field="*{name}"
+                        class="form-control"
+                        placeholder="Nome"
+                        th:errorclass="inputError"
+                        autocomplete="off"
+                >
+
+                <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Campo inválido</span>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label" for="email">E-mail</label>
+
+                    <input
+                            id="email"
+                            type="text"
+                            th:field="${user.email}"
+                            class="form-control"
+                            placeholder="E-mail"
+                    >
+
+                    <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Campo inválido</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label" for="roles">Roles (ROLE_ADMIN, ROLE_GUEST, ROLE_USER)</label>
+
+                    <input
+                            id="roles"
+                            type="text"
+                            th:field="${user.roles}"
+                            class="form-control"
+                            placeholder="ROLE_ADMIN - ROLE_GUEST - ROLE_USER"
+                    >
+
+                    <span class="error" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Campo inválido</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="form-label" for="password">Senha</label>
+
+                    <input
+                            id="password"
+                            type="password"
+                            th:field="${user.password}"
+                            class="form-control"
+                            placeholder="Senha"
+                            required
+                    >
+
+                    <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Campo inválido</span>
+                </div>
+            </div>
+
+            <div class="mb-3 mt-3">
+                <p th:switch="${user.id>0}">
+                    <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+                    <button type="submit" th:case="*" class="btn btn-primary" th:text="Adicionar"></button>
+                </p>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

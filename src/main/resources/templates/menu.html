@@ -21,6 +21,15 @@
             <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/persons/list}">Pessoas</a></li>
             <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/categories/list}">Categorias</a></li>
             <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/categoriesDB/list}">Categorias do MovieDB</a></li>
+
+            <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/users/list}">Usuários</a></li>
+            <div sec:authorize="isAuthenticated()" style="display:flex;">
+              <li class="nav-item"><a class="nav-link active" style='color:#eaff07' aria-current="page" th:href="@{/logout}">Logout</a></li>
+              <li class="nav-item"><span class="nav-link active" style='color:#7edff2' sec:authentication="name"></span></li>
+            </div>
+            <div sec:authorize="!isAuthenticated()" style="display:flex;">
+              <li class="nav-item"><a class="nav-link active" style='color:coral' aria-current="page">open access</a></li>
+            </div>
           </ul>
 
           <form class="d-flex">
