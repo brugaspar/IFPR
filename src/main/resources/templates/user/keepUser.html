@@ -28,6 +28,7 @@
                         placeholder="Nome"
                         th:errorclass="inputError"
                         autocomplete="off"
+                        th:disabled="${!#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
                 >
 
                 <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Campo inválido</span>
@@ -44,6 +45,7 @@
                             th:field="${user.email}"
                             class="form-control"
                             placeholder="E-mail"
+                            th:disabled="${!#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
                     >
 
                     <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Campo inválido</span>
@@ -60,24 +62,38 @@
                             th:field="${user.roles}"
                             class="form-control"
                             placeholder="ROLE_ADMIN - ROLE_GUEST - ROLE_USER"
+                            th:disabled="${!#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
                     >
 
                     <span class="error" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Campo inválido</span>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                 <div class="col">
-                    <label class="form-label" for="password">Senha</label>
+                    <label class="form-label" for="oldPassword">Senha antiga</label>
 
                     <input
-                            id="password"
-                            type="password"
-                            th:field="${user.password}"
-                            class="form-control"
-                            placeholder="Senha"
-                            required
-                    >
+                        id="oldPassword"
+                        type="password"
+                        class="form-control"
+                        th:field="${user.oldPassword}"
+                        placeholder="Senha antiga"
+                        required
+                    />
+                </div>
+
+                <div class="col">
+                    <label class="form-label" for="password">Senha nova</label>
+
+                    <input
+                        id="password"
+                        type="password"
+                        th:field="${user.password}"
+                        class="form-control"
+                        placeholder="Senha nova"
+                        required
+                    />
 
                     <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Campo inválido</span>
                 </div>
@@ -92,7 +108,6 @@
         </form>
     </div>
 </main>
-
 <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

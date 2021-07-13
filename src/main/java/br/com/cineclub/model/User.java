@@ -22,6 +22,9 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
+  @Transient
+  private String oldPassword;
+
   @Column(nullable = false)
   private String password;
 
@@ -52,6 +55,10 @@ public class User {
   public void setEmail(String email) {
     this.email = email;
   }
+
+  public String getOldPassword() { return oldPassword; }
+
+  public void setOldPassword(String oldPassword) { this.oldPassword = oldPassword; }
 
   public String getPassword() {
     return password;
