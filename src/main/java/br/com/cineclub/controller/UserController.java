@@ -59,11 +59,11 @@ public class UserController {
     if (result.hasErrors())
       return "user/keepUser";
 
-    User storedUser = userRepository.findUserById(user.getId());
+    User usuarioDoBanco = userRepository.findUserById(user.getId());
 
     BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
-    if(!passEncoder.matches(user.getOldPassword(), storedUser.getPassword())) {
+    if(!passEncoder.matches(user.getOldPassword(), usuarioDoBanco.getPassword())) {
       return "user/keepUser";
     }
 
