@@ -20,8 +20,8 @@
         <img
             width="150"
             height="200"
-            th:if="${movie.id != null && movie.movieDB != null}"
-            th:src="${movie.movieDB.poster_path}"
+            th:if="${movie.id != null && movie.movieTMDB != null}"
+            th:src="${movie.movieTMDB.poster_path}"
             alt="Poster Image"
             src=""
             class="mt-1 mb-3"
@@ -51,10 +51,10 @@
           </select>
         </div>
 
-        <div class="row" th:if="${movie.id != null && movie.movieDB != null}">
+        <div class="row" th:if="${movie.id != null && movie.movieTMDB != null}">
           <div class="col">
             <label class="form-label">Resumo</label>
-            <span class="moviedb"  th:text="${movie.movieDB.overview}"></span>
+            <span class="moviedb"  th:text="${movie.movieTMDB.overview}"></span>
           </div>
         </div>
 

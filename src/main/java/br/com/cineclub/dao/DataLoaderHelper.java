@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@Service
+//@Service
 public class DataLoaderHelper {
   @Autowired
   static RestTemplate apiRequest;
@@ -136,7 +136,7 @@ public class DataLoaderHelper {
     userRepository.save(guest);
   }
 
-  @Bean
+//  @Bean
   public CommandLineRunner loader(MovieRepository movieRepository, PersonRepository personRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
 
     return (args) -> {

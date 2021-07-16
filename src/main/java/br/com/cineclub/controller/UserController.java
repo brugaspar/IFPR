@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -59,15 +60,25 @@ public class UserController {
     if (result.hasErrors())
       return "user/keepUser";
 
-    User usuarioDoBanco = userRepository.findUserById(user.getId());
-
     BCryptPasswordEncoder passEncoder = new BCryptPasswordEncoder();
 
-    if(!passEncoder.matches(user.getOldPassword(), usuarioDoBanco.getPassword())) {
-      return "user/keepUser";
-    }
+    User usuarioDoBanco = userRepository.findUserById(user.getId());
 
-    user.setPassword(passEncoder.encode(user.getPassword()));
+    if(!Objects.equals(user.getPassword(), "")) {
+      if(!Objects.equals(user.getOldPassword(), "")) {
+        if(!passEncoder.matches(user.getOldPassword(), usuarioDoBanco.getPassword())) {
+          return "user/keepUser";
+        }
+
+        user.setPassword(passEncoder.encode(user.getPassword()));
+      } else {
+        if(user.getId() != null) {
+          return "user/keepUser";
+        }
+      }
+    } else {
+      user.setPassword(usuarioDoBanco.getPassword());
+    }
 
     userRepository.save(user);
 
