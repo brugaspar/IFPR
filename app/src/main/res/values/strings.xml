@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Cadastro - Exercício 1</string>
+    <string name="name_label">Nome</string>
+    <string name="gender_label">Sexo</string>
+    <string name="email_label">E-mail</string>
+    <string name="phone_label">Telefone</string>
+    <string name="preferences_label">Preferências</string>
+    <string name="notifications_label">Ativar notificações</string>
+    <string name="name_hint">Informe seu nome</string>
+    <string name="email_hint">Informe seu e-mail</string>
+    <string name="phone_hint">Informe seu telefone</string>
+    <string name="gender_masculine">Masculino</string>
+    <string name="gender_female">Feminino</string>
+    <string name="preference_music">Música</string>
+    <string name="preference_movie">Cinema</string>
+    <string name="preference_sport">Esporte</string>
+    <string name="preference_gastronomy">Gastronomia</string>
+    <string name="switch_off">Desligado</string>
+    <string name="switch_on">Ligado</string>
+    <string name="show_button">Exibir</string>
+    <string name="clean_button">Limpar</string>
+</resources>
