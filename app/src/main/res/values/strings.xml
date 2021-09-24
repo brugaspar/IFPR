@@ -9,7 +9,7 @@
     <string name="name_hint">Informe seu nome</string>
     <string name="email_hint">Informe seu e-mail</string>
     <string name="phone_hint">Informe seu telefone</string>
-    <string name="gender_masculine">Masculino</string>
+    <string name="gender_male">Masculino</string>
     <string name="gender_female">Feminino</string>
     <string name="preference_music">Música</string>
     <string name="preference_movie">Cinema</string>
