@@ -5,10 +5,15 @@ export const Container = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  max-width: 1120px;
-  height: 6em;
+  max-width: 1200px;
+  height: 8rem;
   margin: 0 auto;
   padding: 0 2rem;
+
+  button:first-child {
+    position: absolute;
+    left: 2rem;
+  }
 
   img {
     width: 15rem;

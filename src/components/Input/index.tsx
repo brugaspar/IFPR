@@ -1,17 +1,17 @@
 import { useState } from "react"
-import { FaAt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa"
+import { FaLock, FaEye, FaEyeSlash, FaUser } from "react-icons/fa"
 
 import { Container } from "./styles"
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   inputRef: React.MutableRefObject<HTMLInputElement>
-  inputType?: "default" | "password" | "email"
+  inputType?: "default" | "password" | "email" | "username"
 }
 
 export function Input({ inputRef, inputType = "default", type, ...rest }: InputProps) {
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
-  const icon = inputType === "password" || inputType === "email"
+  const icon = inputType === "password" || inputType === "username"
   const passwordType = secureTextEntry ? "password" : "text"
 
   function handleToggleSecureTextEntry() {
@@ -28,7 +28,7 @@ export function Input({ inputRef, inputType = "default", type, ...rest }: InputP
               color="var(--text-dark)"
             />
           ) : (
-            <FaAt
+            <FaUser
               size={18}
               color="var(--text-dark)"
             />

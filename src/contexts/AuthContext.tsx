@@ -19,7 +19,7 @@ type User = {
 }
 
 type SignInProps = {
-  email: string
+  username: string
   password: string
   keepConnected: boolean
 }
@@ -44,9 +44,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const authenticated = !!user
 
-  async function signIn({ email, password, keepConnected }: SignInProps) {
+  async function signIn({ username, password, keepConnected }: SignInProps) {
     const { data: { user, token } } = await api.post("/users/authenticate", {
-      email,
+      username,
       password
     })
 

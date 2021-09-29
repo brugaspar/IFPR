@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next"
 import Head from "next/head"
 
 import { Header } from "../../components/Header"
+import { Sidebar } from "../../components/Sidebar"
 
 import { getAccessToken } from "../../helpers/getAccessToken"
 
@@ -9,14 +10,11 @@ import { Container } from "./styles"
 
 export default function Dashboard() {
   return (
-    <>
-      <Header />
-      <Container>
-        <Head>
-          <title>Mark One | Dashboard</title>
-        </Head>
-      </Container>
-    </>
+    <Container>
+      <Head>
+        <title>Mark One | Dashboard</title>
+      </Head>
+    </Container>
   )
 }
 

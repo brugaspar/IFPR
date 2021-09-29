@@ -14,10 +14,11 @@ import { Container, Content } from "../styles/home.styles"
 export default function Home() {
   const { signIn } = useAuth()
 
-  const emailRef = useRef() as React.MutableRefObject<HTMLInputElement>
+  const usernameRef = useRef() as React.MutableRefObject<HTMLInputElement>
   const passwordRef = useRef() as React.MutableRefObject<HTMLInputElement>
 
   const [checkbox, setCheckbox] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   function handleToggleCheckbox() {
     setCheckbox(!checkbox)
@@ -25,6 +26,8 @@ export default function Home() {
 
   async function handleSignIn(event: FormEvent) {
     event.preventDefault()
+
+    setLoading(true)
 
     const id = toast.loading("Carregando", {
       theme: "dark", style: {
@@ -34,14 +37,17 @@ export default function Home() {
 
     try {
       await signIn({
-        email: emailRef.current.value,
+        username: usernameRef.current.value,
         password: passwordRef.current.value,
         keepConnected: checkbox
       })
 
+      setLoading(false)
+
       toast.dismiss(id)
       toast.dismiss("error")
     } catch (error: any) {
+      setLoading(false)
       toast.dismiss(id)
 
       if (error.response.data.message) {
@@ -85,13 +91,14 @@ export default function Home() {
           <img src="/images/logo.png" alt="Mark One" />
 
           <form onSubmit={handleSignIn}>
-            <label htmlFor="email">E-mail</label>
+            <label htmlFor="username">Usuário</label>
             <Input
-              id="email"
-              type="email"
-              inputType="email"
-              placeholder="Informe seu e-mail"
-              inputRef={emailRef}
+              id="username"
+              type="text"
+              inputType="username"
+              placeholder="Informe seu usuário"
+              inputRef={usernameRef}
+              disabled={loading}
             />
 
             <label htmlFor="password">Senha</label>
@@ -101,12 +108,14 @@ export default function Home() {
               inputType="password"
               placeholder="Informe sua senha"
               inputRef={passwordRef}
+              disabled={loading}
             />
 
             <button
               type="button"
               className="checkbox"
               onClick={handleToggleCheckbox}
+              disabled={loading}
             >
               {checkbox ? (
                 <FaCheckSquare
@@ -120,7 +129,7 @@ export default function Home() {
               <h5>Manter conectado</h5>
             </button>
 
-            <button type="submit">Entrar</button>
+            <button disabled={loading} type="submit">Entrar</button>
           </form>
         </div>
       </Content>
