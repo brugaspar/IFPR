@@ -45,7 +45,6 @@ export function Input({ inputRef, inputType = "default", type, ...rest }: InputP
       {inputType === "password" && (
         <button
           type="button"
-          className="password-icon"
           onClick={handleToggleSecureTextEntry}
         >
           {secureTextEntry ? (

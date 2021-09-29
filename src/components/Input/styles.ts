@@ -37,5 +37,13 @@ export const Container = styled.div`
     background: var(--shape);
 
     width: 10%;
+    height: 3rem;
+    border-radius: 0.25rem;
+
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
   }
 `

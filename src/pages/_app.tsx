@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css"
-import "semantic-ui-css/semantic.min.css"
+
 import type { AppProps } from "next/app"
 import { ToastContainer } from "react-toastify"
 
@@ -17,7 +17,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop
-        closeOnClick={false}
+        closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable

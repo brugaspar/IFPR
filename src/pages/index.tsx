@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next"
+import Head from "next/head"
 import { useRef, useState, FormEvent } from "react"
 import { FaCheckSquare } from "react-icons/fa"
 import { toast } from "react-toastify"
@@ -25,30 +26,44 @@ export default function Home() {
   async function handleSignIn(event: FormEvent) {
     event.preventDefault()
 
+    const id = toast.loading("Carregando", {
+      theme: "dark", style: {
+        background: "var(--green)"
+      }
+    })
+
     try {
       await signIn({
         email: emailRef.current.value,
         password: passwordRef.current.value,
         keepConnected: checkbox
       })
+
+      toast.dismiss(id)
+      toast.dismiss("error")
     } catch (error: any) {
-      console.log(error.response.data)
+      toast.dismiss(id)
+
       if (error.response.data.message) {
         if (Array.isArray(error.response.data.message)) {
           for (const message of error.response.data.message) {
-            toast.error(message)
+            toast.error(message, { toastId: "error" })
           }
         } else {
-          toast.error(error.response.data.message)
+          toast.error(error.response.data.message, { toastId: "error" })
         }
       } else {
-        toast.error("Problemas internos")
+        toast.error("Problemas internos", { toastId: "error" })
       }
     }
   }
 
   return (
     <Container>
+      <Head>
+        <title>Mark One | Autenticação</title>
+      </Head>
+
       <img
         src="/images/wave.png"
         alt="Onda"
@@ -95,7 +110,7 @@ export default function Home() {
             >
               {checkbox ? (
                 <FaCheckSquare
-                  size={25}
+                  size={20}
                   color="var(--text-title)"
                 />
               ) : (

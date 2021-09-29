@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next"
+import Head from "next/head"
 
 import { Header } from "../../components/Header"
 
@@ -11,7 +12,9 @@ export default function Dashboard() {
     <>
       <Header />
       <Container>
-        <h1>Dashboard</h1>
+        <Head>
+          <title>Mark One | Dashboard</title>
+        </Head>
       </Container>
     </>
   )

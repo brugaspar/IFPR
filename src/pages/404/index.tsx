@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import Head from "next/head"
 
 import { useAuth } from "../../hooks/useAuth";
 
@@ -14,6 +15,10 @@ export default function Custom404() {
 
   return (
     <Container>
+      <Head>
+        <title>Mark One | 404</title>
+      </Head>
+
       <img src="/images/404-not-found.png" alt="Não encontrado" />
 
       <h1>Página não encontrada</h1>

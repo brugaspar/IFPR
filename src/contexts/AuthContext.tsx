@@ -68,7 +68,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     destroyCookie(null, "@mark-one:token", { path: "/" })
     api.defaults.headers["Authorization"] = undefined
-    setUser(null)
+
+    new Promise(resolve => setTimeout(resolve, 500))
+      .then(() => setUser(null))
   }
 
   async function loadData() {
