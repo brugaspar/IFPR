@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       password
     })
 
-    const ONE_DAY = 60 * 60 * 1
+    const ONE_DAY = 60 * 60 * 24
 
     setCookie(undefined, "@mark-one:token", token, {
       maxAge: keepConnected ? ONE_DAY : undefined
