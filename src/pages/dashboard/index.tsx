@@ -1,9 +1,6 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 
-import { Header } from "../../components/Header"
-import { Sidebar } from "../../components/Sidebar"
-
 import { getAccessToken } from "../../helpers/getAccessToken"
 
 import { Container } from "./styles"
@@ -14,6 +11,8 @@ export default function Dashboard() {
       <Head>
         <title>Mark One | Dashboard</title>
       </Head>
+
+      <h1>Dashboard</h1>
     </Container>
   )
 }

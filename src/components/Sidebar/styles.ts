@@ -6,49 +6,53 @@ export const Container = styled.div`
   left: 0;
 
   height: 100%;
-  width: 0;
-
+  width: 18rem;
   background: var(--shape-dark);
 
-  z-index: 1;
-  overflow-x: hidden;
-  transition: 0.5s;
+  z-index: 100;
+  transition: all 0.5s ease;
 
-  .content {
-    margin-top: 5rem;
-  }
+  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.5);
 
-  a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &:hover {
-      color: #f1f1f1;
+    padding: 1rem 0;
+
+    img {
+      width: 15rem;
+      opacity: 1;
+      transition: all 0.5s ease;
+      overflow-x: visible;
+    }
+
+    span {
+      width: 0;
+      font-size: 2rem;
+      color: var(--text-title);
+      opacity: 0;
+      transition: all 0.5s ease;
+      overflow-x: hidden;
     }
   }
 
-  .close-btn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-    border: 0;
-    background: transparent;
-    color: var(--text-title);
+  &.close {
+    width: 5rem;
 
-    transition: filter 0.2s;
+    .logo-container {
+      img {
+        opacity: 0;
+        overflow-x: hidden;
+        width: 0;
+      }
 
-    &:hover {
-      filter: brightness(0.8);
+      span {
+        opacity: 1;
+        overflow-x: visible;
+        width: auto;
+      }
     }
-  }
-
-  &.active {
-    width: 250px;
   }
 `

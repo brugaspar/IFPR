@@ -1,33 +1,16 @@
-import { FaBars, FaSignOutAlt } from "react-icons/fa"
-
-import { useAuth } from "../../hooks/useAuth"
-
+import { FaBars } from "react-icons/fa"
 import { Container } from "./styles"
 
 type HeaderProps = {
+  isSidebarOpen: boolean
   sidebarToggle: () => void
 }
 
-export function Header({ sidebarToggle }: HeaderProps) {
-  const { user, signOut } = useAuth()
-
+export function Header({ sidebarToggle, isSidebarOpen }: HeaderProps) {
   return (
-    <Container>
+    <Container isSidebarOpen={isSidebarOpen}>
       <button type="button" onClick={sidebarToggle}>
-        <FaBars
-          size={20}
-          color="var(--text-title)"
-        />
-      </button>
-
-      <img src="/images/logo.png" alt="Mark One" />
-
-      <button type="button" onClick={signOut}>
-        <span>Olá, <strong>{user?.name}</strong></span>
-        <FaSignOutAlt
-          size={20}
-          color="var(--red)"
-        />
+        <FaBars />
       </button>
     </Container>
   )

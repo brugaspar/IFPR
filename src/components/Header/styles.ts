@@ -1,46 +1,33 @@
 import styled from "styled-components"
 
-export const Container = styled.div`
+type ContainerProps = {
+  isSidebarOpen: boolean
+}
+
+export const Container = styled.div<ContainerProps>`
+  position: fixed;
+  height: 6rem;
+  width: calc(100% - 5rem);
+  margin-left: ${props => props.isSidebarOpen ? "18rem" : "5rem"};
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
-  max-width: 1200px;
-  height: 8rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-
-  button:first-child {
-    position: absolute;
-    left: 2rem;
-  }
-
-  img {
-    width: 15rem;
-  }
+  transition: margin 0.5s ease;
 
   button {
-    display: flex;
-    align-items: center;
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
 
-    background: transparent;
     border: 0;
+    background: transparent;
 
-    transition: filter 0.2s;
-
-    span {
-      font-size: 1.25rem;
-      font-family: "Epilogue";
-      color: var(--text-title);
-      font-weight: 400;
-    }
+    color: var(--text-title);
 
     svg {
-      margin-left: 1rem;
-    }
-
-    &:hover {
-      filter: brightness(0.8);
+      font-size: 2rem;
     }
   }
 `

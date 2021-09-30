@@ -1,26 +1,38 @@
-import Link from "next/link"
-
+import { FaHome, FaStickyNote, FaTable, FaUsers } from "react-icons/fa"
 import { Container } from "./styles"
 
 type SidebarProps = {
-  visible: boolean
-  sidebarToggle: () => void
+  isSidebarOpen: boolean
 }
 
-export function Sidebar({ visible, sidebarToggle }: SidebarProps) {
+export function Sidebar({ isSidebarOpen }: SidebarProps) {
   return (
-    <Container className={visible ? "active" : ""}>
-      <button className="close-btn" onClick={sidebarToggle}>&times;</button>
-
-      <div className="content">
-        <Link href="/dashboard">
-          <a onClick={sidebarToggle}>Dashboard</a>
-        </Link>
-
-        <Link href="/users">
-          <a onClick={sidebarToggle}>Usuários</a>
-        </Link>
+    <Container className={isSidebarOpen ? "" : "close"}>
+      <div className="logo-container">
+        <img src="/images/logo.png" alt="Mark One" />
+        <span>MK</span>
       </div>
-    </Container>
+
+      <ul>
+        <li>
+          <FaHome />
+          <span>Dashboard</span>
+        </li>
+        <li>
+          <FaUsers />
+          <span>Usuários</span>
+          <ul>
+            <li>
+              <FaTable />
+              <span>Cadastro</span>
+            </li>
+            <li>
+              <FaStickyNote />
+              <span>Relatórios</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </Container >
   )
 }
