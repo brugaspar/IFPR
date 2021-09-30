@@ -1,33 +1,28 @@
 import "react-toastify/dist/ReactToastify.css"
 
+import Head from "next/head"
 import { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import { ToastContainer } from "react-toastify"
 
-import { Header } from "../components/Header"
-import { Sidebar } from "../components/Sidebar"
-
 import { AuthProvider } from "../contexts/AuthContext"
 
 import { GlobalStyle } from "../styles/globals"
-import { useState } from "react"
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-
-  function handleSidebarToggle() {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+  const showComponent = router.pathname !== "/" && router.pathname !== "/404"
 
   return (
     <AuthProvider>
-      {router.pathname !== "/" && router.pathname !== "/404" && (
-        <>
-          <Header isSidebarOpen={isSidebarOpen} sidebarToggle={handleSidebarToggle} />
-          <Sidebar isSidebarOpen={isSidebarOpen} />
-        </>
+      <Head>
+        <link rel="shortcut icon" href="/images/icon.png" type="image/png" />
+      </Head>
+
+      {showComponent && (
+        null
+        // Header/Sidebar
       )}
 
       <Component {...pageProps} />
