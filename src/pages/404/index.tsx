@@ -1,9 +1,9 @@
 import { useRouter } from "next/router"
 import Head from "next/head"
 
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth"
 
-import { Container } from "./styles";
+import { Container } from "./styles"
 
 export default function Custom404() {
   const router = useRouter()

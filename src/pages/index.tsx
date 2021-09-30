@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRef, useState, FormEvent } from "react"
-import { FaCheckSquare } from "react-icons/fa"
+import { BiCheckSquare, BiSquare } from "react-icons/bi"
 import { toast } from "react-toastify"
 
 import { Input } from "../components/Input"
@@ -50,7 +50,7 @@ export default function Home() {
       setLoading(false)
       toast.dismiss(id)
 
-      if (error.response.data.message) {
+      if (error.response?.data?.message) {
         if (Array.isArray(error.response.data.message)) {
           for (const message of error.response.data.message) {
             toast.error(message, { toastId: "error" })
@@ -118,12 +118,15 @@ export default function Home() {
               disabled={loading}
             >
               {checkbox ? (
-                <FaCheckSquare
-                  size={20}
+                <BiCheckSquare
+                  size={30}
                   color="var(--text-title)"
                 />
               ) : (
-                <span />
+                <BiSquare
+                  size={30}
+                  color="var(--text-title)"
+                />
               )}
 
               <h5>Manter conectado</h5>

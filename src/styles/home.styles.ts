@@ -92,13 +92,6 @@ export const Content = styled.div`
 
         transition: filter 0.2s;
 
-        span {
-          height: 1.45rem;
-          width: 1.45rem;
-          border-radius: 0.25rem;
-          border: 2px solid var(--text-title);
-        }
-
         h5 {
           font-weight: 400;
           font-size: 1rem;
