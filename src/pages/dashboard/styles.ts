@@ -11,7 +11,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  button {
+  button.sign-out {
     background: transparent;
     color: var(--text-title);
     font-size: 1.25rem;

@@ -45,15 +45,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const authenticated = !!user
 
   async function signIn({ username, password, keepConnected }: SignInProps) {
-    const { data: { user, token } } = await api.post("/users/authenticate", {
+    const {
+      data: { user, token },
+    } = await api.post("/users/authenticate", {
       username,
-      password
+      password,
     })
 
     const ONE_DAY = 60 * 60 * 24
 
     setCookie(undefined, "@mark-one:token", token, {
-      maxAge: keepConnected ? ONE_DAY : undefined
+      maxAge: keepConnected ? ONE_DAY : undefined,
     })
 
     setUser(user)
@@ -69,8 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     destroyCookie(null, "@mark-one:token", { path: "/" })
     api.defaults.headers["Authorization"] = undefined
 
-    new Promise(resolve => setTimeout(resolve, 500))
-      .then(() => setUser(null))
+    new Promise((resolve) => setTimeout(resolve, 500)).then(() => setUser(null))
   }
 
   async function loadData() {
@@ -95,7 +96,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         user,
         authenticated,
         signIn,
-        signOut
+        signOut,
       }}
     >
       {children}

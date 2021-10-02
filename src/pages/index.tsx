@@ -30,16 +30,17 @@ export default function Home() {
     setLoading(true)
 
     const id = toast.loading("Carregando", {
-      theme: "dark", style: {
-        background: "var(--green)"
-      }
+      theme: "dark",
+      style: {
+        background: "var(--green)",
+      },
     })
 
     try {
       await signIn({
         username: usernameRef.current.value,
         password: passwordRef.current.value,
-        keepConnected: checkbox
+        keepConnected: checkbox,
       })
 
       setLoading(false)
@@ -70,10 +71,7 @@ export default function Home() {
         <title>Mark One | Autenticação</title>
       </Head>
 
-      <img
-        src="/images/wave.png"
-        alt="Onda"
-      />
+      <img src="/images/wave.png" alt="Onda" />
 
       <Content>
         <div className="illustration">
@@ -82,8 +80,8 @@ export default function Home() {
           <img src="/images/illustration.png" alt="Trabalho em equipe" />
 
           <p>
-            O melhor para seus membros, ganhando
-            praticidade e controle no seu negócio
+            O melhor para seus membros, ganhando praticidade e controle no seu
+            negócio
           </p>
         </div>
 
@@ -118,21 +116,17 @@ export default function Home() {
               disabled={loading}
             >
               {checkbox ? (
-                <BiCheckSquare
-                  size={30}
-                  color="var(--text-title)"
-                />
+                <BiCheckSquare size={30} color="var(--text-title)" />
               ) : (
-                <BiSquare
-                  size={30}
-                  color="var(--text-title)"
-                />
+                <BiSquare size={30} color="var(--text-title)" />
               )}
 
               <h5>Manter conectado</h5>
             </button>
 
-            <button disabled={loading} type="submit">Entrar</button>
+            <button disabled={loading} type="submit">
+              Entrar
+            </button>
           </form>
         </div>
       </Content>
@@ -147,13 +141,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       redirect: {
         destination: "/dashboard",
-        permanent: false
-      }
+        permanent: false,
+      },
     }
   }
 
   return {
-    props: {
-    }
+    props: {},
   }
 }
