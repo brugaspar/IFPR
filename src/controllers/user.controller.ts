@@ -40,7 +40,7 @@ class UserController {
     }
 
     // TODO: implementar middleware de autenticação para enviar o usuário da requisição
-    const storedUser = await userRepository.store(user, "dc20ceb4-61f4-46ec-809e-380078a8a153")
+    const storedUser = await userRepository.store(user, process.env.ADMIN_ID || "ADMIN-ID") //? Substituir por request.userId
 
     return response.status(201).json(storedUser)
   }
