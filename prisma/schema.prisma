@@ -1,0 +1,41 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String
+  description String?
+
+  @@map("permission")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
+  password       String
+  username       String    @unique
+  permissions    Json
+  disabled       Boolean   @default(false)
+  disabledAt     DateTime? @map("disabled_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy String?   @map("last_disabled_by")
+  userDisabled   User?     @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
+  UserDisabled   User[]    @relation("UserToDisabled")
+  lastUpdatedBy  String    @map("last_updated_by")
+  userUpdated    User      @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
+  UserUpdated    User[]    @relation("UserToUpdated")
+  createdBy      String    @map("created_by")
+  usetCreated    User      @relation("UserToCreated", fields: [createdBy], references: [id])
+  UserCreated    User[]    @relation("UserToCreated")
+
+  @@map("user")
+}
