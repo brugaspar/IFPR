@@ -16,6 +16,7 @@ type RequestUser = {
 class UserController {
   async store(request: Request, response: Response) {
     const user: RequestUser = request.body
+    // TODO: implementar schema de validação dos campos enviados no body
 
     const userExists = await userRepository.findByUsername(user.username)
 
@@ -36,6 +37,7 @@ class UserController {
       user.permissions = user.permissions.filter((permission, index) => user.permissions.indexOf(permission) === index)
     }
 
+    // TODO: implementar middleware de autenticação para enviar o usuário da requisição
     const storedUser = await userRepository.store(user, "dc20ceb4-61f4-46ec-809e-380078a8a153")
 
     return response.status(201).json(storedUser)

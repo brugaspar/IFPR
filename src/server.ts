@@ -12,3 +12,6 @@ app.use("/api/v1", router)
 const port = process.env.PORT || 3000
 
 app.listen(port, () => console.log(`\nServer running on ${port}\n`))
+
+// TODO: criar arquivo app.ts, para separar a lógica do server.ts
+// TODO: implementar captura de erros automática com express-async-errors
