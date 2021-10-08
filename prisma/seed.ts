@@ -1,3 +1,4 @@
+import "dotenv/config"
 import { PrismaClient } from ".prisma/client"
 
 const prisma = new PrismaClient()
@@ -33,16 +34,18 @@ async function main() {
     ],
   })
 
+  const adminId = process.env.ADMIN_ID || "ADMIN-ID"
+
   await prisma.user.create({
     data: {
-      id: "dc20ceb4-61f4-46ec-809e-380078a8a153",
+      id: adminId,
       name: "Administrador",
       email: "admin@admin.com",
       password: "12345",
       permissions: ["USU_001", "USU_002", "USU_003", "USU_004"],
       username: "administrador",
-      createdBy: "dc20ceb4-61f4-46ec-809e-380078a8a153",
-      lastUpdatedBy: "dc20ceb4-61f4-46ec-809e-380078a8a153",
+      createdBy: adminId,
+      lastUpdatedBy: adminId,
     },
   })
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 
-import { verifyExistingPermissions } from "../helpers/verifyExistingPermissions"
+import { verifyExistingPermissions } from "../helpers/permissions.helper"
 
 import userRepository from "../repositories/user.repository"
 
@@ -34,7 +34,9 @@ class UserController {
     }
 
     if (user.permissions) {
-      user.permissions = user.permissions.filter((permission, index) => user.permissions.indexOf(permission) === index)
+      user.permissions = user.permissions.filter(
+        (permission, index) => user.permissions.indexOf(permission) === index
+      )
     }
 
     // TODO: implementar middleware de autenticação para enviar o usuário da requisição
