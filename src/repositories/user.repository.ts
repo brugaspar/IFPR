@@ -67,8 +67,12 @@ class UserRepository {
     return user
   }
 
-  async findAll() {
-    const users = await prisma.user.findMany()
+  async findAll(onlyEnabled: boolean) {
+    const users = await prisma.user.findMany({
+      where: {
+        disabled: onlyEnabled ? false : undefined,
+      },
+    })
 
     return users
   }

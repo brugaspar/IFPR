@@ -18,6 +18,10 @@ type RequestUser = {
   disabled: boolean
 }
 
+type FilterUser = {
+  onlyEnabled: boolean
+}
+
 class UserController {
   async store(request: Request, response: Response) {
     const user: RequestUser = request.body
@@ -76,7 +80,9 @@ class UserController {
   }
 
   async index(request: Request, response: Response) {
-    const users = await userRepository.findAll()
+    const { onlyEnabled = true }: FilterUser = request.body
+
+    const users = await userRepository.findAll(onlyEnabled)
 
     const parsedUsers = users.map((user) => {
       return {
