@@ -41,7 +41,7 @@ async function main() {
       id: adminId,
       name: "Administrador",
       email: "admin@admin.com",
-      password: "12345",
+      password: "$2a$10$7HEUt9Y6r6.xqqsOdqbFl.TEf9i7xtHdlgmA2EcmlgzY5XD9EWg2K", // admin@23646
       permissions: ["USU_001", "USU_002", "USU_003", "USU_004"],
       username: "administrador",
       createdBy: adminId,

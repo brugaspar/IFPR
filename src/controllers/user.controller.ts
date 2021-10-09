@@ -1,6 +1,11 @@
 import { Request, Response } from "express"
+import * as yup from "yup"
+
+import { AppError } from "../handlers/errors.handler"
+import { checkBodySchema } from "../handlers/schema.handler"
 
 import { verifyExistingPermissions } from "../helpers/permissions.helper"
+import { hashPassword } from "../helpers/hash.helper"
 
 import userRepository from "../repositories/user.repository"
 
@@ -16,12 +21,22 @@ type RequestUser = {
 class UserController {
   async store(request: Request, response: Response) {
     const user: RequestUser = request.body
-    // TODO: implementar schema de validação dos campos enviados no body
+
+    const schema = {
+      name: yup.string().required(),
+      email: yup.string().email().required(),
+      password: yup.string().required(),
+      username: yup.string().required(),
+      permissions: yup.array(),
+      disabled: yup.boolean(),
+    }
+
+    await checkBodySchema(schema, request.body)
 
     const userExists = await userRepository.findByUsername(user.username)
 
     if (userExists) {
-      return response.status(400).json({ message: "Usuário já existe" })
+      throw new AppError("Usuário já existe")
     }
 
     const nonexistentPermissions = await verifyExistingPermissions(user.permissions)
@@ -39,8 +54,11 @@ class UserController {
       )
     }
 
-    // TODO: implementar middleware de autenticação para enviar o usuário da requisição
-    const storedUser = await userRepository.store(user, process.env.ADMIN_ID || "ADMIN-ID") //? Substituir por request.userId
+    const hashedPassword = await hashPassword(user.password)
+
+    user.password = hashedPassword
+
+    const storedUser = await userRepository.store(user, request.userId)
 
     return response.status(201).json(storedUser)
   }
