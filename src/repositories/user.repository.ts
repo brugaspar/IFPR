@@ -46,6 +46,32 @@ class UserRepository {
 
     return user
   }
+
+  async findByEmail(email: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    return user
+  }
+
+  async findById(id: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    return user
+  }
+
+  async findAll() {
+    const users = await prisma.user.findMany()
+
+    return users
+  }
 }
 
 export default new UserRepository()

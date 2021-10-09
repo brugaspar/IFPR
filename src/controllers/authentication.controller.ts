@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
+import * as yup from "yup"
 
 import { AppError } from "../handlers/errors.handler"
+import { checkBodySchema } from "../handlers/schema.handler"
 
 import { comparePassword } from "../helpers/hash.helper"
 import { generateToken } from "../helpers/token.helper"
@@ -15,6 +17,13 @@ type RequestAuthentication = {
 class AuthenticationController {
   async authenticate(request: Request, response: Response) {
     const { username, password }: RequestAuthentication = request.body
+
+    const schema = {
+      username: yup.string().required("Nome de usuário é obrigatório"),
+      password: yup.string().required("Senha é obrigatória"),
+    }
+
+    await checkBodySchema(schema, request.body)
 
     const user = await userRepository.findByUsername(username)
 

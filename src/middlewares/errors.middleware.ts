@@ -12,7 +12,13 @@ export function errorsMiddleware(error: Error, request: Request, response: Respo
 
   if (error.message.match(/invalid signature/gi)) {
     return response.status(401).json({
-      message: "Token JWT inválido, tente novamente",
+      message: "Token inválido, tente novamente",
+    })
+  }
+
+  if (error.message.match(/invalid token/gi)) {
+    return response.status(401).json({
+      message: "Token inválido, tente novamente",
     })
   }
 
