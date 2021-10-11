@@ -1,4 +1,6 @@
 import { PrismaClient } from ".prisma/client"
+import { getDisabledInfo } from "../helpers/disabled.helper"
+import logRepository from "./log.repository"
 
 type User = {
   name: string
@@ -9,19 +11,19 @@ type User = {
   disabled: boolean
 }
 
+type UpdateUserProps = {
+  user: User
+  requestUserId: string
+  userId: string
+}
+
 const prisma = new PrismaClient()
 
 class UserRepository {
   async store(user: User, requestUserId: string) {
-    let disabledAt = null
-    let lastDisabledBy = null
+    const { disabledAt, lastDisabledBy } = getDisabledInfo(user.disabled, requestUserId)
 
-    if (user.disabled) {
-      disabledAt = new Date()
-      lastDisabledBy = requestUserId
-    }
-
-    const id = await prisma.user.create({
+    const { id } = await prisma.user.create({
       data: {
         ...user,
         createdBy: requestUserId,
@@ -32,6 +34,13 @@ class UserRepository {
       select: {
         id: true,
       },
+    })
+
+    await logRepository.store("user", {
+      action: "insert",
+      description: "Registro incluído por usuário",
+      referenceId: id,
+      userId: requestUserId,
     })
 
     return id
@@ -75,6 +84,38 @@ class UserRepository {
     })
 
     return users
+  }
+
+  async update({ user, requestUserId, userId }: UpdateUserProps) {
+    const { createdBy, disabledAt, lastDisabledBy, lastUpdatedBy } = getDisabledInfo(
+      user.disabled,
+      requestUserId
+    )
+
+    const { id } = await prisma.user.update({
+      data: {
+        ...user,
+        createdBy,
+        disabledAt,
+        lastDisabledBy,
+        lastUpdatedBy,
+      },
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    await logRepository.store("user", {
+      action: "update",
+      description: "Registro atualizado por usuário",
+      referenceId: id,
+      userId: requestUserId,
+    })
+
+    return id
   }
 }
 

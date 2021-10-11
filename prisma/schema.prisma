@@ -7,6 +7,35 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum LogAction {
+  insert
+  update
+  disable
+  sign_in_error
+}
+
+model Table {
+  id   String @id @default(uuid())
+  name String @unique
+  Log  Log[]
+
+  @@map("table")
+}
+
+model Log {
+  id          String    @id @default(uuid())
+  description String
+  action      LogAction
+  tableId     String    @map("table_id")
+  table       Table     @relation(fields: [tableId], references: [id])
+  referenceId String    @map("reference_id")
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("log")
+}
+
 model Permission {
   id          String  @id @default(uuid())
   name        String
@@ -34,8 +63,9 @@ model User {
   userUpdated    User      @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
   UserUpdated    User[]    @relation("UserToUpdated")
   createdBy      String    @map("created_by")
-  usetCreated    User      @relation("UserToCreated", fields: [createdBy], references: [id])
+  userCreated    User      @relation("UserToCreated", fields: [createdBy], references: [id])
   UserCreated    User[]    @relation("UserToCreated")
+  Log            Log[]
 
   @@map("user")
 }

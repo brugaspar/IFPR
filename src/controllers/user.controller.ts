@@ -43,9 +43,9 @@ class UserController {
       throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
     }
 
-    const userExists = await userRepository.findByUsername(user.username)
+    const usernameExists = await userRepository.findByUsername(user.username)
 
-    if (userExists) {
+    if (usernameExists) {
       throw new AppError("Nome de usuário já está em uso")
     }
 
@@ -55,16 +55,16 @@ class UserController {
       throw new AppError("E-mail já está em uso")
     }
 
-    const nonexistentPermissions = await verifyExistingPermissions(user.permissions)
-
-    if (nonexistentPermissions.length) {
-      return response.status(400).json({
-        message: "Uma ou mais permissões não existem",
-        nonexistentPermissions,
-      })
-    }
-
     if (user.permissions) {
+      const nonexistentPermissions = await verifyExistingPermissions(user.permissions)
+
+      if (nonexistentPermissions.length) {
+        return response.status(400).json({
+          message: "Uma ou mais permissões não existem",
+          nonexistentPermissions,
+        })
+      }
+
       user.permissions = user.permissions.filter(
         (permission, index) => user.permissions.indexOf(permission) === index
       )
@@ -76,11 +76,17 @@ class UserController {
 
     const storedUser = await userRepository.store(user, request.userId)
 
-    return response.status(201).json(storedUser)
+    return response.status(201).json({ id: storedUser })
   }
 
   async index(request: Request, response: Response) {
     const { onlyEnabled = true }: FilterUser = request.body
+
+    const schema = {
+      onlyEnabled: yup.boolean(),
+    }
+
+    await checkBodySchema(schema, request.body)
 
     const users = await userRepository.findAll(onlyEnabled)
 
@@ -105,6 +111,74 @@ class UserController {
     }
 
     return response.status(200).json(parsedUser)
+  }
+
+  async update(request: Request, response: Response) {
+    const user: RequestUser = request.body
+
+    const id = request.params.id
+
+    const schema = {
+      name: yup.string(),
+      email: yup.string().email(),
+      password: yup.string(),
+      username: yup.string(),
+      permissions: yup.array(),
+      disabled: yup.boolean(),
+    }
+
+    await checkBodySchema(schema, request.body)
+
+    const requestUserExists = await userRepository.findById(request.userId)
+
+    if (!requestUserExists) {
+      throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
+    }
+
+    if (user.username) {
+      const usernameExists = await userRepository.findByUsername(user.username)
+
+      if (usernameExists) {
+        throw new AppError("Nome de usuário já está em uso")
+      }
+    }
+
+    if (user.email) {
+      const emailExists = await userRepository.findByEmail(user.email)
+
+      if (emailExists) {
+        throw new AppError("E-mail já está em uso")
+      }
+    }
+
+    if (user.permissions) {
+      const nonexistentPermissions = await verifyExistingPermissions(user.permissions)
+
+      if (nonexistentPermissions.length) {
+        return response.status(400).json({
+          message: "Uma ou mais permissões não existem",
+          nonexistentPermissions,
+        })
+      }
+
+      user.permissions = user.permissions.filter(
+        (permission, index) => user.permissions.indexOf(permission) === index
+      )
+    }
+
+    if (user.password) {
+      const hashedPassword = await hashPassword(user.password)
+
+      user.password = hashedPassword
+    }
+
+    const updatedUser = await userRepository.update({
+      user,
+      requestUserId: request.userId,
+      userId: id,
+    })
+
+    return response.status(200).json({ id: updatedUser })
   }
 }
 

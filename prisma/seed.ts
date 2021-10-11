@@ -4,6 +4,10 @@ import { PrismaClient } from ".prisma/client"
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.permission.deleteMany()
+  await prisma.user.deleteMany()
+  await prisma.table.deleteMany()
+
   await prisma.permission.createMany({
     data: [
       {
@@ -47,6 +51,23 @@ async function main() {
       createdBy: adminId,
       lastUpdatedBy: adminId,
     },
+  })
+
+  await prisma.table.createMany({
+    data: [
+      {
+        name: "table",
+      },
+      {
+        name: "log",
+      },
+      {
+        name: "user",
+      },
+      {
+        name: "permission",
+      },
+    ],
   })
 }
 
