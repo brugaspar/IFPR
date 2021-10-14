@@ -69,3 +69,17 @@ model User {
 
   @@map("user")
 }
+
+model State {
+  id       Int    @id
+  name     String
+  initials String
+  City     City[]
+}
+
+model City {
+  id      Int    @id
+  name    String
+  stateId Int    @map("state_id")
+  state   State  @relation(fields: [stateId], references: [id])
+}

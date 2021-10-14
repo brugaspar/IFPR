@@ -2,190 +2,136 @@
   {
     "id" : 12,
     "name" : "Acre",
-    "initials" : "AC",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "AC"
   },
   {
     "id" : 27,
     "name" : "Alagoas",
-    "initials" : "AL",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "AL"
   },
   {
     "id" : 16,
     "name" : "Amapá",
-    "initials" : "AP",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "AP"
   },
   {
     "id" : 13,
     "name" : "Amazonas",
-    "initials" : "AM",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "AM"
   },
   {
     "id" : 29,
     "name" : "Bahia",
-    "initials" : "BA",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "BA"
   },
   {
     "id" : 23,
     "name" : "Ceará",
-    "initials" : "CE",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "CE"
   },
   {
     "id" : 53,
     "name" : "Distrito Federal",
-    "initials" : "DF",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "DF"
   },
   {
     "id" : 32,
     "name" : "Espírito Santo",
-    "initials" : "ES",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "ES"
   },
   {
     "id" : 52,
     "name" : "Goiás",
-    "initials" : "GO",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "GO"
   },
   {
     "id" : 21,
     "name" : "Maranhão",
-    "initials" : "MA",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "MA"
   },
   {
     "id" : 51,
     "name" : "Mato Grosso",
-    "initials" : "MT",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "MT"
   },
   {
     "id" : 50,
     "name" : "Mato Grosso do Sul",
-    "initials" : "MS",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "MS"
   },
   {
     "id" : 15,
     "name" : "Pará",
-    "initials" : "PA",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "PA"
   },
   {
     "id" : 25,
     "name" : "Paraíba",
-    "initials" : "PB",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "PB"
   },
   {
     "id" : 41,
     "name" : "Paraná",
-    "initials" : "PR",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "PR"
   },
   {
     "id" : 26,
     "name" : "Pernambuco",
-    "initials" : "PE",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "PE"
   },
   {
     "id" : 22,
     "name" : "Piauí",
-    "initials" : "PI",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "PI"
   },
   {
     "id" : 33,
     "name" : "Rio de Janeiro",
-    "initials" : "RJ",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "RJ"
   },
   {
     "id" : 24,
     "name" : "Rio Grande do Norte",
-    "initials" : "RN",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "RN"
   },
   {
     "id" : 43,
     "name" : "Rio Grande do Sul",
-    "initials" : "RS",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "RS"
   },
   {
     "id" : 11,
     "name" : "Rondônia",
-    "initials" : "RO",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "RO"
   },
   {
     "id" : 14,
     "name" : "Roraima",
-    "initials" : "RR",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "RR"
   },
   {
     "id" : 42,
     "name" : "Santa Catarina",
-    "initials" : "SC",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "SC"
   },
   {
     "id" : 35,
     "name" : "São Paulo",
-    "initials" : "SP",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "SP"
   },
   {
     "id" : 28,
     "name" : "Sergipe",
-    "initials" : "SE",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "SE"
   },
   {
     "id" : 17,
     "name" : "Tocantins",
-    "initials" : "TO",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "TO"
   },
   {
     "id" : 31,
     "name" : "Minas Gerais",
-    "initials" : "MG",
-    "created_at" : "2021-09-13T20:47:51.019Z",
-    "updated_at" : "2021-09-13T20:47:51.019Z"
+    "initials" : "MG"
   }
 ]

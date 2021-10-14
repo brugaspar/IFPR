@@ -1,6 +1,9 @@
 import "dotenv/config"
 import { PrismaClient } from ".prisma/client"
 
+import cities from "../tmp/cities.json"
+import states from "../tmp/states.json"
+
 const prisma = new PrismaClient()
 
 async function main() {
@@ -68,6 +71,14 @@ async function main() {
         name: "permission",
       },
     ],
+  })
+
+  await prisma.state.createMany({
+    data: states,
+  })
+
+  await prisma.city.createMany({
+    data: cities,
   })
 }
 
