@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 class TableRepository {
   async findByName(name: string) {
-    const id = await prisma.table.findUnique({
+    const id = await prisma.tables.findUnique({
       where: {
         name,
       },

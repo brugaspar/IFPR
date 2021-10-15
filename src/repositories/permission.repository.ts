@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 class PermissionRepository {
   async findAll() {
-    const permissions = await prisma.permission.findMany()
+    const permissions = await prisma.permissions.findMany()
 
     return permissions
   }

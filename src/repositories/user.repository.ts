@@ -1,5 +1,7 @@
 import { PrismaClient } from ".prisma/client"
+
 import { getDisabledInfo } from "../helpers/disabled.helper"
+
 import logRepository from "./log.repository"
 
 type User = {
@@ -23,7 +25,7 @@ class UserRepository {
   async store(user: User, requestUserId: string) {
     const { disabledAt, lastDisabledBy } = getDisabledInfo(user.disabled, requestUserId)
 
-    const { id } = await prisma.user.create({
+    const { id } = await prisma.users.create({
       data: {
         ...user,
         createdBy: requestUserId,
@@ -36,7 +38,7 @@ class UserRepository {
       },
     })
 
-    await logRepository.store("user", {
+    await logRepository.store("users", {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
@@ -47,7 +49,7 @@ class UserRepository {
   }
 
   async findByUsername(username: string) {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         username,
       },
@@ -57,7 +59,7 @@ class UserRepository {
   }
 
   async findByEmail(email: string) {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },
@@ -67,7 +69,7 @@ class UserRepository {
   }
 
   async findById(id: string) {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         id,
       },
@@ -77,7 +79,7 @@ class UserRepository {
   }
 
   async findAll(onlyEnabled: boolean) {
-    const users = await prisma.user.findMany({
+    const users = await prisma.users.findMany({
       where: {
         disabled: onlyEnabled ? false : undefined,
       },
@@ -92,7 +94,7 @@ class UserRepository {
       requestUserId
     )
 
-    const { id } = await prisma.user.update({
+    const { id } = await prisma.users.update({
       data: {
         ...user,
         createdBy,
@@ -108,7 +110,7 @@ class UserRepository {
       },
     })
 
-    await logRepository.store("user", {
+    await logRepository.store("users", {
       action: "update",
       description: "Registro atualizado por usuário",
       referenceId: id,
