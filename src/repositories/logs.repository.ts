@@ -8,7 +8,7 @@ type Log = {
   description: string
   action: Action
   referenceId: string
-  userId: string
+  userId?: string
 }
 
 const prisma = new PrismaClient()

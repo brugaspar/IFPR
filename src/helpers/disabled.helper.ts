@@ -4,6 +4,8 @@ export function getDisabledInfo(disabled: boolean, requestUserId: string) {
   const lastUpdatedBy = requestUserId === adminId ? undefined : requestUserId
   const createdBy = requestUserId === adminId ? undefined : requestUserId
 
+  const logUserId = requestUserId === adminId ? undefined : requestUserId
+
   let disabledAt = null
   let lastDisabledBy = undefined
 
@@ -14,5 +16,5 @@ export function getDisabledInfo(disabled: boolean, requestUserId: string) {
     lastDisabledBy = requestUserId === adminId ? undefined : requestUserId
   }
 
-  return { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy }
+  return { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId }
 }

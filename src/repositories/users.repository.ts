@@ -23,13 +23,16 @@ const prisma = new PrismaClient()
 
 class UsersRepository {
   async store(user: User, requestUserId: string) {
-    const { disabledAt, lastDisabledBy } = getDisabledInfo(user.disabled, requestUserId)
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(
+      user.disabled,
+      requestUserId
+    )
 
     const { id } = await prisma.users.create({
       data: {
         ...user,
-        createdBy: requestUserId,
-        lastUpdatedBy: requestUserId,
+        createdBy,
+        lastUpdatedBy,
         disabledAt,
         lastDisabledBy,
       },
@@ -42,7 +45,7 @@ class UsersRepository {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
-      userId: requestUserId,
+      userId: logUserId,
     })
 
     return id
@@ -89,7 +92,7 @@ class UsersRepository {
   }
 
   async update({ user, requestUserId, userId }: UpdateUserProps) {
-    const { createdBy, disabledAt, lastDisabledBy, lastUpdatedBy } = getDisabledInfo(
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(
       user.disabled,
       requestUserId
     )
@@ -97,7 +100,6 @@ class UsersRepository {
     const { id } = await prisma.users.update({
       data: {
         ...user,
-        createdBy,
         disabledAt,
         lastDisabledBy,
         lastUpdatedBy,
@@ -114,7 +116,7 @@ class UsersRepository {
       action: "update",
       description: "Registro atualizado por usuário",
       referenceId: id,
-      userId: requestUserId,
+      userId: logUserId,
     })
 
     return id
