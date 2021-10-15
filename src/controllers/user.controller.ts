@@ -105,6 +105,10 @@ class UserController {
 
     const user = await userRepository.findById(id)
 
+    if (!user) {
+      throw new AppError("Usuário não encontrado")
+    }
+
     const parsedUser = {
       ...user,
       password: undefined,

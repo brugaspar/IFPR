@@ -35,7 +35,7 @@ class AuthenticationController {
     const matchPasswords = await comparePassword(password, user.password)
 
     if (!matchPasswords) {
-      await logRepository.store("user", {
+      await logRepository.store("users", {
         action: "sign_in_error",
         description: "Dados incorretos na autenticação do usuário",
         referenceId: user.id,
