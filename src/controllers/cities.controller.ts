@@ -1,16 +1,16 @@
 import { Request, Response } from "express"
 
-import cityRepository from "../repositories/city.repository"
+import citiesRepository from "../repositories/cities.repository"
 
 type FilterCity = {
   search: string
 }
 
-class CityController {
+class CitiesController {
   async index(request: Request, response: Response) {
     const { search }: FilterCity = request.query as any
 
-    const cities = await cityRepository.findAll({
+    const cities = await citiesRepository.findAll({
       search,
     })
 
@@ -18,4 +18,4 @@ class CityController {
   }
 }
 
-export default new CityController()
+export default new CitiesController()

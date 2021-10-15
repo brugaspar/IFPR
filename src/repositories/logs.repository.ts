@@ -1,6 +1,6 @@
 import { PrismaClient } from ".prisma/client"
 
-import tableRepository from "./table.repository"
+import tablesRepository from "./tables.repository"
 
 type Action = "insert" | "update" | "disable" | "sign_in_error"
 
@@ -13,9 +13,9 @@ type Log = {
 
 const prisma = new PrismaClient()
 
-class LogRepository {
+class LogsRepository {
   async store(tableName: string, log: Log) {
-    const table = await tableRepository.findByName(tableName)
+    const table = await tablesRepository.findByName(tableName)
 
     if (!table) {
       throw new Error(`Tabela inexistente: ${tableName}`)
@@ -30,4 +30,4 @@ class LogRepository {
   }
 }
 
-export default new LogRepository()
+export default new LogsRepository()

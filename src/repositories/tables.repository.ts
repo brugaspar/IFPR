@@ -2,7 +2,7 @@ import { PrismaClient } from ".prisma/client"
 
 const prisma = new PrismaClient()
 
-class TableRepository {
+class TablesRepository {
   async findByName(name: string) {
     const id = await prisma.tables.findUnique({
       where: {
@@ -17,4 +17,4 @@ class TableRepository {
   }
 }
 
-export default new TableRepository()
+export default new TablesRepository()

@@ -7,7 +7,7 @@ import { checkBodySchema } from "../handlers/schema.handler"
 import { verifyExistingPermissions } from "../helpers/permissions.helper"
 import { hashPassword } from "../helpers/hash.helper"
 
-import userRepository from "../repositories/user.repository"
+import usersRepository from "../repositories/users.repository"
 
 type RequestUser = {
   name: string
@@ -37,19 +37,19 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
-    const requestUserExists = await userRepository.findById(request.userId)
+    const requestUserExists = await usersRepository.findById(request.userId)
 
     if (!requestUserExists) {
       throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
     }
 
-    const usernameExists = await userRepository.findByUsername(user.username)
+    const usernameExists = await usersRepository.findByUsername(user.username)
 
     if (usernameExists) {
       throw new AppError("Nome de usuário já está em uso")
     }
 
-    const emailExists = await userRepository.findByEmail(user.email)
+    const emailExists = await usersRepository.findByEmail(user.email)
 
     if (emailExists) {
       throw new AppError("E-mail já está em uso")
@@ -74,7 +74,7 @@ class UserController {
 
     user.password = hashedPassword
 
-    const storedUser = await userRepository.store(user, request.userId)
+    const storedUser = await usersRepository.store(user, request.userId)
 
     return response.status(201).json({ id: storedUser })
   }
@@ -88,7 +88,7 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
-    const users = await userRepository.findAll(onlyEnabled)
+    const users = await usersRepository.findAll(onlyEnabled)
 
     const parsedUsers = users.map((user) => {
       return {
@@ -103,7 +103,7 @@ class UserController {
   async show(request: Request, response: Response) {
     const id = request.params.id
 
-    const user = await userRepository.findById(id)
+    const user = await usersRepository.findById(id)
 
     if (!user) {
       throw new AppError("Usuário não encontrado")
@@ -133,14 +133,14 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
-    const requestUserExists = await userRepository.findById(request.userId)
+    const requestUserExists = await usersRepository.findById(request.userId)
 
     if (!requestUserExists) {
       throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
     }
 
     if (user.username) {
-      const usernameExists = await userRepository.findByUsername(user.username)
+      const usernameExists = await usersRepository.findByUsername(user.username)
 
       if (usernameExists) {
         throw new AppError("Nome de usuário já está em uso")
@@ -148,7 +148,7 @@ class UserController {
     }
 
     if (user.email) {
-      const emailExists = await userRepository.findByEmail(user.email)
+      const emailExists = await usersRepository.findByEmail(user.email)
 
       if (emailExists) {
         throw new AppError("E-mail já está em uso")
@@ -176,7 +176,7 @@ class UserController {
       user.password = hashedPassword
     }
 
-    const updatedUser = await userRepository.update({
+    const updatedUser = await usersRepository.update({
       user,
       requestUserId: request.userId,
       userId: id,

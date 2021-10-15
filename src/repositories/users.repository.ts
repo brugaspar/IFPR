@@ -2,7 +2,7 @@ import { PrismaClient } from ".prisma/client"
 
 import { getDisabledInfo } from "../helpers/disabled.helper"
 
-import logRepository from "./log.repository"
+import logsRepository from "./logs.repository"
 
 type User = {
   name: string
@@ -21,7 +21,7 @@ type UpdateUserProps = {
 
 const prisma = new PrismaClient()
 
-class UserRepository {
+class UsersRepository {
   async store(user: User, requestUserId: string) {
     const { disabledAt, lastDisabledBy } = getDisabledInfo(user.disabled, requestUserId)
 
@@ -38,7 +38,7 @@ class UserRepository {
       },
     })
 
-    await logRepository.store("users", {
+    await logsRepository.store("users", {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
@@ -110,7 +110,7 @@ class UserRepository {
       },
     })
 
-    await logRepository.store("users", {
+    await logsRepository.store("users", {
       action: "update",
       description: "Registro atualizado por usuário",
       referenceId: id,
@@ -121,4 +121,4 @@ class UserRepository {
   }
 }
 
-export default new UserRepository()
+export default new UsersRepository()

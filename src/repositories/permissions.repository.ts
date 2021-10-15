@@ -2,7 +2,7 @@ import { PrismaClient } from ".prisma/client"
 
 const prisma = new PrismaClient()
 
-class PermissionRepository {
+class PermissionsRepository {
   async findAll() {
     const permissions = await prisma.permissions.findMany()
 
@@ -10,4 +10,4 @@ class PermissionRepository {
   }
 }
 
-export default new PermissionRepository()
+export default new PermissionsRepository()

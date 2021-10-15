@@ -6,9 +6,9 @@ import { checkBodySchema } from "../handlers/schema.handler"
 
 import { comparePassword } from "../helpers/hash.helper"
 import { generateToken } from "../helpers/token.helper"
-import logRepository from "../repositories/log.repository"
 
-import userRepository from "../repositories/user.repository"
+import usersRepository from "../repositories/users.repository"
+import logsRepository from "../repositories/logs.repository"
 
 type RequestAuthentication = {
   username: string
@@ -26,7 +26,7 @@ class AuthenticationController {
 
     await checkBodySchema(schema, request.body)
 
-    const user = await userRepository.findByUsername(username)
+    const user = await usersRepository.findByUsername(username)
 
     if (!user) {
       throw new AppError("Usuário ou senha incorretos")
@@ -35,7 +35,7 @@ class AuthenticationController {
     const matchPasswords = await comparePassword(password, user.password)
 
     if (!matchPasswords) {
-      await logRepository.store("users", {
+      await logsRepository.store("users", {
         action: "sign_in_error",
         description: "Dados incorretos na autenticação do usuário",
         referenceId: user.id,

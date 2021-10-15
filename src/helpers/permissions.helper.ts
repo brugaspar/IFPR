@@ -1,7 +1,7 @@
-import permissionRepository from "../repositories/permission.repository"
+import permissionsRepository from "../repositories/permissions.repository"
 
 export async function verifyExistingPermissions(permissions: string[]) {
-  const storedPermissions = await permissionRepository.findAll()
+  const storedPermissions = await permissionsRepository.findAll()
 
   const nonexistentPermissions: string[] = []
 
