@@ -6,6 +6,7 @@ import { checkBodySchema } from "../handlers/schema.handler"
 
 import { verifyExistingPermissions } from "../helpers/permissions.helper"
 import { hashPassword } from "../helpers/hash.helper"
+import { checkRequestUser } from "../helpers/request.helper"
 
 import usersRepository from "../repositories/users.repository"
 
@@ -37,11 +38,7 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
-    const requestUserExists = await usersRepository.findById(request.userId)
-
-    if (!requestUserExists) {
-      throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
-    }
+    await checkRequestUser(request.userId)
 
     const usernameExists = await usersRepository.findByUsername(user.username)
 
@@ -133,11 +130,7 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
-    const requestUserExists = await usersRepository.findById(request.userId)
-
-    if (!requestUserExists) {
-      throw new AppError("Usuário não autenticado ou token inválido, tente novamente")
-    }
+    await checkRequestUser(request.userId)
 
     if (user.username) {
       const usernameExists = await usersRepository.findByUsername(user.username)

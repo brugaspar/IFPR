@@ -16,5 +16,8 @@
   },
   {
     "name": "cities"
+  },
+  {
+    "name": "members_plans"
   }
 ]

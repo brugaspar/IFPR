@@ -22,6 +22,12 @@ export function errorsMiddleware(error: Error, request: Request, response: Respo
     })
   }
 
+  if (error.message.match(/invalid algorithm/gi)) {
+    return response.status(401).json({
+      message: "Token inválido, tente novamente",
+    })
+  }
+
   saveError(error)
 
   return response.status(500).json({

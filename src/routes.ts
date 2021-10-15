@@ -6,6 +6,7 @@ import authenticationController from "./controllers/authentication.controller"
 import userController from "./controllers/users.controller"
 import cityController from "./controllers/cities.controller"
 import permissionsController from "./controllers/permissions.controller"
+import plansController from "./controllers/plans.controller"
 
 const router = Router()
 
@@ -19,5 +20,10 @@ router.put("/users/:id", authenticationMiddleware, userController.update)
 router.get("/cities", authenticationMiddleware, cityController.index)
 
 router.get("/permissions", authenticationMiddleware, permissionsController.index)
+
+router.post("/plans", authenticationMiddleware, plansController.store)
+router.get("/plans", authenticationMiddleware, plansController.index)
+router.get("/plans/:id", authenticationMiddleware, plansController.show)
+router.put("/plans/:id", authenticationMiddleware, plansController.update)
 
 export { router }

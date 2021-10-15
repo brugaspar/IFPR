@@ -35,15 +35,19 @@ model Users {
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at")
   lastDisabledBy String?   @map("last_disabled_by")
-  userDisabled   Users?    @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
-  UserDisabled   Users[]   @relation("UserToDisabled")
+  usersDisabled  Users?    @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
+  UsersDisabled  Users[]   @relation("UserToDisabled")
   lastUpdatedBy  String    @map("last_updated_by")
-  userUpdated    Users     @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
-  UserUpdated    Users[]   @relation("UserToUpdated")
+  usersUpdated   Users     @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
+  UsersUpdated   Users[]   @relation("UserToUpdated")
   createdBy      String    @map("created_by")
-  userCreated    Users     @relation("UserToCreated", fields: [createdBy], references: [id])
-  UserCreated    Users[]   @relation("UserToCreated")
+  usersCreated   Users     @relation("UserToCreated", fields: [createdBy], references: [id])
+  UsersCreated   Users[]   @relation("UserToCreated")
   Log            Logs[]
+  PlansDisabled  Plans[]   @relation("PlanToDisabled")
+  PlansUpdated   Plans[]   @relation("PlanToUpdated")
+  PlansCreated   Plans[]   @relation("PlanToCreated")
+
 
   @@map("users")
 }
@@ -74,7 +78,7 @@ model States {
   id       Int      @id
   name     String
   initials String
-  City     Cities[]
+  Cities   Cities[]
 
   @@map("states")
 }
@@ -86,4 +90,29 @@ model Cities {
   state   States @relation(fields: [stateId], references: [id])
 
   @@map("cities")
+}
+
+model Plans {
+  id                    String    @id @default(uuid())
+  name                  String
+  description           String?
+  value                 Float
+  renewValue            Float     @map("renew_value")
+  gunTargetDiscount     Float     @map("gun_target_discount")
+  courseDiscount        Float     @map("course_discount")
+  shootingDrillsPerYear Int       @map("shooting_drills_per_year")
+  gunExemption          Boolean   @map("gun_exemption")
+  targetExemption       Boolean   @map("target_exemption")
+  disabled              Boolean   @default(false)
+  disabledAt            DateTime? @map("disabled_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy        String?   @map("last_disabled_by")
+  usersDisabled         Users?    @relation("PlanToDisabled", fields: [lastDisabledBy], references: [id])
+  lastUpdatedBy         String    @map("last_updated_by")
+  usersUpdated          Users     @relation("PlanToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy             String    @map("created_by")
+  usersCreated          Users     @relation("PlanToCreated", fields: [createdBy], references: [id])
+
+  @@map("members_plans")
 }

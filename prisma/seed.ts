@@ -8,41 +8,39 @@ import states from "./data/states.json"
 
 const prisma = new PrismaClient()
 
-async function insertTables() {
+async function deleteFromAllTables() {
+  await prisma.users.deleteMany()
+  await prisma.cities.deleteMany()
+  await prisma.states.deleteMany()
+  await prisma.permissions.deleteMany()
   await prisma.tables.deleteMany()
+}
 
+async function insertTables() {
   await prisma.tables.createMany({
     data: tables,
   })
 }
 
 async function insertPermissions() {
-  await prisma.permissions.deleteMany()
-
   await prisma.permissions.createMany({
     data: permissions,
   })
 }
 
 async function insertStates() {
-  await prisma.states.deleteMany()
-
   await prisma.states.createMany({
     data: states,
   })
 }
 
 async function insertCities() {
-  await prisma.cities.deleteMany()
-
   await prisma.cities.createMany({
     data: cities,
   })
 }
 
 async function insertAdminUser() {
-  await prisma.users.deleteMany()
-
   const adminId = process.env.ADMIN_ID || "ADMIN-ID"
 
   await prisma.users.create({
@@ -60,6 +58,8 @@ async function insertAdminUser() {
 }
 
 async function insertSeedData() {
+  await deleteFromAllTables()
+
   await insertTables()
   await insertPermissions()
   await insertStates()
