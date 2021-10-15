@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Permite alterar permissões",
+    "slug": "PER_001",
+    "description": "Permite a alteração das permissões dos usuários cadastrados"
+  },
+  {
+    "name": "Permite visualizar usuários",
+    "slug": "USU_001",
+    "description": "Permite a visualização da lista de usuários cadastrados"
+  },
+  {
+    "name": "Permite incluir usuários",
+    "slug": "USU_002",
+    "description": "Permite a inclusão de um novo usuário no sistema"
+  },
+  {
+    "name": "Permite editar usuários",
+    "slug": "USU_003",
+    "description": "Permite a edição dos dados cadastrais dos usuários"
+  },
+  {
+    "name": "Permite excluir usuários",
+    "slug": "USU_004",
+    "description": "Permite a exclusão de um usuário do sistema"
+  }
+]

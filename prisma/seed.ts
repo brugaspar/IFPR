@@ -1,49 +1,51 @@
 import "dotenv/config"
 import { PrismaClient } from ".prisma/client"
 
-import cities from "../tmp/cities.json"
-import states from "../tmp/states.json"
+import tables from "./data/tables.json"
+import permissions from "./data/permissions.json"
+import cities from "./data/cities.json"
+import states from "./data/states.json"
 
 const prisma = new PrismaClient()
 
-async function main() {
-  await prisma.permission.deleteMany()
-  await prisma.user.deleteMany()
-  await prisma.table.deleteMany()
+async function insertTables() {
+  await prisma.tables.deleteMany()
 
-  await prisma.permission.createMany({
-    data: [
-      {
-        name: "Permite alterar permissões",
-        slug: "PER_001",
-        description: "Permite a alteração das permissões dos usuários cadastrados",
-      },
-      {
-        name: "Permite visualizar usuários",
-        slug: "USU_001",
-        description: "Permite a visualização da lista de usuários cadastrados",
-      },
-      {
-        name: "Permite incluir usuários",
-        slug: "USU_002",
-        description: "Permite a inclusão de um novo usuário no sistema",
-      },
-      {
-        name: "Permite editar usuários",
-        slug: "USU_003",
-        description: "Permite a edição dos dados cadastrais dos usuários",
-      },
-      {
-        name: "Permite excluir usuários",
-        slug: "USU_004",
-        description: "Permite a exclusão de um usuário do sistema",
-      },
-    ],
+  await prisma.tables.createMany({
+    data: tables,
   })
+}
+
+async function insertPermissions() {
+  await prisma.permissions.deleteMany()
+
+  await prisma.permissions.createMany({
+    data: permissions,
+  })
+}
+
+async function insertStates() {
+  await prisma.states.deleteMany()
+
+  await prisma.states.createMany({
+    data: states,
+  })
+}
+
+async function insertCities() {
+  await prisma.cities.deleteMany()
+
+  await prisma.cities.createMany({
+    data: cities,
+  })
+}
+
+async function insertAdminUser() {
+  await prisma.users.deleteMany()
 
   const adminId = process.env.ADMIN_ID || "ADMIN-ID"
 
-  await prisma.user.create({
+  await prisma.users.create({
     data: {
       id: adminId,
       name: "Administrador",
@@ -55,31 +57,14 @@ async function main() {
       lastUpdatedBy: adminId,
     },
   })
-
-  await prisma.table.createMany({
-    data: [
-      {
-        name: "table",
-      },
-      {
-        name: "log",
-      },
-      {
-        name: "user",
-      },
-      {
-        name: "permission",
-      },
-    ],
-  })
-
-  await prisma.state.createMany({
-    data: states,
-  })
-
-  await prisma.city.createMany({
-    data: cities,
-  })
 }
 
-main()
+async function insertSeedData() {
+  await insertTables()
+  await insertPermissions()
+  await insertStates()
+  await insertCities()
+  await insertAdminUser()
+}
+
+insertSeedData()
