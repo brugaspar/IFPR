@@ -48,6 +48,8 @@ class PlansController {
   }
 
   async index(request: Request, response: Response) {
+    await checkRequestUser(request.userId)
+
     const plans = await plansRepository.findAll()
 
     return response.status(200).json(plans)
@@ -55,6 +57,8 @@ class PlansController {
 
   async show(request: Request, response: Response) {
     const id = request.params.id
+
+    await checkRequestUser(request.userId)
 
     const plan = await plansRepository.findById(id)
 

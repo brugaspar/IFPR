@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
 
+import { checkRequestUser } from "../helpers/request.helper"
+
 import citiesRepository from "../repositories/cities.repository"
 
 type FilterCity = {
@@ -9,6 +11,8 @@ type FilterCity = {
 class CitiesController {
   async index(request: Request, response: Response) {
     const { search }: FilterCity = request.query as any
+
+    await checkRequestUser(request.userId)
 
     const cities = await citiesRepository.findAll({
       search,

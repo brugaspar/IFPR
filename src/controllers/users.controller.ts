@@ -85,6 +85,8 @@ class UserController {
 
     await checkBodySchema(schema, request.body)
 
+    await checkRequestUser(request.userId)
+
     const users = await usersRepository.findAll(onlyEnabled)
 
     const parsedUsers = users.map((user) => {
@@ -99,6 +101,8 @@ class UserController {
 
   async show(request: Request, response: Response) {
     const id = request.params.id
+
+    await checkRequestUser(request.userId)
 
     const user = await usersRepository.findById(id)
 

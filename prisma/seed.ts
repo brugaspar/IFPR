@@ -13,6 +13,7 @@ async function deleteFromAllTables() {
   await prisma.cities.deleteMany()
   await prisma.states.deleteMany()
   await prisma.permissions.deleteMany()
+  await prisma.logs.deleteMany()
   await prisma.tables.deleteMany()
 }
 

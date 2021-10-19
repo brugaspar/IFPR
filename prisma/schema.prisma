@@ -35,21 +35,21 @@ model Users {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at")
   lastDisabledBy  String?   @map("last_disabled_by")
-  usersDisabled   Users?    @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
-  UsersDisabled   Users[]   @relation("UserToDisabled")
+  disabledByUser  Users?    @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
+  disabledUsers   Users[]   @relation("UserToDisabled")
   lastUpdatedBy   String?   @map("last_updated_by")
-  usersUpdated    Users?    @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
-  UsersUpdated    Users[]   @relation("UserToUpdated")
+  updatedByUser   Users?    @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
+  updatedUsers    Users[]   @relation("UserToUpdated")
   createdBy       String?   @map("created_by")
-  usersCreated    Users?    @relation("UserToCreated", fields: [createdBy], references: [id])
-  UsersCreated    Users[]   @relation("UserToCreated")
-  Log             Logs[]
-  PlansDisabled   Plans[]   @relation("PlanToDisabled")
-  PlansUpdated    Plans[]   @relation("PlanToUpdated")
-  PlansCreated    Plans[]   @relation("PlanToCreated")
-  MembersDisabled Members[] @relation("MemberToDisabled")
-  MembersUpdated  Members[] @relation("MemberToUpdated")
-  MembersCreated  Members[] @relation("MemberToCreated")
+  createdByUser   Users?    @relation("UserToCreated", fields: [createdBy], references: [id])
+  createdUsers    Users[]   @relation("UserToCreated")
+  logs            Logs[]
+  disabledPlans   Plans[]   @relation("PlanToDisabled")
+  updatedPlanes   Plans[]   @relation("PlanToUpdated")
+  createdPlans    Plans[]   @relation("PlanToCreated")
+  disabledMembers Members[] @relation("MemberToDisabled")
+  updatedMembers  Members[] @relation("MemberToUpdated")
+  createdMembers  Members[] @relation("MemberToCreated")
 
 
   @@map("users")
@@ -58,7 +58,7 @@ model Users {
 model Tables {
   id   String @id @default(uuid())
   name String @unique
-  Log  Logs[]
+  logs Logs[]
 
   @@map("general_tables")
 }
@@ -81,7 +81,7 @@ model States {
   id       Int      @id
   name     String
   initials String
-  Cities   Cities[]
+  cities   Cities[]
 
   @@map("states")
 }
@@ -91,7 +91,7 @@ model Cities {
   name    String
   stateId Int       @map("state_id")
   state   States    @relation(fields: [stateId], references: [id])
-  Members Members[]
+  members Members[]
 
   @@map("cities")
 }
@@ -112,12 +112,12 @@ model Plans {
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at")
   lastDisabledBy        String?   @map("last_disabled_by")
-  usersDisabled         Users?    @relation("PlanToDisabled", fields: [lastDisabledBy], references: [id])
+  disabledByUser        Users?    @relation("PlanToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy         String?   @map("last_updated_by")
-  usersUpdated          Users?    @relation("PlanToUpdated", fields: [lastUpdatedBy], references: [id])
+  updatedByUser         Users?    @relation("PlanToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy             String?   @map("created_by")
-  usersCreated          Users?    @relation("PlanToCreated", fields: [createdBy], references: [id])
-  Members               Members[]
+  createdByUser         Users?    @relation("PlanToCreated", fields: [createdBy], references: [id])
+  members               Members[]
 
   @@map("members_plans")
 }
@@ -154,7 +154,7 @@ model Members {
   issuingAuthority String        @map("issuing_authority")
   cpf              String        @unique
   naturalityCityId Int           @map("naturality_city_id")
-  Cities           Cities        @relation(fields: [naturalityCityId], references: [id])
+  city             Cities        @relation(fields: [naturalityCityId], references: [id])
   motherName       String?       @map("mother_name")
   fatherName       String?       @map("father_name")
   profession       String
@@ -174,13 +174,13 @@ model Members {
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @default(now()) @updatedAt @map("updated_at")
   lastDisabledBy   String?       @map("last_disabled_by")
-  usersDisabled    Users?        @relation("MemberToDisabled", fields: [lastDisabledBy], references: [id])
+  disabledByUser   Users?        @relation("MemberToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy    String?       @map("last_updated_by")
-  usersUpdated     Users?        @relation("MemberToUpdated", fields: [lastUpdatedBy], references: [id])
+  updatedByUser    Users?        @relation("MemberToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy        String?       @map("created_by")
-  usersCreated     Users?        @relation("MemberToCreated", fields: [createdBy], references: [id])
+  createdByUser    Users?        @relation("MemberToCreated", fields: [createdBy], references: [id])
   planId           String        @map("plan_id")
-  Plans            Plans         @relation(fields: [planId], references: [id])
+  plan             Plans         @relation(fields: [planId], references: [id])
 
   @@map("members")
 }
