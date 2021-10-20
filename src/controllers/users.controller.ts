@@ -104,7 +104,7 @@ class UserController {
 
     await checkRequestUser(request.userId)
 
-    const user = await usersRepository.findById(id)
+    const user = await usersRepository.findById(id === "token" ? request.userId : id)
 
     if (!user) {
       throw new AppError("Usuário não encontrado")
