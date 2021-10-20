@@ -1,7 +1,25 @@
 import styled from "styled-components"
-import { darken } from "polished"
+import { darken, transparentize } from "polished"
 
 export const Container = styled.div`
+  /* @keyframes fade-in {
+    from {
+      width: 5rem;
+    }
+    to {
+      width: 15rem;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      width: 4rem;
+    }
+    to {
+      width: 3.2rem;
+    }
+  } */
+
   position: fixed;
   top: 0;
   left: 0;
@@ -16,39 +34,134 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid ${darken(0.75, "#ffffff")};
-    margin: 2rem 0;
+
+    height: 7rem;
 
     img.small-icon {
       width: 3.2rem;
-      transition-delay: 0s;
       opacity: 0;
       pointer-events: none;
       display: none;
+      /* animation: fade-out 0.3s normal forwards ease-in-out; */
     }
 
     img.icon {
       width: 15rem;
-      margin-bottom: 1rem;
+      /* animation: fade-in 0.3s normal forwards ease-in-out; */
     }
   }
 
-  ul {
-    li {
-      display: flex;
-      align-items: center;
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: calc(100% - 7rem);
 
-      margin: 1rem 1rem;
+    padding: 2rem 0;
 
-      svg {
-        font-size: 1.25rem;
-        color: var(--text-title);
+    .list-container {
+      width: 100%;
+      overflow: auto;
+      overflow-x: hidden;
+      margin-bottom: 2rem;
+
+      &::-webkit-scrollbar {
+        width: 0.2rem;
       }
 
-      span {
-        font-size: 1.5rem;
-        margin-left: 1rem;
-        color: var(--text-title);
+      &::-webkit-scrollbar-track {
+        background: var(--background);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 2rem;
+        border: 3px solid var(--text-body);
+      }
+
+      ul {
+        padding: 0 1rem;
+
+        li {
+          display: flex;
+          align-items: center;
+          height: 3rem;
+
+          list-style: none;
+          background: var(--background);
+          border-radius: 0.25rem;
+
+          transition: background 0.2s;
+
+          cursor: pointer;
+
+          + li {
+            margin-top: 0.5rem;
+          }
+
+          .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.7rem;
+            font-size: 1.5rem;
+          }
+
+          .label {
+            font-size: 1.25rem;
+            margin-top: 0.2rem;
+            margin-left: 1rem;
+            white-space: nowrap;
+          }
+
+          &:hover {
+            background: ${darken(0.05, "#121214")};
+          }
+        }
+      }
+    }
+
+    .sign-out-container {
+      width: 100%;
+
+      ul {
+        padding: 0 1rem;
+
+        li {
+          display: flex;
+          align-items: center;
+          height: 3rem;
+
+          list-style: none;
+          background: rgba(255, 64, 64, 0.05);
+          border-radius: 0.25rem;
+
+          transition: background 0.2s;
+
+          cursor: pointer;
+
+          border: 1px solid ${transparentize(0.7, "#ff4040")};
+
+          .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.7rem;
+            font-size: 1.5rem;
+            color: var(--red);
+          }
+
+          .label {
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+            margin-left: 1rem;
+            white-space: nowrap;
+          }
+
+          &:hover {
+            background: ${transparentize(0.8, "#ff4040")};
+          }
+        }
       }
     }
   }
@@ -57,20 +170,29 @@ export const Container = styled.div`
     width: 5rem;
 
     .logo-container {
-      border: 1px solid transparent;
-
       img.small-icon {
-        transition-delay: 1s;
         opacity: 1;
         pointer-events: auto;
         display: inline;
       }
 
       img.icon {
-        transition-delay: 0s;
         opacity: 0;
         pointer-events: none;
         display: none;
+      }
+    }
+
+    .list-container,
+    .sign-out-container {
+      ul {
+        li {
+          .label {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+          }
+        }
       }
     }
   }

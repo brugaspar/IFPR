@@ -4,13 +4,22 @@ import Head from "next/head"
 import { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import { ToastContainer } from "react-toastify"
+import { useState } from "react"
 
 import { AuthProvider } from "../contexts/AuthContext"
 
 import { GlobalStyle } from "../styles/globals"
+import { Header } from "../components/Header"
+import { Sidebar } from "../components/Sidebar"
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
+
+  const [sidebar, setSidebar] = useState(false)
+
+  function handleSidebarToggle() {
+    setSidebar(!sidebar)
+  }
 
   const showComponent = router.pathname !== "/" && router.pathname !== "/404"
 
@@ -21,8 +30,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       </Head>
 
       {showComponent && (
-        null
-        // Header/Sidebar
+        <>
+          <Header toggleSidebar={handleSidebarToggle} isOpen={sidebar} />
+          <Sidebar isOpen={sidebar} />
+        </>
       )}
 
       <Component {...pageProps} />

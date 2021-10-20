@@ -47,7 +47,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signIn({ username, password, keepConnected }: SignInProps) {
     const {
       data: { user, token },
-    } = await api.post("/users/authenticate", {
+    } = await api.post("/authenticate", {
       username,
       password,
     })
