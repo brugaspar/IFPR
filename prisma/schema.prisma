@@ -11,6 +11,7 @@ enum LogAction {
   insert
   update
   disable
+  delete
   sign_in_error
 }
 
@@ -24,32 +25,34 @@ model Permissions {
 }
 
 model Users {
-  id              String    @id @default(uuid())
+  id              String             @id @default(uuid())
   name            String
-  email           String    @unique
+  email           String             @unique
   password        String
-  username        String    @unique
+  username        String             @unique
   permissions     Json
-  disabled        Boolean   @default(false)
-  disabledAt      DateTime? @map("disabled_at")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at")
-  lastDisabledBy  String?   @map("last_disabled_by")
-  disabledByUser  Users?    @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
-  disabledUsers   Users[]   @relation("UserToDisabled")
-  lastUpdatedBy   String?   @map("last_updated_by")
-  updatedByUser   Users?    @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
-  updatedUsers    Users[]   @relation("UserToUpdated")
-  createdBy       String?   @map("created_by")
-  createdByUser   Users?    @relation("UserToCreated", fields: [createdBy], references: [id])
-  createdUsers    Users[]   @relation("UserToCreated")
+  disabled        Boolean            @default(false)
+  disabledAt      DateTime?          @map("disabled_at")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy  String?            @map("last_disabled_by")
+  disabledByUser  Users?             @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
+  disabledUsers   Users[]            @relation("UserToDisabled")
+  lastUpdatedBy   String?            @map("last_updated_by")
+  updatedByUser   Users?             @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
+  updatedUsers    Users[]            @relation("UserToUpdated")
+  createdBy       String?            @map("created_by")
+  createdByUser   Users?             @relation("UserToCreated", fields: [createdBy], references: [id])
+  createdUsers    Users[]            @relation("UserToCreated")
   logs            Logs[]
-  disabledPlans   Plans[]   @relation("PlanToDisabled")
-  updatedPlanes   Plans[]   @relation("PlanToUpdated")
-  createdPlans    Plans[]   @relation("PlanToCreated")
-  disabledMembers Members[] @relation("MemberToDisabled")
-  updatedMembers  Members[] @relation("MemberToUpdated")
-  createdMembers  Members[] @relation("MemberToCreated")
+  disabledPlans   Plans[]            @relation("PlanToDisabled")
+  updatedPlanes   Plans[]            @relation("PlanToUpdated")
+  createdPlans    Plans[]            @relation("PlanToCreated")
+  disabledMembers Members[]          @relation("MemberToDisabled")
+  updatedMembers  Members[]          @relation("MemberToUpdated")
+  createdMembers  Members[]          @relation("MemberToCreated")
+  updatedAddress  MembersAddresses[] @relation("AddressToUpdated")
+  createdAddress  MembersAddresses[] @relation("AddressToCreated")
 
 
   @@map("users")
@@ -87,11 +90,12 @@ model States {
 }
 
 model Cities {
-  id      Int       @id
-  name    String
-  stateId Int       @map("state_id")
-  state   States    @relation(fields: [stateId], references: [id])
-  members Members[]
+  id               Int                @id
+  name             String
+  stateId          Int                @map("state_id")
+  state            States             @relation(fields: [stateId], references: [id])
+  members          Members[]
+  membersAddresses MembersAddresses[]
 
   @@map("cities")
 }
@@ -148,39 +152,61 @@ enum BloodTyping {
 }
 
 model Members {
-  id               String        @id @default(uuid())
+  id               String             @id @default(uuid())
   name             String
   rg               String
-  issuingAuthority String        @map("issuing_authority")
-  cpf              String        @unique
-  naturalityCityId Int           @map("naturality_city_id")
-  city             Cities        @relation(fields: [naturalityCityId], references: [id])
-  motherName       String?       @map("mother_name")
-  fatherName       String?       @map("father_name")
+  issuingAuthority String             @map("issuing_authority")
+  cpf              String             @unique
+  naturalityCityId Int                @map("naturality_city_id")
+  city             Cities             @relation(fields: [naturalityCityId], references: [id])
+  motherName       String?            @map("mother_name")
+  fatherName       String?            @map("father_name")
   profession       String
-  email            String?       @unique
+  email            String?            @unique
   phone            String?
-  cellPhone        String        @map("cell_phone")
-  crNumber         String        @map("cr_number")
-  issuedAt         DateTime      @map("issued_at")
-  birthDate        DateTime      @map("birth_date")
-  crValidity       DateTime      @map("cr_validity")
-  healthIssues     String?       @map("health_issues")
+  cellPhone        String             @map("cell_phone")
+  crNumber         String             @map("cr_number")
+  issuedAt         DateTime           @map("issued_at")
+  birthDate        DateTime           @map("birth_date")
+  crValidity       DateTime           @map("cr_validity")
+  healthIssues     String?            @map("health_issues")
   gender           Gender
-  maritalStatus    MaritalStatus @map("marital_status")
-  bloodTyping      BloodTyping   @map("blood_typing")
-  disabled         Boolean       @default(false)
-  disabledAt       DateTime?     @map("disabled_at")
-  createdAt        DateTime      @default(now()) @map("created_at")
-  updatedAt        DateTime      @default(now()) @updatedAt @map("updated_at")
-  lastDisabledBy   String?       @map("last_disabled_by")
-  disabledByUser   Users?        @relation("MemberToDisabled", fields: [lastDisabledBy], references: [id])
-  lastUpdatedBy    String?       @map("last_updated_by")
-  updatedByUser    Users?        @relation("MemberToUpdated", fields: [lastUpdatedBy], references: [id])
-  createdBy        String?       @map("created_by")
-  createdByUser    Users?        @relation("MemberToCreated", fields: [createdBy], references: [id])
-  planId           String        @map("plan_id")
-  plan             Plans         @relation(fields: [planId], references: [id])
+  maritalStatus    MaritalStatus      @map("marital_status")
+  bloodTyping      BloodTyping        @map("blood_typing")
+  disabled         Boolean            @default(false)
+  disabledAt       DateTime?          @map("disabled_at")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy   String?            @map("last_disabled_by")
+  disabledByUser   Users?             @relation("MemberToDisabled", fields: [lastDisabledBy], references: [id])
+  lastUpdatedBy    String?            @map("last_updated_by")
+  updatedByUser    Users?             @relation("MemberToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy        String?            @map("created_by")
+  createdByUser    Users?             @relation("MemberToCreated", fields: [createdBy], references: [id])
+  planId           String             @map("plan_id")
+  plan             Plans              @relation(fields: [planId], references: [id])
+  memberAddresses  MembersAddresses[]
 
   @@map("members")
+}
+
+model MembersAddresses {
+  id            String   @id @default(uuid())
+  street        String
+  neighbourhood String
+  number        String
+  complement    String?
+  zipcode       String
+  cityId        Int      @map("city_id")
+  memberId      String   @map("member_id")
+  member        Members  @relation(fields: [memberId], references: [id])
+  city          Cities   @relation(fields: [cityId], references: [id])
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  lastUpdatedBy String?  @map("last_updated_by")
+  updatedByUser Users?   @relation("AddressToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy     String?  @map("created_by")
+  createdByUser Users?   @relation("AddressToCreated", fields: [createdBy], references: [id])
+
+  @@map("members_addresses")
 }

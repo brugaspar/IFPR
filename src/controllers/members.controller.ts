@@ -8,6 +8,7 @@ import { AppError } from "../handlers/errors.handler"
 
 import membersRepository from "../repositories/members.repository"
 import plansRepository from "../repositories/plans.repository"
+import addressesRepository from "../repositories/addresses.repository"
 
 type Gender = "male" | "female" | "other"
 type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
@@ -43,6 +44,14 @@ type RequestMember = {
   bloodTyping: BloodTyping
   disabled: boolean
   planId: string
+  address: {
+    street: string
+    number: string
+    neighbourhood: string
+    complement: string
+    zipcode: string
+    cityId: number
+  }
 }
 
 type FilterMember = {
@@ -90,6 +99,14 @@ class MemberController {
         .required(),
       disabled: yup.string(),
       planId: yup.string().required(),
+      address: yup.object().shape({
+        street: yup.string().required("Endereço é obrigatório"),
+        number: yup.string().required("Número é obrigatório"),
+        neighbourhood: yup.string().required("Bairro é obrigatório"),
+        complement: yup.string(),
+        zipcode: yup.string().required("CEP é obrigatório"),
+        cityId: yup.number().required("Cidade é obrigatória"),
+      }),
     }
 
     await checkBodySchema(schema, request.body)
@@ -114,7 +131,17 @@ class MemberController {
     member.crValidity = new Date(member.crValidity).toISOString()
     member.birthDate = new Date(member.birthDate).toISOString()
 
-    const storedMember = await membersRepository.store(member, request.userId)
+    const { address, ...memberData } = member
+
+    const storedMember = await membersRepository.store(memberData, request.userId)
+
+    await addressesRepository.store(
+      {
+        ...address,
+        memberId: storedMember,
+      },
+      request.userId
+    )
 
     return response.status(201).json({ id: storedMember })
   }
@@ -187,6 +214,14 @@ class MemberController {
         ]),
       disabled: yup.string(),
       planId: yup.string(),
+      address: yup.object().shape({
+        street: yup.string(),
+        number: yup.string(),
+        neighbourhood: yup.string(),
+        complement: yup.string(),
+        zipcode: yup.string(),
+        cityId: yup.number(),
+      }),
     }
 
     await checkBodySchema(schema, request.body)
@@ -209,11 +244,48 @@ class MemberController {
       }
     }
 
+    const { address, ...memberData } = member
+
     const updatedMember = await membersRepository.update({
-      member,
+      member: memberData,
       requestUserId: request.userId,
       memberId: id,
     })
+
+    if (address) {
+      const addresses = await addressesRepository.findByZipcode(address.zipcode, updatedMember)
+
+      if (addresses.length) {
+        for (const storedAddress of addresses) {
+          if (storedAddress.number === String(address.number)) {
+            await addressesRepository.update({
+              address: {
+                ...address,
+                memberId: updatedMember,
+              },
+              requestUserId: request.userId,
+              addressId: storedAddress.id,
+            })
+          } else {
+            await addressesRepository.store(
+              {
+                ...address,
+                memberId: updatedMember,
+              },
+              request.userId
+            )
+          }
+        }
+      } else {
+        await addressesRepository.store(
+          {
+            ...address,
+            memberId: updatedMember,
+          },
+          request.userId
+        )
+      }
+    }
 
     return response.status(200).json({ id: updatedMember })
   }

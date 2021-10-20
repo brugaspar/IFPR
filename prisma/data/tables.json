@@ -22,5 +22,8 @@
   },
   {
     "name": "members"
+  },
+  {
+    "name": "members_addresses"
   }
 ]

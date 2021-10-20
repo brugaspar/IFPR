@@ -2,7 +2,7 @@ import { PrismaClient } from ".prisma/client"
 
 import tablesRepository from "./tables.repository"
 
-type Action = "insert" | "update" | "disable" | "sign_in_error"
+type Action = "insert" | "update" | "disable" | "sign_in_error" | "delete"
 
 type Log = {
   description: string

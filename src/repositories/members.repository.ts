@@ -109,6 +109,7 @@ class MembersRepository {
         lastUpdatedBy: true,
         planId: true,
         city: true,
+        memberAddresses: true,
       },
     })
 
