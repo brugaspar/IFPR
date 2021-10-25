@@ -126,6 +126,24 @@ export const Container = styled.div`
 
       ul {
         padding: 0 1rem;
+        display: flex;
+        align-items: center;
+
+        .user-info {
+          height: 3rem;
+        }
+
+        .name,
+        .username {
+          font-size: 1.2rem;
+          margin-top: 0.2rem;
+          margin-left: 1rem;
+          white-space: nowrap;
+        }
+
+        .username {
+          font-size: 1rem;
+        }
 
         li {
           display: flex;
@@ -149,13 +167,6 @@ export const Container = styled.div`
             padding: 0 0.7rem;
             font-size: 1.5rem;
             color: var(--red);
-          }
-
-          .label {
-            font-size: 1.2rem;
-            margin-top: 0.2rem;
-            margin-left: 1rem;
-            white-space: nowrap;
           }
 
           &:hover {
@@ -186,6 +197,13 @@ export const Container = styled.div`
     .list-container,
     .sign-out-container {
       ul {
+        .name,
+        .username {
+          display: none;
+          opacity: 0;
+          pointer-events: none;
+        }
+
         li {
           .label {
             display: none;

@@ -9,13 +9,9 @@ import { getAccessToken } from "../helpers/getAccessToken"
 type User = {
   id: string
   name: string
+  email: string
+  username: string
   permissions: string[]
-  disabled: boolean
-  disabled_at?: string
-  created_at: string
-  updated_at: string
-  last_disabled_by?: string
-  last_updated_by?: string
 }
 
 type SignInProps = {

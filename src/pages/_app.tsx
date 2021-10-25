@@ -32,7 +32,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       {showComponent && (
         <>
           <Header toggleSidebar={handleSidebarToggle} isOpen={sidebar} />
-          <Sidebar isOpen={sidebar} />
+          <Sidebar toggleSidebar={handleSidebarToggle} isOpen={sidebar} />
         </>
       )}
 
