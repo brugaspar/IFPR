@@ -36,6 +36,8 @@ export const AuthContext = createContext({} as AuthContextProps)
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter()
 
+  const [loading, setLoading] = useState(true)
+
   const [user, setUser] = useState<User | null>(null)
 
   const authenticated = !!user
@@ -80,11 +82,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setUser(data)
     }
+
+    setLoading(false)
   }
 
   useEffect(() => {
     loadData()
   }, [])
+
+  if (loading) {
+    return null
+  }
 
   return (
     <AuthContext.Provider

@@ -8,17 +8,44 @@ export const Container = styled.div`
 
   margin: 7rem 0 0 5rem;
 
-  .title {
-    font-size: 1.8rem;
-    font-weight: 400;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
 
-    margin-bottom: 2rem;
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 400;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      border: 0;
+      border-radius: 0.25rem;
+      padding: 0.6rem 0.8rem;
+
+      font-family: "Epilogue";
+      font-size: 1rem;
+      background: var(--green);
+      color: var(--background);
+
+      transition: filter 0.2s;
+
+      svg {
+        margin-right: 0.5rem;
+      }
+
+      &:hover {
+        filter: brightness(0.8);
+      }
+    }
 
     &::after {
       content: "";
       position: absolute;
-      top: 2.5rem;
+      top: 3rem;
       left: 0;
       width: 100%;
       border-bottom: 1px solid var(--text-body);
@@ -28,6 +55,7 @@ export const Container = styled.div`
   .scroll-div {
     overflow-x: auto;
     height: calc(100vh - 15rem);
+    margin-top: 2rem;
 
     &::-webkit-scrollbar {
       width: 0.2rem;
@@ -74,7 +102,11 @@ export const Container = styled.div`
     }
 
     tbody tr {
-      cursor: pointer;
+      /* cursor: pointer; */
+
+      td.edit {
+        cursor: pointer;
+      }
 
       transition: filter 0.2s;
 
