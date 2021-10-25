@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { transparentize } from "polished"
 
 export const Container = styled.div<{ isSidebarOpen: boolean }>`
   position: fixed;
@@ -11,6 +10,8 @@ export const Container = styled.div<{ isSidebarOpen: boolean }>`
   align-items: center;
   justify-content: space-between;
   top: 0;
+  background: var(--background);
+  z-index: 999;
 
   border-bottom: 1px solid var(--shape-dark);
 
@@ -29,6 +30,7 @@ export const Container = styled.div<{ isSidebarOpen: boolean }>`
 
     h1 {
       font-size: 1.25rem;
+      font-weight: 400;
     }
 
     svg {
