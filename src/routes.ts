@@ -1,4 +1,7 @@
 import { Router } from "express"
+import multer from "multer"
+
+import multerConfiguration from "./configuration/multer.configuration"
 
 import { authenticationMiddleware } from "./middlewares/authentication.middleware"
 
@@ -27,9 +30,20 @@ router.get("/plans", authenticationMiddleware, plansController.index)
 router.get("/plans/:id", authenticationMiddleware, plansController.show)
 router.put("/plans/:id", authenticationMiddleware, plansController.update)
 
-router.post("/members", authenticationMiddleware, membersController.store)
+router.post(
+  "/members",
+  authenticationMiddleware,
+  multer(multerConfiguration).array("files"),
+  membersController.store
+)
 router.get("/members", authenticationMiddleware, membersController.index)
+router.get("/members/documents", authenticationMiddleware, membersController.findDocuments)
 router.get("/members/:id", authenticationMiddleware, membersController.show)
-router.put("/members/:id", authenticationMiddleware, membersController.update)
+router.put(
+  "/members/:id",
+  authenticationMiddleware,
+  multer(multerConfiguration).array("files"),
+  membersController.update
+)
 
 export { router }

@@ -25,5 +25,8 @@
   },
   {
     "name": "members_addresses"
+  },
+  {
+    "name": "members_documents"
   }
 ]

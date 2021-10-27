@@ -9,6 +9,7 @@ import { AppError } from "../handlers/errors.handler"
 import membersRepository from "../repositories/members.repository"
 import plansRepository from "../repositories/plans.repository"
 import addressesRepository from "../repositories/addresses.repository"
+import documentsRepository from "../repositories/documents.repository"
 
 type Gender = "male" | "female" | "other"
 type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
@@ -58,9 +59,22 @@ type FilterMember = {
   onlyEnabled: boolean
 }
 
+type MemberDocument = {
+  fieldname: string
+  originalname: string
+  encoding: string
+  mimetype: string
+  key: string
+  destination: string
+  filename: string
+  path: string
+  size: number
+}
+
 class MemberController {
   async store(request: Request, response: Response) {
     const member: RequestMember = request.body
+    const memberDocuments: MemberDocument[] = request.files as any
 
     const schema = {
       name: yup.string().required(),
@@ -133,11 +147,32 @@ class MemberController {
 
     const { address, ...memberData } = member
 
-    const storedMember = await membersRepository.store(memberData, request.userId)
+    const storedMember = await membersRepository.store(
+      {
+        ...memberData,
+        naturalityCityId: Number(member.naturalityCityId),
+      },
+      request.userId
+    )
+
+    for (const document of memberDocuments) {
+      const documentData = {
+        name: document.key,
+        path: `http://localhost:3030/files/${document.key}`,
+      }
+
+      await documentsRepository.store(
+        {
+          ...documentData,
+          memberId: storedMember,
+        },
+        request.userId
+      )
+    }
 
     await addressesRepository.store(
       {
-        ...address,
+        ...JSON.parse(address as any as string),
         memberId: storedMember,
       },
       request.userId
@@ -288,6 +323,22 @@ class MemberController {
     }
 
     return response.status(200).json({ id: updatedMember })
+  }
+
+  async findDocuments(request: Request, response: Response) {
+    const { memberId }: { memberId: string } = request.body
+
+    const schema = {
+      memberId: yup.string().required(),
+    }
+
+    await checkBodySchema(schema, request.body)
+
+    await checkRequestUser(request.userId)
+
+    const memberDocuments = await membersRepository.findAllDocuments(memberId)
+
+    return response.status(200).json(memberDocuments)
   }
 }
 

@@ -53,6 +53,8 @@ model Users {
   createdMembers  Members[]          @relation("MemberToCreated")
   updatedAddress  MembersAddresses[] @relation("AddressToUpdated")
   createdAddress  MembersAddresses[] @relation("AddressToCreated")
+  updatedDocument MembersDocuments[] @relation("DocumentToUpdated")
+  createdDocument MembersDocuments[] @relation("DocumentToCreated")
 
 
   @@map("users")
@@ -186,6 +188,7 @@ model Members {
   planId           String             @map("plan_id")
   plan             Plans              @relation(fields: [planId], references: [id])
   memberAddresses  MembersAddresses[]
+  memberDocuments  MembersDocuments[]
 
   @@map("members")
 }
@@ -209,4 +212,21 @@ model MembersAddresses {
   createdByUser Users?   @relation("AddressToCreated", fields: [createdBy], references: [id])
 
   @@map("members_addresses")
+}
+
+model MembersDocuments {
+  id            String    @id @default(uuid())
+  name          String
+  path          String
+  validity      DateTime?
+  memberId      String    @map("member_id")
+  member        Members   @relation(fields: [memberId], references: [id])
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at")
+  lastUpdatedBy String?   @map("last_updated_by")
+  updatedByUser Users?    @relation("DocumentToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy     String?   @map("created_by")
+  createdByUser Users?    @relation("DocumentToCreated", fields: [createdBy], references: [id])
+
+  @@map("members_documents")
 }

@@ -193,6 +193,19 @@ class MembersRepository {
 
     return id
   }
+
+  async findAllDocuments(memberId: string) {
+    const memberDocuments = await prisma.members.findUnique({
+      where: {
+        id: memberId,
+      },
+      select: {
+        memberDocuments: true,
+      },
+    })
+
+    return memberDocuments
+  }
 }
 
 export default new MembersRepository()
