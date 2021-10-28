@@ -4,7 +4,6 @@ import "express-async-errors"
 import express from "express"
 import cors from "cors"
 import morgan from "morgan"
-import path from "path"
 
 import { router } from "./routes"
 

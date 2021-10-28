@@ -136,7 +136,13 @@ class UserController {
 
     await checkRequestUser(request.userId)
 
-    if (user.username) {
+    const usersExists = await usersRepository.findById(id)
+
+    if (!usersExists) {
+      throw new AppError("Usuário não encontrado")
+    }
+
+    if (user.username && user.username !== usersExists.username) {
       const usernameExists = await usersRepository.findByUsername(user.username)
 
       if (usernameExists) {
@@ -144,7 +150,7 @@ class UserController {
       }
     }
 
-    if (user.email) {
+    if (user.email && user.email !== usersExists.email) {
       const emailExists = await usersRepository.findByEmail(user.email)
 
       if (emailExists) {

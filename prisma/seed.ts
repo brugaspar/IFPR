@@ -10,6 +10,8 @@ const prisma = new PrismaClient()
 
 async function deleteFromAllTables() {
   await prisma.users.deleteMany()
+  await prisma.membersAddresses.deleteMany()
+  await prisma.membersDocuments.deleteMany()
   await prisma.members.deleteMany()
   await prisma.cities.deleteMany()
   await prisma.states.deleteMany()
@@ -51,7 +53,7 @@ async function insertAdminUser() {
       name: "Administrador",
       email: "admin@admin.com",
       password: "$2a$10$7HEUt9Y6r6.xqqsOdqbFl.TEf9i7xtHdlgmA2EcmlgzY5XD9EWg2K", // admin@23646
-      permissions: ["USU_001", "USU_002", "USU_003", "USU_004"],
+      permissions: ["list_users", "create_users", "edit_users", "disable_users"],
       username: "administrador",
       createdBy: adminId,
       lastUpdatedBy: adminId,
