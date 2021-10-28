@@ -27,8 +27,28 @@ async function insertTables() {
 }
 
 async function insertPermissions() {
+  const parsedPermissions = []
+
+  for (const permission of permissions) {
+    const table = await prisma.tables.findUnique({
+      where: {
+        name: permission.table,
+      },
+      select: {
+        id: true,
+      },
+    })
+
+    parsedPermissions.push({
+      name: permission.name,
+      slug: permission.slug,
+      description: permission.description,
+      tableId: table?.id || "",
+    })
+  }
+
   await prisma.permissions.createMany({
-    data: permissions,
+    data: parsedPermissions,
   })
 }
 

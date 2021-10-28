@@ -2,66 +2,79 @@
   {
     "name": "Alterar permissões",
     "slug": "alter_permissions",
-    "description": "Permite a alteração das permissões dos usuários cadastrados."
+    "description": "Permite a alteração das permissões dos usuários cadastrados.",
+    "table": "permissions"
   },
   {
     "name": "Visualizar usuários",
     "slug": "list_users",
-    "description": "Permite a visualização da lista de usuários cadastrados."
+    "description": "Permite a visualização da lista de usuários cadastrados.",
+    "table": "users"
   },
   {
     "name": "Incluir usuários",
     "slug": "create_users",
-    "description": "Permite a inclusão de um novo usuário no sistema."
+    "description": "Permite a inclusão de um novo usuário no sistema.",
+    "table": "users"
   },
   {
     "name": "Editar usuários",
     "slug": "edit_users",
-    "description": "Permite a edição dos dados cadastrais dos usuários."
+    "description": "Permite a edição dos dados cadastrais dos usuários.",
+    "table": "users"
   },
   {
     "name": "Ativar ou desativar usuários",
     "slug": "disable_users",
-    "description": "Permite ativar ou desativar o cadastro de um usuário do sistema."
+    "description": "Permite ativar ou desativar o cadastro de um usuário do sistema.",
+    "table": "users"
   },
   {
     "name": "Visualizar membros",
     "slug": "list_members",
-    "description": "Permite a visualização da lista de membros cadastrados."
+    "description": "Permite a visualização da lista de membros cadastrados.",
+    "table": "members"
   },
   {
     "name": "Incluir membros",
     "slug": "create_members",
-    "description": "Permite a inclusão de um novo membro no sistema."
+    "description": "Permite a inclusão de um novo membro no sistema.",
+    "table": "members"
   },
   {
     "name": "Editar membros",
     "slug": "edit_members",
-    "description": "Permite a edição dos dados cadastrais dos membros."
+    "description": "Permite a edição dos dados cadastrais dos membros.",
+    "table": "members"
   },
   {
     "name": "Ativar ou desativar membros",
     "slug": "disable_members",
-    "description": "Permite ativar ou desativar o cadastro de um membro do sistema."
+    "description": "Permite ativar ou desativar o cadastro de um membro do sistema.",
+    "table": "members"
   },
   {
     "name": "Visualizar planos",
     "slug": "list_plans",
-    "description": "Permite a visualização da lista de planos cadastrados."
+    "description": "Permite a visualização da lista de planos cadastrados.",
+    "table": "members_plans"
   },
   {
     "name": "Incluir planos",
     "slug": "create_plans",
-    "description": "Permite a inclusão de um novo plano no sistema."
+    "description": "Permite a inclusão de um novo plano no sistema.",
+    "table": "members_plans"
   },
   {
     "name": "Editar planos",
     "slug": "edit_plans",
-    "description": "Permite a edição dos dados cadastrais dos planos."
+    "description": "Permite a edição dos dados cadastrais dos planos.",
+    "table": "members_plans"
   },
   {
     "name": "Ativar ou desativar planos",
     "slug": "disable_plans",
-    "description": "Permite ativar ou desativar o cadastro de um plano do sistema."
+    "description": "Permite ativar ou desativar o cadastro de um plano do sistema.",
+    "table": "members_plans"
   }
 ]

@@ -19,6 +19,8 @@ model Permissions {
   id          String  @id @default(uuid())
   name        String
   slug        String
+  tableId     String  @map("table_id")
+  table       Tables  @relation(fields: [tableId], references: [id])
   description String?
 
   @@map("permissions")
@@ -61,9 +63,10 @@ model Users {
 }
 
 model Tables {
-  id   String @id @default(uuid())
-  name String @unique
-  logs Logs[]
+  id          String        @id @default(uuid())
+  name        String        @unique
+  logs        Logs[]
+  permissions Permissions[]
 
   @@map("general_tables")
 }
