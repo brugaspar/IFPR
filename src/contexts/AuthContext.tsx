@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 
 import { api } from "../services/api.service"
 
-import { getAccessToken } from "../helpers/getAccessToken"
+import { getAccessToken } from "../helpers/token.helper"
 
 type User = {
   id: string

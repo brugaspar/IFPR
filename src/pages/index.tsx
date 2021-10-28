@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { Input } from "../components/Input"
 
-import { getAccessToken } from "../helpers/getAccessToken"
+import { getAccessToken } from "../helpers/token.helper"
 import { useAuth } from "../hooks/useAuth"
 
 import { Container, Content } from "../styles/home.styles"
@@ -79,10 +79,7 @@ export default function Home() {
 
           <img src="/images/illustration.png" alt="Trabalho em equipe" />
 
-          <p>
-            O melhor para seus membros, ganhando praticidade e controle no seu
-            negócio
-          </p>
+          <p>O melhor para seus membros, ganhando praticidade e controle no seu negócio</p>
         </div>
 
         <div className="sign-in">
@@ -93,6 +90,7 @@ export default function Home() {
             <Input
               id="username"
               type="text"
+              autoFocus
               inputType="username"
               placeholder="Informe seu usuário"
               inputRef={usernameRef}
@@ -109,12 +107,7 @@ export default function Home() {
               disabled={loading}
             />
 
-            <button
-              type="button"
-              className="checkbox"
-              onClick={handleToggleCheckbox}
-              disabled={loading}
-            >
+            <button type="button" className="checkbox" onClick={handleToggleCheckbox} disabled={loading}>
               {checkbox ? (
                 <BiCheckSquare size={30} color="var(--text-title)" />
               ) : (

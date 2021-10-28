@@ -2,44 +2,14 @@ import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useEffect, useState } from "react"
 import { FaEdit, FaPlus } from "react-icons/fa"
+
 import { UserModal } from "../../components/UserModal"
 
-import { getAccessToken } from "../../helpers/getAccessToken"
+import { getAccessToken } from "../../helpers/token.helper"
 
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
-
-const data = [
-  {
-    name: "Administrador",
-    email: "admin@admin.com",
-    createdAt: "2021-10-01 10:40:02",
-    username: "administrador",
-    disabled: false,
-  },
-  {
-    name: "Bruno Gaspar",
-    email: "bruninhoogaspar@gmail.com",
-    createdAt: "2021-10-01 11:20:12",
-    username: "brugaspar",
-    disabled: false,
-  },
-  {
-    name: "Lucas Zorzan",
-    email: "lucaszorzan@gmail.com",
-    createdAt: "2021-10-05 15:42:47",
-    username: "lucas.zorzan",
-    disabled: false,
-  },
-  {
-    name: "Guilherme Locks",
-    email: "guilocks@gmail.com",
-    createdAt: "2021-10-20 11:23:32",
-    username: "guilherme.locks",
-    disabled: false,
-  },
-]
 
 type User = {
   id: string
@@ -52,7 +22,7 @@ type User = {
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([])
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [selectedUser, setSelectedUser] = useState<string | null>("")
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 
@@ -76,7 +46,7 @@ export default function Users() {
   }
 
   function handleEditUser(user: User) {
-    setSelectedUser(user)
+    setSelectedUser(user.id)
     handleOpenUserModal()
   }
 
@@ -128,7 +98,7 @@ export default function Users() {
         </table>
       </div>
 
-      <UserModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} user={selectedUser} />
+      <UserModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
     </Container>
   )
 }

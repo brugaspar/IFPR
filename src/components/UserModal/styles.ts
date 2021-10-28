@@ -29,13 +29,13 @@ export const Container = styled.div`
     input {
       width: 100%;
       height: 3rem;
-      background: var(--shape);
+      background: var(--shape-dark);
       border-radius: 0.25rem;
       border: 0;
       padding: 0 0.625rem;
 
       font-size: 1rem;
-      color: var(--background);
+      color: var(--text-title);
     }
 
     .close {
