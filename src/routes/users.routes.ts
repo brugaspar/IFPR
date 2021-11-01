@@ -10,26 +10,15 @@ const usersRouter = Router()
 
 usersRouter.post("/authenticate", authenticationController.authenticate)
 
-usersRouter.post(
-  "/users",
-  authenticationMiddleware,
-  permissionsMiddleware(["create_users", "list_users"]),
-  usersController.store
-)
+usersRouter.post("/users", authenticationMiddleware, permissionsMiddleware(["create_users", "list_users"]), usersController.store)
 
-usersRouter.get(
-  "/users",
-  authenticationMiddleware,
-  permissionsMiddleware(["list_users"]),
-  usersController.index
-)
+usersRouter.get("/users/permissions", authenticationMiddleware, usersController.findPermissions)
 
-usersRouter.get(
-  "/users/:id",
-  authenticationMiddleware,
-  permissionsMiddleware(["list_users", "edit_users"]),
-  usersController.show
-)
+usersRouter.get("/users/token", authenticationMiddleware, usersController.show)
+
+usersRouter.get("/users", authenticationMiddleware, permissionsMiddleware(["list_users"]), usersController.index)
+
+usersRouter.get("/users/:id", authenticationMiddleware, permissionsMiddleware(["list_users", "edit_users"]), usersController.show)
 
 usersRouter.put(
   "/users/:id",

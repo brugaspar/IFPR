@@ -49,6 +49,10 @@ class AuthenticationController {
       throw new AppError("Usuário ou senha incorretos")
     }
 
+    if (user.disabled) {
+      throw new AppError("Usuário está desativado, entre em contato com algum responsável")
+    }
+
     const matchPasswords = await comparePassword(password, user.password)
 
     if (!matchPasswords) {

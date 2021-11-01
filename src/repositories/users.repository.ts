@@ -23,10 +23,7 @@ const prisma = new PrismaClient()
 
 class UsersRepository {
   async store(user: User, requestUserId: string) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(
-      user.disabled,
-      requestUserId
-    )
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(user.disabled, requestUserId)
 
     const { id } = await prisma.users.create({
       data: {
@@ -86,20 +83,21 @@ class UsersRepository {
       where: {
         disabled: onlyEnabled ? false : undefined,
       },
+      include: {
+        disabledByUser: true,
+      },
     })
 
     return users
   }
 
   async update({ user, requestUserId, userId }: UpdateUserProps) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(
-      user.disabled,
-      requestUserId
-    )
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(user.disabled, requestUserId)
 
     const { id } = await prisma.users.update({
       data: {
         ...user,
+        password: user.password || undefined,
         disabledAt,
         lastDisabledBy,
         lastUpdatedBy,

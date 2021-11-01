@@ -3,7 +3,7 @@ import { PrismaClient } from ".prisma/client"
 const prisma = new PrismaClient()
 
 type FilterPermission = {
-  tableId: string
+  tableId?: string
 }
 
 class PermissionsRepository {

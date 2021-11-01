@@ -5,7 +5,7 @@ import { AppError } from "../handlers/errors.handler"
 import { checkBodySchema } from "../handlers/schema.handler"
 
 import { verifyExistingPermissions } from "../helpers/permissions.helper"
-import { hashPassword } from "../helpers/hash.helper"
+import { comparePassword, hashPassword } from "../helpers/hash.helper"
 import { checkRequestUser } from "../helpers/request.helper"
 
 import usersRepository from "../repositories/users.repository"
@@ -19,8 +19,8 @@ type RequestUser = {
   disabled: boolean
 }
 
-type FilterUser = {
-  onlyEnabled: boolean
+type RequestUpdateUser = RequestUser & {
+  newPassword?: string
 }
 
 class UserController {
@@ -62,9 +62,7 @@ class UserController {
         })
       }
 
-      user.permissions = user.permissions.filter(
-        (permission, index) => user.permissions.indexOf(permission) === index
-      )
+      user.permissions = user.permissions.filter((permission, index) => user.permissions.indexOf(permission) === index)
     }
 
     const hashedPassword = await hashPassword(user.password)
@@ -77,7 +75,7 @@ class UserController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true }: FilterUser = request.body
+    const { onlyEnabled = true } = request.query as any
 
     const schema = {
       onlyEnabled: yup.boolean(),
@@ -87,7 +85,7 @@ class UserController {
 
     await checkRequestUser(request.userId)
 
-    const users = await usersRepository.findAll(onlyEnabled)
+    const users = await usersRepository.findAll(JSON.parse(onlyEnabled))
 
     const parsedUsers = users.map((user) => {
       return {
@@ -104,7 +102,7 @@ class UserController {
 
     await checkRequestUser(request.userId)
 
-    const user = await usersRepository.findById(id === "token" ? request.userId : id)
+    const user = await usersRepository.findById(!id ? request.userId : id)
 
     if (!user) {
       throw new AppError("Usuário não encontrado")
@@ -118,8 +116,18 @@ class UserController {
     return response.status(200).json(parsedUser)
   }
 
+  async findPermissions(request: Request, response: Response) {
+    const user = await usersRepository.findById(request.userId)
+
+    if (!user) {
+      throw new AppError("Usuário não encontrado")
+    }
+
+    return response.status(200).json({ permissions: user.permissions })
+  }
+
   async update(request: Request, response: Response) {
-    const user: RequestUser = request.body
+    const user: RequestUpdateUser = request.body
 
     const id = request.params.id
 
@@ -158,6 +166,16 @@ class UserController {
       }
     }
 
+    if (user.newPassword) {
+      const matchPasswords = await comparePassword(user.password, usersExists.password)
+
+      if (!matchPasswords) {
+        throw new AppError("Senha atual não confere")
+      }
+
+      user.password = user.newPassword
+    }
+
     if (user.permissions) {
       const nonexistentPermissions = await verifyExistingPermissions(user.permissions)
 
@@ -168,9 +186,7 @@ class UserController {
         })
       }
 
-      user.permissions = user.permissions.filter(
-        (permission, index) => user.permissions.indexOf(permission) === index
-      )
+      user.permissions = user.permissions.filter((permission, index) => user.permissions.indexOf(permission) === index)
     }
 
     if (user.password) {
@@ -178,6 +194,8 @@ class UserController {
 
       user.password = hashedPassword
     }
+
+    delete user.newPassword
 
     const updatedUser = await usersRepository.update({
       user,

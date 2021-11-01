@@ -1,7 +1,9 @@
 import permissionsRepository from "../repositories/permissions.repository"
 
 export async function verifyExistingPermissions(permissions: string[]) {
-  const storedPermissions = await permissionsRepository.findAll()
+  const storedPermissions = await permissionsRepository.findAll({
+    tableId: undefined,
+  })
 
   const nonexistentPermissions: string[] = []
 
