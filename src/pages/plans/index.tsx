@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const userHasPermission = await verifyUserPermissions("list_plans", ctx)
+  const userHasPermission = await verifyUserPermissions("list_plans", [], ctx)
 
   if (!userHasPermission) {
     return {

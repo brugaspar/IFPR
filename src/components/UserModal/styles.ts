@@ -20,6 +20,10 @@ export const Container = styled.div`
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      + .row {
+        margin-top: 1rem;
+      }
     }
 
     input {
@@ -42,7 +46,6 @@ export const Container = styled.div`
 
       button {
         height: 3rem;
-        /* padding: 0 1rem; */
         width: 100%;
         border-radius: 0.25rem;
         font-size: 1rem;
@@ -52,8 +55,9 @@ export const Container = styled.div`
 
         transition: filter 0.2s;
 
-        border: 1px solid rgba(255, 0, 0, 0.2);
-        background: rgba(255, 0, 0, 0.05);
+        /* border: 1px solid rgba(255, 0, 0, 0.2); */
+        /* background: rgba(255, 0, 0, 0.05); */
+        border: 1px solid var(--text-title);
 
         + button {
           margin-left: 1rem;
@@ -90,12 +94,16 @@ export const RowContainer = styled.div<{ width?: number; align?: string }>`
     color: var(--text-title);
     font-size: 16px;
 
-    margin-top: 0.8rem;
+    margin-top: 1.85rem;
 
     transition: filter 0.2s;
 
     &:hover {
       filter: brightness(0.8);
     }
+  }
+
+  &.margin-top {
+    margin-top: 0.8rem;
   }
 `

@@ -3,6 +3,8 @@ import Head from "next/head"
 import { useEffect, useState } from "react"
 import { FaEdit, FaPlus } from "react-icons/fa"
 
+import { useAuth } from "../../hooks/useAuth"
+
 import { UserModal } from "../../components/UserModal"
 import { Checkbox } from "../../components/Checkbox"
 
@@ -27,6 +29,9 @@ type User = {
 
 export default function Users() {
   // const [reload, setReload] = useState(false)
+  const { user } = useAuth()
+
+  const userPermissions = user?.permissions || []
 
   const [users, setUsers] = useState<User[]>([])
   const [selectedUser, setSelectedUser] = useState<string | null>("")
@@ -71,10 +76,10 @@ export default function Users() {
   }
 
   async function verifyPermissions() {
-    const userHasCreateUsersPermission = await verifyUserPermissions("create_users")
+    const userHasCreateUsersPermission = await verifyUserPermissions("create_users", userPermissions)
     setCreateUserPermission(userHasCreateUsersPermission)
 
-    const userHasEditUsersPermission = await verifyUserPermissions("edit_users")
+    const userHasEditUsersPermission = await verifyUserPermissions("edit_users", userPermissions)
     setEditUserPermission(userHasEditUsersPermission)
   }
 
@@ -169,7 +174,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  const userHasPermission = await verifyUserPermissions("list_users", ctx)
+  const userHasPermission = await verifyUserPermissions("list_users", [], ctx)
 
   if (!userHasPermission) {
     return {

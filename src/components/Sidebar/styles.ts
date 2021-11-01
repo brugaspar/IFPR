@@ -81,7 +81,7 @@ export const Container = styled.div`
       }
 
       ul {
-        padding: 0 1rem;
+        padding: 0.5rem 1rem;
 
         .list-button {
           display: flex;

@@ -22,6 +22,10 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    &:focus {
+      box-shadow: 0 0 5px var(--green);
+    }
   }
 
   @media(max-width: 1080px) {
@@ -58,13 +62,13 @@ export const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
-  input:-webkit-autofill,
+  /* input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
       transition: background-color 5000s ease-in-out 0s;
       -webkit-text-fill-color: var(--text-title);
-  }
+  } */
 
   [disabled] {
     opacity: 0.6;

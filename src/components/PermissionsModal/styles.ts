@@ -18,6 +18,11 @@ export const Container = styled.div`
 
       padding: 0 1.5rem 0 0;
 
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 400;
+      }
+
       + .permissions-item {
         margin-top: 1.5rem;
       }
@@ -45,7 +50,6 @@ export const Container = styled.div`
 
     button {
       height: 3rem;
-      /* padding: 0 1rem; */
       width: 100%;
       border-radius: 0.25rem;
       font-size: 1rem;
@@ -55,8 +59,9 @@ export const Container = styled.div`
 
       transition: filter 0.2s;
 
-      border: 1px solid rgba(255, 0, 0, 0.2);
-      background: rgba(255, 0, 0, 0.05);
+      /* border: 1px solid rgba(255, 0, 0, 0.2); */
+      /* background: rgba(255, 0, 0, 0.05); */
+      border: 1px solid var(--text-title);
 
       + button {
         margin-left: 1rem;

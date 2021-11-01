@@ -16,6 +16,8 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const { user, signOut } = useAuth()
   const router = useRouter()
 
+  const userPermissions = user?.permissions || []
+
   const [listActivitiesPermission, setListActivitiesPermission] = useState(false)
   const [listMembersPermission, setListMembersPermission] = useState(false)
   const [listPlansPermission, setListPlansPermission] = useState(false)
@@ -39,19 +41,19 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   }
 
   async function verifyPermissions() {
-    const userHasListActivitiesPermission = await verifyUserPermissions("list_activities")
-    setListUsersPermission(userHasListActivitiesPermission)
+    const userHasListActivitiesPermission = await verifyUserPermissions("list_activities", userPermissions)
+    setListActivitiesPermission(userHasListActivitiesPermission)
 
-    const userHasListMembersPermission = await verifyUserPermissions("list_members")
+    const userHasListMembersPermission = await verifyUserPermissions("list_members", userPermissions)
     setListMembersPermission(userHasListMembersPermission)
 
-    const userHasListPlansPermission = await verifyUserPermissions("list_plans")
+    const userHasListPlansPermission = await verifyUserPermissions("list_plans", userPermissions)
     setListPlansPermission(userHasListPlansPermission)
 
-    const userHasListUsersPermission = await verifyUserPermissions("list_users")
+    const userHasListUsersPermission = await verifyUserPermissions("list_users", userPermissions)
     setListUsersPermission(userHasListUsersPermission)
 
-    const userHasListSystemOptionsPermission = await verifyUserPermissions("list_system")
+    const userHasListSystemOptionsPermission = await verifyUserPermissions("list_system", userPermissions)
     setListSystemOptionsPermission(userHasListSystemOptionsPermission)
   }
 

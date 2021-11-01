@@ -1,10 +1,14 @@
 import { FormEvent, useEffect, useState } from "react"
-import { BiCheckSquare, BiSquare } from "react-icons/bi"
 import Modal from "react-modal"
+
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
+import { useAuth } from "../../hooks/useAuth"
+
 import { api } from "../../services/api.service"
+
 import { Checkbox } from "../Checkbox"
+import { Input } from "../Input"
 import { PermissionsModal } from "../PermissionsModal"
 
 import { Container, RowContainer } from "./styles"
@@ -27,12 +31,16 @@ type UserModalProps = {
 Modal.setAppElement("#root")
 
 export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
+  const { user } = useAuth()
+
+  const userPermissions = user?.permissions || []
+
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [username, setUsername] = useState("")
-  const [permissions, setPermissions] = useState([""])
+  const [permissions, setPermissions] = useState<string[]>([])
   const [disabled, setDisabled] = useState(false)
 
   const [disableUsersPermission, setDisableUsersPermission] = useState(false)
@@ -107,10 +115,10 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
   }
 
   async function verifyPermissions() {
-    const userHasDisableUsersPermission = await verifyUserPermissions("disable_users")
+    const userHasDisableUsersPermission = await verifyUserPermissions("disable_users", userPermissions)
     setDisableUsersPermission(userHasDisableUsersPermission)
 
-    const userHasAlterPermissionsPermission = await verifyUserPermissions("alter_permissions")
+    const userHasAlterPermissionsPermission = await verifyUserPermissions("alter_permissions", userPermissions)
     setAlterPermissionsPermission(userHasAlterPermissionsPermission)
   }
 
@@ -145,37 +153,62 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
           <div className="row">
             <RowContainer>
               <label htmlFor="name">Nome</label>
-              <input
+              <Input
+                id="name"
+                type="text"
+                autoFocus
+                inputType="default"
+                placeholder="Informe o nome"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+              {/* <input
                 id="name"
                 type="text"
                 placeholder="Informe o nome"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-              />
+              /> */}
             </RowContainer>
 
             <RowContainer>
               <label htmlFor="email">E-mail</label>
-              <input
+              <Input
+                inputType="default"
+                id="email"
+                type="email"
+                placeholder="Informe o e-mail"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              {/* <input
                 id="email"
                 type="text"
                 placeholder="Informe o e-mail"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-              />
+              /> */}
             </RowContainer>
           </div>
 
           <div className="row">
             <RowContainer width={35}>
               <label htmlFor="username">Nome de usuário</label>
-              <input
+              <Input
+                inputType="default"
                 id="username"
                 type="text"
                 placeholder="Informe o usuário"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
+              {/* <input
+                id="username"
+                type="text"
+                placeholder="Informe o usuário"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+              /> */}
             </RowContainer>
 
             <RowContainer width={35}>
@@ -189,7 +222,7 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
               </button>
             </RowContainer>
 
-            <RowContainer width={25} align="center">
+            <RowContainer width={25} align="center" className="margin-top">
               <Checkbox
                 title="Desativado"
                 active={disabled}
@@ -202,23 +235,39 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
           <div className="row">
             <RowContainer>
               <label htmlFor="password">{userId ? "Senha atual" : "Senha"}</label>
-              <input
+              <Input
+                inputType="password"
                 id="password"
                 type="password"
                 placeholder="Informe a senha"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
+              {/* <input
+                id="password"
+                type="password"
+                placeholder="Informe a senha"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              /> */}
             </RowContainer>
             <RowContainer>
               <label htmlFor="confirmPassword">{userId ? "Nova senha" : "Confirme a senha"}</label>
-              <input
+              <Input
+                inputType="password"
                 id="confirmPassword"
                 type="password"
                 placeholder={userId ? "Informe a nova senha" : "Informe a confirmação"}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
               />
+              {/* <input
+                id="confirmPassword"
+                type="password"
+                placeholder={userId ? "Informe a nova senha" : "Informe a confirmação"}
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              /> */}
             </RowContainer>
           </div>
 

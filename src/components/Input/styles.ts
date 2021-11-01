@@ -1,10 +1,10 @@
 import styled from "styled-components"
 
-export const Container = styled.div`
+export const Container = styled.div<{ light?: boolean }>`
   display: inline-flex;
   align-items: center;
 
-  background: var(--shape);
+  background: ${(props) => (props.light ? "var(--shape)" : "var(--shape-dark)")};
   width: 100%;
 
   border-radius: 0.25rem;
@@ -34,7 +34,7 @@ export const Container = styled.div`
     justify-content: center;
 
     border: 0;
-    background: var(--shape);
+    background: ${(props) => (props.light ? "var(--shape)" : "var(--shape-dark)")};
 
     width: 10%;
     height: 3rem;

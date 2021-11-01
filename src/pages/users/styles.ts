@@ -105,6 +105,9 @@ export const Container = styled.div`
       /* cursor: pointer; */
 
       button.edit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: 0;
         background: transparent;
         width: 100%;

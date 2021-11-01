@@ -52,6 +52,8 @@ export default function Home() {
       setLoading(false)
       toast.dismiss(id)
 
+      usernameRef.current.focus()
+
       if (error.response?.data?.message) {
         if (Array.isArray(error.response.data.message)) {
           for (const message of error.response.data.message) {
@@ -89,6 +91,8 @@ export default function Home() {
           <form onSubmit={handleSignIn}>
             <label htmlFor="username">Usuário</label>
             <Input
+              light
+              hasIcon
               id="username"
               type="text"
               autoFocus
@@ -100,6 +104,8 @@ export default function Home() {
 
             <label htmlFor="password">Senha</label>
             <Input
+              light
+              hasIcon
               id="password"
               type="password"
               inputType="password"

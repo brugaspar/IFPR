@@ -38,10 +38,8 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
     if (permissionsToShow.includes(slug)) {
       const newArr = permissionsToShow.filter((permission) => permission !== slug)
 
-      // onChangePermissions(newArr)
       setPermissionsToShow(newArr)
     } else {
-      // onChangePermissions([...teste, slug])
       setPermissionsToShow([...permissionsToShow, slug])
     }
   }
