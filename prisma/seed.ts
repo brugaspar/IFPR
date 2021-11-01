@@ -73,7 +73,7 @@ async function insertAdminUser() {
       name: "Administrador",
       email: "admin@admin.com",
       password: "$2a$10$7HEUt9Y6r6.xqqsOdqbFl.TEf9i7xtHdlgmA2EcmlgzY5XD9EWg2K", // admin@23646
-      permissions: ["list_users", "create_users", "edit_users", "disable_users"],
+      permissions: ["list_users", "create_users", "edit_users", "disable_users", "alter_permissions"],
       username: "administrador",
       createdBy: adminId,
       lastUpdatedBy: adminId,
