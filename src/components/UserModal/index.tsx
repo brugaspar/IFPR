@@ -112,6 +112,7 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
     setPassword("")
     setConfirmPassword("")
     setDisabled(false)
+    setPermissions([])
   }
 
   async function verifyPermissions() {

@@ -22,10 +22,6 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
-    &:focus {
-      box-shadow: 0 0 5px var(--green);
-    }
   }
 
   @media(max-width: 1080px) {
@@ -44,6 +40,12 @@ export const GlobalStyle = createGlobalStyle`
     background: var(--background);
     color: var(--text-body);
     -webkit-font-smoothing: antialiased;
+  }
+
+  button {
+    &:focus {
+      box-shadow: 0 0 5px var(--green);
+    }
   }
 
   body, input, textarea, button {
