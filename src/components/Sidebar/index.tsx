@@ -1,6 +1,8 @@
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import { FaChartPie, FaCog, FaFolderOpen, FaHome, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa"
 
+import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { useAuth } from "../../hooks/useAuth"
 
 import { Container } from "./styles"
@@ -13,6 +15,12 @@ type SidebarProps = {
 export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const { user, signOut } = useAuth()
   const router = useRouter()
+
+  const [listActivitiesPermission, setListActivitiesPermission] = useState(false)
+  const [listMembersPermission, setListMembersPermission] = useState(false)
+  const [listPlansPermission, setListPlansPermission] = useState(false)
+  const [listUsersPermission, setListUsersPermission] = useState(false)
+  const [listSystemOptionsPermission, setListSystemOptionsPermission] = useState(false)
 
   function handleSignOut() {
     if (isOpen) {
@@ -30,6 +38,27 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     router.push(pageName)
   }
 
+  async function verifyPermissions() {
+    const userHasListActivitiesPermission = await verifyUserPermissions("list_activities")
+    setListUsersPermission(userHasListActivitiesPermission)
+
+    const userHasListMembersPermission = await verifyUserPermissions("list_members")
+    setListMembersPermission(userHasListMembersPermission)
+
+    const userHasListPlansPermission = await verifyUserPermissions("list_plans")
+    setListPlansPermission(userHasListPlansPermission)
+
+    const userHasListUsersPermission = await verifyUserPermissions("list_users")
+    setListUsersPermission(userHasListUsersPermission)
+
+    const userHasListSystemOptionsPermission = await verifyUserPermissions("list_system")
+    setListSystemOptionsPermission(userHasListSystemOptionsPermission)
+  }
+
+  useEffect(() => {
+    verifyPermissions()
+  }, [])
+
   return (
     <Container className={isOpen ? "" : "close"}>
       <div className="logo-container">
@@ -40,58 +69,83 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
       <div className="content">
         <div className="list-container">
           <ul>
-            <li title="Início" onClick={() => handleNavigateToPage("/dashboard")}>
+            <button className="list-button" title="Início" onClick={() => handleNavigateToPage("/dashboard")}>
               <span className="icon">
                 <FaHome />
               </span>
 
               <span className="label">Início</span>
-            </li>
-            <li title="Atividades" onClick={() => handleNavigateToPage("/activities")}>
+            </button>
+            <button
+              className="list-button"
+              title="Atividades"
+              onClick={() => handleNavigateToPage("/activities")}
+              disabled={!listActivitiesPermission}
+            >
               <span className="icon">
                 <FaChartPie />
               </span>
 
               <span className="label">Atividades</span>
-            </li>
-            <li title="Membros" onClick={() => handleNavigateToPage("/members")}>
+            </button>
+            <button
+              className="list-button"
+              title="Membros"
+              onClick={() => handleNavigateToPage("/members")}
+              disabled={!listMembersPermission}
+            >
               <span className="icon">
                 <FaUsers />
               </span>
 
               <span className="label">Membros</span>
-            </li>
-            <li title="Planos" onClick={() => handleNavigateToPage("/plans")}>
+            </button>
+            <button
+              className="list-button"
+              title="Planos"
+              onClick={() => handleNavigateToPage("/plans")}
+              disabled={!listPlansPermission}
+            >
               <span className="icon">
                 <FaFolderOpen />
               </span>
 
               <span className="label">Planos</span>
-            </li>
-            <li title="Usuários" onClick={() => handleNavigateToPage("/users")}>
+            </button>
+            <button
+              className="list-button"
+              title="Usuários"
+              onClick={() => handleNavigateToPage("/users")}
+              disabled={!listUsersPermission}
+            >
               <span className="icon">
                 <FaUser />
               </span>
 
               <span className="label">Usuários</span>
-            </li>
-            <li title="Sistema" onClick={() => handleNavigateToPage("/system")}>
+            </button>
+            <button
+              className="list-button"
+              title="Sistema"
+              onClick={() => handleNavigateToPage("/system")}
+              disabled={!listSystemOptionsPermission}
+            >
               <span className="icon">
                 <FaCog />
               </span>
 
               <span className="label">Sistema</span>
-            </li>
+            </button>
           </ul>
         </div>
 
         <div className="sign-out-container">
           <ul>
-            <li title="Sair" onClick={handleSignOut}>
+            <button className="list-button" title="Sair" onClick={handleSignOut}>
               <span className="icon">
                 <FaSignOutAlt />
               </span>
-            </li>
+            </button>
 
             <div className="user-info">
               <h1 className="name">Olá, {user?.name}</h1>

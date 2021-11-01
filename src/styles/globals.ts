@@ -89,6 +89,25 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     max-width: 800px;
 
+    max-height: calc(100% - 7rem);
+
+    background: var(--background);
+
+    padding: 3rem;
+    position: relative;
+
+    border-radius: 0.25rem;
+
+    outline: 0;
+  }
+
+  .react-modal-permissions-content {
+    width: 100%;
+    height: calc(100vh - 8rem);
+
+    max-width: 800px;
+    margin-top: 7rem;
+
     background: var(--background);
 
     padding: 3rem;

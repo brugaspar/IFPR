@@ -83,10 +83,13 @@ export const Container = styled.div`
       ul {
         padding: 0 1rem;
 
-        li {
+        .list-button {
           display: flex;
           align-items: center;
           height: 3rem;
+          border: 0;
+          color: var(--text-body);
+          width: 100%;
 
           list-style: none;
           background: var(--background);
@@ -94,9 +97,7 @@ export const Container = styled.div`
 
           transition: background 0.2s;
 
-          cursor: pointer;
-
-          + li {
+          + .list-button {
             margin-top: 0.5rem;
           }
 
@@ -146,7 +147,7 @@ export const Container = styled.div`
           font-size: 1rem;
         }
 
-        li {
+        .list-button {
           display: flex;
           align-items: center;
           height: 3rem;
@@ -205,7 +206,7 @@ export const Container = styled.div`
           pointer-events: none;
         }
 
-        li {
+        .list-button {
           .label {
             display: none;
             opacity: 0;

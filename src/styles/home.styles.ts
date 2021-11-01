@@ -82,28 +82,6 @@ export const Content = styled.div`
         margin-top: 1rem;
       }
 
-      button.checkbox {
-        display: flex;
-        align-items: center;
-        background: var(--background);
-        border: 0;
-        border-radius: 0.25rem;
-        margin-top: 1rem;
-
-        transition: filter 0.2s;
-
-        h5 {
-          font-weight: 400;
-          font-size: 1rem;
-          margin-left: 1rem;
-          margin-top: 0.3rem;
-        }
-
-        &:hover {
-          filter: brightness(0.8);
-        }
-      }
-
       button[type="submit"] {
         width: 100%;
         height: 3rem;

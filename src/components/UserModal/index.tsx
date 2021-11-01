@@ -1,9 +1,13 @@
 import { FormEvent, useEffect, useState } from "react"
+import { BiCheckSquare, BiSquare } from "react-icons/bi"
 import Modal from "react-modal"
+import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
 import { api } from "../../services/api.service"
+import { Checkbox } from "../Checkbox"
+import { PermissionsModal } from "../PermissionsModal"
 
-import { Container } from "./styles"
+import { Container, RowContainer } from "./styles"
 
 type User = {
   id: string
@@ -28,8 +32,21 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [username, setUsername] = useState("")
-  const [permissions, setPermissions] = useState(["USU_001"])
+  const [permissions, setPermissions] = useState([""])
   const [disabled, setDisabled] = useState(false)
+
+  const [disableUsersPermission, setDisableUsersPermission] = useState(false)
+  const [alterPermissionsPermission, setAlterPermissionsPermission] = useState(false)
+
+  const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
+
+  function handleOpenPermissionsModal() {
+    setIsPermissionsModalOpen(true)
+  }
+
+  function handleClosePermissionsModal() {
+    setIsPermissionsModalOpen(false)
+  }
 
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
@@ -43,6 +60,7 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
           username,
           permissions,
           disabled,
+          newPassword: confirmPassword,
         })
       } else {
         if (!(password === confirmPassword)) {
@@ -71,9 +89,40 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
     setName(response.data.name)
     setEmail(response.data.email)
     setUsername(response.data.username)
+    setDisabled(response.data.disabled)
+    setPermissions(response.data.permissions)
+  }
+
+  function handleToggleDisabled() {
+    setDisabled(!disabled)
+  }
+
+  function resetFields() {
+    setName("")
+    setEmail("")
+    setUsername("")
+    setPassword("")
+    setConfirmPassword("")
+    setDisabled(false)
+  }
+
+  async function verifyPermissions() {
+    const userHasDisableUsersPermission = await verifyUserPermissions("disable_users")
+    setDisableUsersPermission(userHasDisableUsersPermission)
+
+    const userHasAlterPermissionsPermission = await verifyUserPermissions("alter_permissions")
+    setAlterPermissionsPermission(userHasAlterPermissionsPermission)
+  }
+
+  function handleChangePermissions(newPermissions: string[]) {
+    setPermissions(newPermissions)
   }
 
   useEffect(() => {
+    if (isOpen) {
+      verifyPermissions()
+    }
+
     if (isOpen && userId) {
       loadUserById()
     }
@@ -87,13 +136,14 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
       className="react-modal-content"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc={false}
+      onAfterClose={resetFields}
     >
       <Container>
         <h1>{userId ? "Editar usuário" : "Novo usuário"}</h1>
 
         <form onSubmit={handleConfirm}>
           <div className="row">
-            <div>
+            <RowContainer>
               <label htmlFor="name">Nome</label>
               <input
                 id="name"
@@ -102,9 +152,9 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
-            </div>
+            </RowContainer>
 
-            <div>
+            <RowContainer>
               <label htmlFor="email">E-mail</label>
               <input
                 id="email"
@@ -113,11 +163,11 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
-            </div>
+            </RowContainer>
           </div>
 
           <div className="row">
-            <div>
+            <RowContainer width={35}>
               <label htmlFor="username">Nome de usuário</label>
               <input
                 id="username"
@@ -126,11 +176,31 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
-            </div>
+            </RowContainer>
+
+            <RowContainer width={35}>
+              <button
+                type="button"
+                onClick={handleOpenPermissionsModal}
+                className="permissions-button"
+                disabled={!alterPermissionsPermission}
+              >
+                Gerenciar permissões
+              </button>
+            </RowContainer>
+
+            <RowContainer width={25} align="center">
+              <Checkbox
+                title="Desativado"
+                active={disabled}
+                handleToggleActive={handleToggleDisabled}
+                disabled={!disableUsersPermission}
+              />
+            </RowContainer>
           </div>
 
           <div className="row">
-            <div>
+            <RowContainer>
               <label htmlFor="password">{userId ? "Senha atual" : "Senha"}</label>
               <input
                 id="password"
@@ -139,17 +209,17 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
-            </div>
-            <div>
+            </RowContainer>
+            <RowContainer>
               <label htmlFor="confirmPassword">{userId ? "Nova senha" : "Confirme a senha"}</label>
               <input
                 id="confirmPassword"
                 type="password"
-                placeholder="Informe a confirmação"
+                placeholder={userId ? "Informe a nova senha" : "Informe a confirmação"}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
               />
-            </div>
+            </RowContainer>
           </div>
 
           <div className="close">
@@ -159,6 +229,13 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
             <button type="submit">Salvar</button>
           </div>
         </form>
+
+        <PermissionsModal
+          isOpen={isPermissionsModalOpen}
+          onRequestClose={handleClosePermissionsModal}
+          permissions={permissions}
+          onChangePermissions={handleChangePermissions}
+        />
       </Container>
     </Modal>
   )

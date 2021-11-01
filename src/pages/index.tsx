@@ -3,6 +3,7 @@ import Head from "next/head"
 import { useRef, useState, FormEvent } from "react"
 import { BiCheckSquare, BiSquare } from "react-icons/bi"
 import { toast } from "react-toastify"
+import { Checkbox } from "../components/Checkbox"
 
 import { Input } from "../components/Input"
 
@@ -107,15 +108,7 @@ export default function Home() {
               disabled={loading}
             />
 
-            <button type="button" className="checkbox" onClick={handleToggleCheckbox} disabled={loading}>
-              {checkbox ? (
-                <BiCheckSquare size={30} color="var(--text-title)" />
-              ) : (
-                <BiSquare size={30} color="var(--text-title)" />
-              )}
-
-              <h5>Manter conectado</h5>
-            </button>
+            <Checkbox title="Manter conectado" active={checkbox} handleToggleActive={handleToggleCheckbox} />
 
             <button disabled={loading} type="submit">
               Entrar

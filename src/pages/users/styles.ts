@@ -104,8 +104,10 @@ export const Container = styled.div`
     tbody tr {
       /* cursor: pointer; */
 
-      td.edit {
-        cursor: pointer;
+      button.edit {
+        border: 0;
+        background: transparent;
+        width: 100%;
       }
 
       transition: filter 0.2s;
