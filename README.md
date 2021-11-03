@@ -1,4 +1,4 @@
-# Configuração do back-end
+# Configuração do front-end
 
 ## Instalação do <strong>Node.js</strong>
 
