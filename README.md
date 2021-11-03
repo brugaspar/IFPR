@@ -57,6 +57,20 @@ Assim, resta apenas preencher os dados necessários no arquivo. Sendo eles:
 
 <br/>
 
+## Rodar as "migrations" e as "seeds"
+
+O Prisma (ORM) deve rodar todas as "migrations" para criação das tabelas e estruturas necessárias no banco de dados, assim como as "seeds", para inserção de dados padrão da aplicação, como as cidades e estados. Para isso, deve-se rodar o comando:
+
+<code>yarn prisma migrate dev</code>
+
+Esse comando cria as "migrations". E deve-se rodar também o comando:
+
+<code>yarn prisma db seed</code>
+
+Esse comando cria as "seeds".
+
+<br/>
+
 ## Iniciar aplicação
 
 Por fim, deve-se rodar o comando:
