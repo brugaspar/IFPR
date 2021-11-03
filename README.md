@@ -54,7 +54,7 @@ ou
 
 <code>http://{HOST_REMOTO}:{PORT}/api/v1</code>
 
-Sendo o primeiro em ambiente de desenvolvimento, algo como "localhost" ou IP da máquina e o segundo caso esteja hospedado em algum lugar, sendo o site ou domínio remoto.
+Sendo o primeiro em ambiente de desenvolvimento, algo como "localhost" ou IP da máquina e o segundo caso esteja hospedado em algum lugar, sendo o site ou domínio remoto. E também o "PORT", que é a porta onde o back-end está rodando.
 
 <br/>
 
