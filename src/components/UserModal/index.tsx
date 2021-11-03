@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react"
 import Modal from "react-modal"
+import { toast } from "react-toastify"
 
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
@@ -85,9 +86,27 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
         })
       }
 
+      toast.dismiss("error")
+
+      if (userId) {
+        toast.success("Usuário alterado com sucesso")
+      } else {
+        toast.success("Usuário incluído com sucesso")
+      }
+
       onRequestClose()
     } catch (error: any) {
-      alert(error.response.data.message)
+      if (error.response?.data?.message) {
+        if (Array.isArray(error.response.data.message)) {
+          for (const message of error.response.data.message) {
+            toast.error(message, { toastId: "error" })
+          }
+        } else {
+          toast.error(error.response.data.message, { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos", { toastId: "error" })
+      }
     }
   }
 
