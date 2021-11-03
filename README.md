@@ -30,7 +30,7 @@ Isso instalará o Yarn globalmente na máquina em questão.
 
 ### <strong>Instalação das dependências</strong>
 
-Para começar com a configuração do ambiente do back-end, é preciso estar na pasta do projeto. Após isso, com o terminal aberto, basta rodar o comando:
+Para começar com a configuração do ambiente do front-end, é preciso estar na pasta do projeto. Após isso, com o terminal aberto, basta rodar o comando:
 
 <code>yarn</code>
 
