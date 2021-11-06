@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { UserModal } from "../../components/UserModal"
 import { Checkbox } from "../../components/Checkbox"
+import { SearchBar } from "../../components/SearchBar"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -44,10 +45,13 @@ export default function Users() {
   const [createUserPermission, setCreateUserPermission] = useState(false)
   const [editUserPermission, setEditUserPermission] = useState(false)
 
+  const [searchTerm, setSearchTerm] = useState("")
+  
   async function loadUsers() {
     const response = await api.get("/users", {
       params: {
         onlyEnabled,
+        search: searchTerm // enviar termo de busca para o back-end através da propriedade "search"
       },
     })
 
@@ -102,7 +106,7 @@ export default function Users() {
   useEffect(() => {
     loadUsers()
   }, [onlyEnabled, isUserModalOpen])
-
+  
   return (
     <Container>
       <Head>
@@ -120,6 +124,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
+        <SearchBar placeholder="Informe um dado para a busca" onChange={event => setSearchTerm(event.target.value)}/>
 
         <table className="styled-table">
           <thead>
