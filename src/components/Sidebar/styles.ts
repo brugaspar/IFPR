@@ -81,7 +81,7 @@ export const Container = styled.div`
       }
 
       ul {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 0rem;
 
         .list-button {
           display: flex;
@@ -93,12 +93,11 @@ export const Container = styled.div`
 
           list-style: none;
           background: var(--background);
-          border-radius: 0.25rem;
 
           transition: background 0.2s;
 
           + .list-button {
-            margin-top: 0.5rem;
+            margin-top: 0.1rem;
           }
 
           .icon {
@@ -107,13 +106,40 @@ export const Container = styled.div`
             justify-content: center;
             padding: 0 0.7rem;
             font-size: 1.5rem;
+            margin-left: 1rem;
+
+            &.submenu {
+              padding: 0 0.3rem;
+              font-size: 1.2rem;
+              margin-left: 3rem;
+            }
           }
+
+          /* .icon-submenu {
+            padding: 0 0.3rem;
+            font-size: 1.2rem;
+            margin-left: 3rem;
+          } */
 
           .label {
             font-size: 1.25rem;
             margin-top: 0.2rem;
             margin-left: 1rem;
             white-space: nowrap;
+          }
+
+          &.subitem {
+            background: ${darken(0.03, "#232323")};
+
+            &.hide {
+              display: none;
+              opacity: 0;
+              pointer-events: none;
+            }
+
+            &:hover {
+              background: ${darken(0.01, "#121214")};
+            }
           }
 
           &:hover {
@@ -208,6 +234,12 @@ export const Container = styled.div`
 
         .list-button {
           .label {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          &.subitem {
             display: none;
             opacity: 0;
             pointer-events: none;
