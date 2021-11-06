@@ -1,6 +1,19 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { FaChartPie, FaCog, FaComment, FaComments, FaEnvelope, FaFolderOpen, FaGavel, FaHome, FaQuestion, FaServer, FaSignOutAlt, FaUser, FaUsers } from "react-icons/fa"
+import {
+  FaChartPie,
+  FaCog,
+  FaComments,
+  FaEnvelope,
+  FaFolderOpen,
+  FaGavel,
+  FaHome,
+  FaQuestion,
+  FaServer,
+  FaSignOutAlt,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa"
 
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { useAuth } from "../../hooks/useAuth"
@@ -25,9 +38,17 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const [listSystemOptionsPermission, setListSystemOptionsPermission] = useState(false)
 
   const [hideClass, setHideClass] = useState(true)
-  
+
   function handleToggleHideClass() {
-    setHideClass(!hideClass)
+    if (!hideClass && !isOpen) {
+      toggleSidebar()
+    } else {
+      setHideClass(!hideClass)
+    }
+
+    if (!isOpen) {
+      toggleSidebar()
+    }
   }
 
   function handleSignOut() {
@@ -66,7 +87,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   useEffect(() => {
     verifyPermissions()
   }, [])
-
 
   return (
     <Container className={isOpen ? "" : "close"}>
@@ -146,67 +166,66 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
               <span className="label">Sistema</span>
             </button>
-           
+
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Suporte"
               onClick={() => handleNavigateToPage("/support")}
               // disabled={!listSystemOptionsPermission}
             >
-              <span className="icon-submenu">
+              <span className="icon submenu">
                 <FaEnvelope />
               </span>
               <span className="label">Suporte</span>
             </button>
-            
+
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="perguntasFrequentes"
               onClick={() => handleNavigateToPage("/commonQuestions")}
               // disabled={!listSystemOptionsPermission}
             >
-              <span className="icon-submenu">
+              <span className="icon submenu">
                 <FaComments />
               </span>
               <span className="label">Perguntas Frequentes</span>
             </button>
-            
+
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="politicasDePrivacidade"
               onClick={() => handleNavigateToPage("/privacyPolicies")}
               // disabled={!listSystemOptionsPermission}
             >
-              <span className="icon-submenu">
+              <span className="icon submenu">
                 <FaGavel />
               </span>
-              <span className="label">Politicas de privacidade</span>
+              <span className="label">Políticas de privacidade</span>
             </button>
-            
+
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="log"
               onClick={() => handleNavigateToPage("/log")}
               // disabled={!listSystemOptionsPermission}
             >
-              <span className="icon-submenu">
+              <span className="icon submenu">
                 <FaServer />
               </span>
-              <span className="label">Log do Sistema</span>
+              <span className="label">LOG do Sistema</span>
             </button>
-           
+
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Sobre"
               onClick={() => handleNavigateToPage("/about")}
               // disabled={!listSystemOptionsPermission}
             >
-              <span className="icon-submenu">
+              <span className="icon submenu">
                 <FaQuestion />
               </span>
               <span className="label">Sobre</span>
             </button>
-          
           </ul>
         </div>
 
@@ -217,7 +236,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 <FaSignOutAlt />
               </span>
             </button>
-          
+
             <div className="user-info">
               <h1 className="name">Olá, {user?.name}</h1>
               <span className="username">#{user?.username}</span>

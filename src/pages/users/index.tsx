@@ -120,7 +120,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-        <Input hasIcon/>
+
         <table className="styled-table">
           <thead>
             <tr>

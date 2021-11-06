@@ -20,7 +20,6 @@ export const Container = styled.div`
     }
   } */
 
-  
   z-index: 999;
   position: fixed;
   top: 0;
@@ -92,23 +91,8 @@ export const Container = styled.div`
           color: var(--text-body);
           width: 100%;
 
-          &.subitem {
-            background:${darken(0.03,'#232323')};
-            
-            &.hide {
-              display: none;
-              opacity: 0;
-              pointer-events: none;
-            }
-
-            &:hover {
-              background: ${darken(0.01, "#121214")};
-            }
-          }
-
           list-style: none;
           background: var(--background);
-          border-radius: 0.25rem;
 
           transition: background 0.2s;
 
@@ -122,17 +106,20 @@ export const Container = styled.div`
             justify-content: center;
             padding: 0 0.7rem;
             font-size: 1.5rem;
-            margin-left:1rem;
+            margin-left: 1rem;
+
+            &.submenu {
+              padding: 0 0.3rem;
+              font-size: 1.2rem;
+              margin-left: 3rem;
+            }
           }
 
-          .icon-submenu{
-            display: flex;
-            align-items: center;
-            justify-content: center;
+          /* .icon-submenu {
             padding: 0 0.3rem;
             font-size: 1.2rem;
-            margin-left:3rem;
-          }
+            margin-left: 3rem;
+          } */
 
           .label {
             font-size: 1.25rem;
@@ -141,7 +128,19 @@ export const Container = styled.div`
             white-space: nowrap;
           }
 
-         
+          &.subitem {
+            background: ${darken(0.03, "#232323")};
+
+            &.hide {
+              display: none;
+              opacity: 0;
+              pointer-events: none;
+            }
+
+            &:hover {
+              background: ${darken(0.01, "#121214")};
+            }
+          }
 
           &:hover {
             background: ${darken(0.05, "#121214")};
@@ -178,7 +177,7 @@ export const Container = styled.div`
           display: flex;
           align-items: center;
           height: 3rem;
-          
+
           list-style: none;
           background: rgba(255, 64, 64, 0.05);
           border-radius: 0.25rem;
@@ -205,7 +204,7 @@ export const Container = styled.div`
       }
     }
   }
-  
+
   &.close {
     width: 5rem;
 
