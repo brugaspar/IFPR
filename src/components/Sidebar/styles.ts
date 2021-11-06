@@ -20,6 +20,7 @@ export const Container = styled.div`
     }
   } */
 
+  
   z-index: 999;
   position: fixed;
   top: 0;
@@ -81,7 +82,7 @@ export const Container = styled.div`
       }
 
       ul {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 0rem;
 
         .list-button {
           display: flex;
@@ -91,6 +92,20 @@ export const Container = styled.div`
           color: var(--text-body);
           width: 100%;
 
+          &.subitem {
+            background:${darken(0.03,'#232323')};
+            
+            &.hide {
+              display: none;
+              opacity: 0;
+              pointer-events: none;
+            }
+
+            &:hover {
+              background: ${darken(0.01, "#121214")};
+            }
+          }
+
           list-style: none;
           background: var(--background);
           border-radius: 0.25rem;
@@ -98,7 +113,7 @@ export const Container = styled.div`
           transition: background 0.2s;
 
           + .list-button {
-            margin-top: 0.5rem;
+            margin-top: 0.1rem;
           }
 
           .icon {
@@ -107,6 +122,16 @@ export const Container = styled.div`
             justify-content: center;
             padding: 0 0.7rem;
             font-size: 1.5rem;
+            margin-left:1rem;
+          }
+
+          .icon-submenu{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.3rem;
+            font-size: 1.2rem;
+            margin-left:3rem;
           }
 
           .label {
@@ -115,6 +140,8 @@ export const Container = styled.div`
             margin-left: 1rem;
             white-space: nowrap;
           }
+
+         
 
           &:hover {
             background: ${darken(0.05, "#121214")};
@@ -151,7 +178,7 @@ export const Container = styled.div`
           display: flex;
           align-items: center;
           height: 3rem;
-
+          
           list-style: none;
           background: rgba(255, 64, 64, 0.05);
           border-radius: 0.25rem;
@@ -178,7 +205,7 @@ export const Container = styled.div`
       }
     }
   }
-
+  
   &.close {
     width: 5rem;
 
@@ -208,6 +235,12 @@ export const Container = styled.div`
 
         .list-button {
           .label {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          &.subitem {
             display: none;
             opacity: 0;
             pointer-events: none;

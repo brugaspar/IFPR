@@ -14,6 +14,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
+import { Input } from "../../components/Input"
 
 type User = {
   id: string
@@ -119,7 +120,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-
+        <Input hasIcon/>
         <table className="styled-table">
           <thead>
             <tr>
