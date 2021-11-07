@@ -75,17 +75,21 @@ class UserController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true } = request.query as any
+    const { onlyEnabled = true, search = "" } = request.query as any
 
     const schema = {
       onlyEnabled: yup.boolean(),
+      search: yup.string(),
     }
 
     await checkBodySchema(schema, request.body)
 
     await checkRequestUser(request.userId)
 
-    const users = await usersRepository.findAll(JSON.parse(onlyEnabled))
+    const users = await usersRepository.findAll({
+      onlyEnabled: JSON.parse(onlyEnabled),
+      search,
+    })
 
     const parsedUsers = users.map((user) => {
       return {

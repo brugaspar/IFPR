@@ -19,6 +19,11 @@ type UpdateUserProps = {
   userId: string
 }
 
+type FilterUser = {
+  onlyEnabled: boolean
+  search: string
+}
+
 const prisma = new PrismaClient()
 
 class UsersRepository {
@@ -78,7 +83,8 @@ class UsersRepository {
     return user
   }
 
-  async findAll(onlyEnabled: boolean) {
+  async findAll({ onlyEnabled = true, search = "" }: FilterUser) {
+    // TODO: adicionar "search" na busca
     const users = await prisma.users.findMany({
       where: {
         disabled: onlyEnabled ? false : undefined,
