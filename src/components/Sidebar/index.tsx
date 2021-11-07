@@ -158,7 +158,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className="list-button"
               title="Sistema"
               onClick={handleToggleHideClass}
-              // disabled={!listSystemOptionsPermission}
+              disabled={!listSystemOptionsPermission}
             >
               <span className="icon">
                 <FaCog />
@@ -171,7 +171,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Suporte"
               onClick={() => handleNavigateToPage("/support")}
-              // disabled={!listSystemOptionsPermission}
             >
               <span className="icon submenu">
                 <FaEnvelope />
@@ -183,7 +182,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="perguntasFrequentes"
               onClick={() => handleNavigateToPage("/commonQuestions")}
-              // disabled={!listSystemOptionsPermission}
             >
               <span className="icon submenu">
                 <FaComments />
@@ -195,7 +193,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="politicasDePrivacidade"
               onClick={() => handleNavigateToPage("/privacyPolicies")}
-              // disabled={!listSystemOptionsPermission}
             >
               <span className="icon submenu">
                 <FaGavel />

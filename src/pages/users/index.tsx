@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { UserModal } from "../../components/UserModal"
 import { Checkbox } from "../../components/Checkbox"
+import { SearchBar } from "../../components/SearchBar"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -14,7 +15,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
-import { Input } from "../../components/Input"
 
 type User = {
   id: string
@@ -44,10 +44,13 @@ export default function Users() {
   const [createUserPermission, setCreateUserPermission] = useState(false)
   const [editUserPermission, setEditUserPermission] = useState(false)
 
+  const [search, setSearch] = useState("")
+
   async function loadUsers() {
     const response = await api.get("/users", {
       params: {
         onlyEnabled,
+        search,
       },
     })
 
@@ -101,7 +104,7 @@ export default function Users() {
 
   useEffect(() => {
     loadUsers()
-  }, [onlyEnabled, isUserModalOpen])
+  }, [onlyEnabled, isUserModalOpen, search])
 
   return (
     <Container>
@@ -120,6 +123,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
+        <SearchBar placeholder="Informe algum dado para buscar" onChange={(event) => setSearch(event.target.value)} />
 
         <table className="styled-table">
           <thead>
