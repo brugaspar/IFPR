@@ -1,56 +1,28 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
-  
-   position: relative;
-   height: 2.5rem;
-   width: 20rem;
-   background: var(--shape-dark);
-   overflow: hidden;
-   border-radius: 0.25rem;
+  background: var(--shape-dark);
+  border-radius: 0.25rem;
 
-   /* border:1px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  .searchInputs {
-    display: flex;
-  }
+  width: 20rem;
 
-  .search input {
+  input {
     background: var(--shape-dark);
-    border: 0;   
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    font-size: 1.2rem;
-    padding: 1rem;
-    height: 2.5rem;
-    width: 17.5rem;
-    color:white;
-
-    /* border:1px solid green; */
-  } 
-
-  .searchIcon {
-    height: 2rem;
-    width: 2.12rem;
-    display: grid;
-    margin-top:0.2rem;
-    place-items: center;
-    color:grey;
-    float:right;
-    /* border:1px solid blue; */
+    color: var(--text-body);
   }
 
-  input:focus {
-    outline: none;
-  }
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
 
-  .searchIcon svg {
-    font-size: 1.7rem;
+    svg {
+      font-size: 1.2rem;
+    }
   }
-
-  #clearBtn {
-    cursor: pointer;
-  }
-
- 
 `
