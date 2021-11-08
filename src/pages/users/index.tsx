@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FaEdit, FaPlus } from "react-icons/fa"
 
 import { useAuth } from "../../hooks/useAuth"
@@ -29,7 +29,6 @@ type User = {
 }
 
 export default function Users() {
-  // const [reload, setReload] = useState(false)
   const { user } = useAuth()
 
   const userPermissions = user?.permissions || []
@@ -45,6 +44,19 @@ export default function Users() {
   const [editUserPermission, setEditUserPermission] = useState(false)
 
   const [search, setSearch] = useState("")
+  const [reload, setReload] = useState(false)
+
+  const timeoutRef = useRef<any>(0)
+
+  function handleSearchFilter(text: string) {
+    setSearch(text)
+
+    clearTimeout(timeoutRef.current)
+
+    timeoutRef.current = setTimeout(() => {
+      setReload(!reload)
+    }, 500)
+  }
 
   async function loadUsers() {
     const response = await api.get("/users", {
@@ -104,7 +116,7 @@ export default function Users() {
 
   useEffect(() => {
     loadUsers()
-  }, [onlyEnabled, isUserModalOpen, search])
+  }, [onlyEnabled, isUserModalOpen, reload])
 
   return (
     <Container>
@@ -123,7 +135,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-        <SearchBar placeholder="Informe algum dado para buscar" onChange={(event) => setSearch(event.target.value)} />
+        <SearchBar placeholder="Informe algum dado para buscar" onChange={(event) => handleSearchFilter(event.target.value)} />
 
         <table className="styled-table">
           <thead>
