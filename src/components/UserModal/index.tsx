@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, KeyboardEvent, useEffect, useState } from "react"
 import Modal from "react-modal"
 import { toast } from "react-toastify"
 
@@ -48,6 +48,12 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
   const [alterPermissionsPermission, setAlterPermissionsPermission] = useState(false)
 
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
+
+  function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
+    if (event.ctrlKey && event.code === "Enter") {
+      handleConfirm(event)
+    }
+  }
 
   function handleOpenPermissionsModal() {
     setIsPermissionsModalOpen(true)
@@ -163,13 +169,13 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
       overlayClassName="react-modal-overlay"
       className="react-modal-content"
       shouldCloseOnOverlayClick={false}
-      shouldCloseOnEsc={false}
+      shouldCloseOnEsc
       onAfterClose={resetFields}
     >
       <Container>
         <h1>{userId ? "Editar usuário" : "Novo usuário"}</h1>
 
-        <form onSubmit={handleConfirm}>
+        <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
           <div className="row">
             <RowContainer>
               <label htmlFor="name">Nome</label>
@@ -293,9 +299,9 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
 
           <div className="close">
             <button type="button" onClick={onRequestClose}>
-              Cancelar
+              Cancelar (ESC)
             </button>
-            <button type="submit">Salvar</button>
+            <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
 

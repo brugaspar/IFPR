@@ -35,7 +35,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const [listMembersPermission, setListMembersPermission] = useState(false)
   const [listPlansPermission, setListPlansPermission] = useState(false)
   const [listUsersPermission, setListUsersPermission] = useState(false)
-  const [listLOGPermission, setListLOGPermission] = useState(false)
+  const [listLogsPermission, setListLogssPermission] = useState(false)
 
   const [hideClass, setHideClass] = useState(true)
 
@@ -80,8 +80,8 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const userHasListUsersPermission = await verifyUserPermissions("list_users", userPermissions)
     setListUsersPermission(userHasListUsersPermission)
 
-    const userHasListLOGPermission = await verifyUserPermissions("list_log", userPermissions)
-    setListLOGPermission(userHasListLOGPermission)
+    const userHasListLogsPermission = await verifyUserPermissions("list_logs", userPermissions)
+    setListLogssPermission(userHasListLogsPermission)
   }
 
   useEffect(() => {
@@ -202,13 +202,13 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="log"
-              onClick={() => handleNavigateToPage("/log")}
-              disabled={!listLOGPermission}
+              onClick={() => handleNavigateToPage("/logs")}
+              disabled={!listLogsPermission}
             >
               <span className="icon submenu">
                 <FaServer />
               </span>
-              <span className="label">LOG do Sistema</span>
+              <span className="label">Logs do Sistema</span>
             </button>
 
             <button

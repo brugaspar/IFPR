@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { KeyboardEvent, useEffect, useState } from "react"
 import Modal from "react-modal"
 
 import { api } from "../../services/api.service"
@@ -27,6 +27,12 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
   const [permissionsToShow, setPermissionsToShow] = useState([""])
 
   const [permissionsList, setPermissionsList] = useState<Permission[]>([])
+
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.ctrlKey && event.code === "Enter") {
+      handleConfirmSelection()
+    }
+  }
 
   async function loadPermissionsList() {
     const response = await api.get("permissions")
@@ -68,13 +74,14 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
       overlayClassName="react-modal-overlay"
       className="react-modal-permissions-content"
       shouldCloseOnOverlayClick={false}
-      shouldCloseOnEsc={false}
+      shouldCloseOnEsc
+      onAfterClose={handleCancelSelection}
     >
-      <Container>
+      <Container onKeyDown={handleKeyDown}>
         <h1>Permissões do usuário</h1>
 
         <div className="permissions-container">
-          {permissionsList.map((permission) => (
+          {permissionsList.map((permission, index) => (
             <div key={permission.id} className="permissions-item">
               <div>
                 <h3>{permission.name}</h3>
@@ -84,6 +91,7 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
               <Switch
                 checked={permissionsToShow.includes(permission.slug)}
                 onChange={() => handleTogglePermissionList(permission.slug)}
+                autoFocus={index === 0}
               />
             </div>
           ))}
@@ -91,10 +99,10 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
 
         <div className="close">
           <button type="button" onClick={handleCancelSelection}>
-            Cancelar
+            Cancelar (ESC)
           </button>
           <button className="save-button" type="button" onClick={handleConfirmSelection}>
-            Salvar
+            Salvar (CTRL + Enter)
           </button>
         </div>
       </Container>
