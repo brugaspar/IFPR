@@ -76,5 +76,11 @@
     "slug": "disable_plans",
     "description": "Permite ativar ou desativar o cadastro de um plano do sistema.",
     "table": "members_plans"
+  },
+  {
+    "name": "Listar LOG do sistema",
+    "slug": "list_logs",
+    "description": "Permite visualizar os LOG gerados pelo sistema",
+    "table": "general_logs"
   }
 ]

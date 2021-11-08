@@ -28,6 +28,17 @@ class LogsRepository {
       },
     })
   }
+
+  async findAll() {
+    const logs = await prisma.logs.findMany({
+      include: {
+        table: true,
+        user: true,
+      },
+    })
+
+    return logs
+  }
 }
 
 export default new LogsRepository()

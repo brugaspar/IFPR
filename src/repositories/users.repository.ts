@@ -5,6 +5,15 @@ import { getDisabledInfo } from "../helpers/disabled.helper"
 
 import logsRepository from "./logs.repository"
 
+type RequestUser = {
+  name: string
+  email: string
+  password: string
+  username: string
+  permissions: string[]
+  disabled: boolean
+}
+
 type User = {
   id: string
   name: string
@@ -23,7 +32,7 @@ type User = {
 }
 
 type UpdateUserProps = {
-  user: User
+  user: RequestUser
   requestUserId: string
   userId: string
 }
@@ -37,7 +46,7 @@ const prisma = new PrismaClient()
 const pgPool = new Pool()
 
 class UsersRepository {
-  async store(user: User, requestUserId: string) {
+  async store(user: RequestUser, requestUserId: string) {
     const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(user.disabled, requestUserId)
 
     const { id } = await prisma.users.create({
@@ -152,7 +161,7 @@ class UsersRepository {
       ${whereClause}
     `
 
-    const users = await pg.query(query)
+    const users = await pg.query<User>(query)
 
     await pg.release()
 
