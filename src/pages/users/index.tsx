@@ -140,8 +140,8 @@ export default function Users() {
       </div>
 
       <div className="scroll-div">
-        <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
         <SearchBar placeholder="Nome, usuário ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
+        <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
 
         <table className="styled-table">
           <thead>
