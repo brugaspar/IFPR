@@ -87,7 +87,8 @@ export const Container = styled.div`
           display: flex;
           align-items: center;
           height: 3rem;
-          border: 0;
+          border: 1px solid var(--shape-dark);
+          border-radius: 0.25rem;
           color: var(--text-body);
           width: 100%;
 

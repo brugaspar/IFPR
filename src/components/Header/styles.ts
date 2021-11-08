@@ -18,6 +18,9 @@ export const Container = styled.div<{ isSidebarOpen: boolean }>`
   transition: all 0.5s ease;
 
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 0;
     background: transparent;
     border-radius: 0.25rem;
