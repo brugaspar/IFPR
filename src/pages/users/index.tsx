@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
 import { FaEdit, FaPlus } from "react-icons/fa"
+import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
@@ -59,14 +60,19 @@ export default function Users() {
   }
 
   async function loadUsers() {
-    const response = await api.get("/users", {
-      params: {
-        onlyEnabled,
-        search,
-      },
-    })
+    try {
+      const response = await api.get("/users", {
+        params: {
+          onlyEnabled,
+          search,
+        },
+      })
 
-    setUsers(response.data)
+      toast.dismiss("error")
+      setUsers(response.data)
+    } catch (error) {
+      toast.error("Problemas internos ao carregar usuários", { toastId: "error" })
+    }
   }
 
   function handleOpenUserModal() {
@@ -135,7 +141,7 @@ export default function Users() {
 
       <div className="scroll-div">
         <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-        <SearchBar placeholder="Informe algum dado para buscar" onChange={(event) => handleSearchFilter(event.target.value)} />
+        <SearchBar placeholder="Nome, usuário ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
 
         <table className="styled-table">
           <thead>
