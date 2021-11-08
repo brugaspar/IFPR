@@ -159,7 +159,7 @@ export default function Users() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.name}>
+              <tr key={user.id}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditUser(user)} disabled={!editUserPermission}>
@@ -169,7 +169,7 @@ export default function Users() {
                 <td>{user.name}</td>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
-                <td>{user.disabled ? "Desativo" : "Ativo"}</td>
+                <td>{user.disabled ? "Inativo" : "Ativo"}</td>
                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                 <td>{new Date(user.updatedAt).toLocaleString()}</td>
                 <td>{user.disabledAt && new Date(user.disabledAt).toLocaleDateString()}</td>
