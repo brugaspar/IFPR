@@ -73,7 +73,7 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
         })
       } else {
         if (!(password === confirmPassword)) {
-          return alert("Senhas não coincidem")
+          return toast.error("Senhas não coincidem")
         }
 
         await api.post("users", {

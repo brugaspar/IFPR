@@ -116,17 +116,30 @@ export const Container = styled.div`
             }
           }
 
-          /* .icon-submenu {
-            padding: 0 0.3rem;
-            font-size: 1.2rem;
-            margin-left: 3rem;
-          } */
-
           .label {
             font-size: 1.25rem;
             margin-top: 0.2rem;
             margin-left: 1rem;
             white-space: nowrap;
+          }
+
+          .has-submenu {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+
+            padding-right: 1rem;
+
+            .label-icon {
+              transition: transform 0.5s ease-in-out;
+            }
+
+            &.open {
+              .label-icon {
+                transform: rotate(180deg);
+              }
+            }
           }
 
           &.subitem {
@@ -238,6 +251,14 @@ export const Container = styled.div`
             display: none;
             opacity: 0;
             pointer-events: none;
+          }
+
+          .has-submenu {
+            .label-icon {
+              display: none;
+              opacity: 0;
+              pointer-events: none;
+            }
           }
 
           &.subitem {

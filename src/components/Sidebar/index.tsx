@@ -35,7 +35,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const [listMembersPermission, setListMembersPermission] = useState(false)
   const [listPlansPermission, setListPlansPermission] = useState(false)
   const [listUsersPermission, setListUsersPermission] = useState(false)
-  const [listSystemOptionsPermission, setListSystemOptionsPermission] = useState(false)
+  const [listLOGPermission, setListLOGPermission] = useState(false)
 
   const [hideClass, setHideClass] = useState(true)
 
@@ -60,7 +60,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   }
 
   function handleNavigateToPage(pageName: string) {
-    if (isOpen && !hideClass) {
+    if (isOpen) {
       toggleSidebar()
     }
 
@@ -80,8 +80,8 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const userHasListUsersPermission = await verifyUserPermissions("list_users", userPermissions)
     setListUsersPermission(userHasListUsersPermission)
 
-    const userHasListSystemOptionsPermission = await verifyUserPermissions("list_system", userPermissions)
-    setListSystemOptionsPermission(userHasListSystemOptionsPermission)
+    const userHasListLOGPermission = await verifyUserPermissions("list_log", userPermissions)
+    setListLOGPermission(userHasListLOGPermission)
   }
 
   useEffect(() => {
@@ -154,17 +154,16 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
               <span className="label">Usuários</span>
             </button>
-            <button
-              className="list-button"
-              title="Sistema"
-              onClick={handleToggleHideClass}
-              disabled={!listSystemOptionsPermission}
-            >
+            <button className="list-button" title="Sistema" onClick={handleToggleHideClass}>
               <span className="icon">
                 <FaCog />
               </span>
 
-              <span className="label">Sistema</span>
+              <div className={hideClass ? "has-submenu" : "has-submenu open"}>
+                <span className="label">Sistema</span>
+
+                <span className="label-icon">▼</span>
+              </div>
             </button>
 
             <button
@@ -181,7 +180,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="perguntasFrequentes"
-              onClick={() => handleNavigateToPage("/commonQuestions")}
+              onClick={() => handleNavigateToPage("/frequently-asked-questions")}
             >
               <span className="icon submenu">
                 <FaComments />
@@ -192,7 +191,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="politicasDePrivacidade"
-              onClick={() => handleNavigateToPage("/privacyPolicies")}
+              onClick={() => handleNavigateToPage("/privacy-policies")}
             >
               <span className="icon submenu">
                 <FaGavel />
@@ -204,7 +203,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="log"
               onClick={() => handleNavigateToPage("/log")}
-              // disabled={!listSystemOptionsPermission}
+              disabled={!listLOGPermission}
             >
               <span className="icon submenu">
                 <FaServer />
@@ -216,7 +215,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Sobre"
               onClick={() => handleNavigateToPage("/about")}
-              // disabled={!listSystemOptionsPermission}
             >
               <span className="icon submenu">
                 <FaQuestion />
