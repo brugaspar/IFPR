@@ -124,9 +124,15 @@ class UsersRepository {
       }
     })
 
+    let whereClause = `
+      where
+        ${onlyEnabled ? `u.disabled = false and` : ""}
+        ${searchText}
+    `
+
     const pg = await pgPool.connect()
 
-    const users = await pg.query(`
+    const query = `
       select
         u.id,
         u.name,
@@ -143,9 +149,10 @@ class UsersRepository {
         (select u2.name from users u2 where u2.id = u.last_disabled_by) disabled_by_user
       from
         users u
-      where
-        ${searchText}
-    `)
+      ${whereClause}
+    `
+
+    const users = await pg.query(query)
 
     await pg.release()
 
