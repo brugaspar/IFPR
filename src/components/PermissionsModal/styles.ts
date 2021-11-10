@@ -6,9 +6,34 @@ export const Container = styled.div`
     margin-bottom: 0.5rem;
   }
 
-  .permissions-container {
-    height: calc(100vh - 22rem);
+  .permissions-options {
     margin: 2rem 0;
+
+    button {
+      height: 2rem;
+      padding: 0 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 1rem;
+
+      background: var(--green);
+      color: var(--text-dark);
+
+      transition: filter 0.2s;
+
+      border: 0;
+
+      + button {
+        margin-left: 1rem;
+      }
+
+      &:hover {
+        filter: brightness(0.8);
+      }
+    }
+  }
+
+  .permissions-container {
+    height: calc(100vh - 23.5rem);
     overflow-y: scroll;
 
     .permissions-item {
@@ -43,10 +68,16 @@ export const Container = styled.div`
   }
 
   .close {
-    margin-top: 2rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    padding: 0 2rem;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    background: var(--background);
 
     button {
       height: 3rem;
@@ -76,6 +107,45 @@ export const Container = styled.div`
       &:hover {
         filter: brightness(0.8);
       }
+    }
+  }
+`
+
+export const CopyContainer = styled.div`
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  select {
+    height: 3rem;
+    padding: 0 0.625rem;
+    font-family: "Mukta";
+    background: var(--shape-dark);
+    color: var(--text-title);
+    border-radius: 0.25rem;
+    border: 0;
+    width: 100%;
+    outline: none;
+  }
+
+  button {
+    height: 3rem;
+    width: 100%;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+
+    background: transparent;
+    color: var(--text-title);
+
+    transition: filter 0.2s;
+
+    border: 1px solid var(--text-title);
+
+    margin-top: 1rem;
+
+    &:hover {
+      filter: brightness(0.8);
     }
   }
 `
