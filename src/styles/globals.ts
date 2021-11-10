@@ -123,4 +123,21 @@ export const GlobalStyle = createGlobalStyle`
 
     outline: 0;
   }
+
+  .react-modal-content-small {
+    width: 100%;
+    max-width: 500px;
+
+    max-height: calc(100% - 7rem);
+
+    background: var(--background);
+
+    padding: 2rem;
+    position: relative;
+
+    border-radius: 0.25rem;
+
+    outline: 0;
+  }
+
 `
