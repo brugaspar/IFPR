@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Exercício - Fragment</string>
+    <string name="increment">Incrementar</string>
+</resources>
