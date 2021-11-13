@@ -1,20 +1,213 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { useEffect, useRef, useState } from "react"
+import { FaChevronDown, FaChevronUp, FaEdit, FaFilter, FaPlus } from "react-icons/fa"
+import { toast } from "react-toastify"
+
+import { useAuth } from "../../hooks/useAuth"
+
+import { UserModal } from "../../components/UserModal"
+import { Checkbox } from "../../components/Checkbox"
+import { SearchBar } from "../../components/SearchBar"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
+import { api } from "../../services/api.service"
+
 import { Container } from "./styles"
 
+type Member = {
+  id: string
+  name: string
+  phone:string
+  email: string
+  healthIssues: string
+  plan_id: string
+  disabled: boolean
+  crValidity: string
+  // last_activity:string
+  createdAt: string
+  disabledAt: string
+  disabledByUser: Member | null
+}
+
 export default function Members() {
+  // const [reload, setReload] = useState(false)
+  const { user } = useAuth()
+  const userPermissions = user?.permissions || []
+
+  const [members, setMembers] = useState<Member[]>([])
+  const [selectedMember, setSelectedMember] = useState<string | null>("")
+
+  const [onlyEnabled, setOnlyEnabled] = useState(true)
+
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false)
+
+  const [createMemberPermission, setCreateMemberPermission] = useState(false)
+  const [editMemberPermission, setEditMemberPermission] = useState(false)
+
+  const [search, setSearch] = useState("")
+  const [reload, setReload] = useState(false)
+
+  const timeoutRef = useRef<any>(0)
+
+  function handleSearchFilter(text: string) {
+    setSearch(text)
+
+    clearTimeout(timeoutRef.current)
+
+    timeoutRef.current = setTimeout(() => {
+      setReload(!reload)
+    }, 500)
+  }
+
+
+  async function loadMembers() {
+    const response = await api.get("/members", {
+      params: {
+        onlyEnabled,
+        search,
+      },
+    })
+
+    setMembers(response.data)
+  }
+
+  function handleOpenMemberModal() {
+    setIsMemberModalOpen(true)
+  }
+
+  function handleCloseMemberModal() {
+    setIsMemberModalOpen(false)
+  }
+
+  function handleAddMember() {
+    setSelectedMember(null)
+    handleOpenMemberModal()
+  }
+
+  function handleEditMember(member: Member) {
+    setSelectedMember(member.id)
+    handleOpenMemberModal()
+  }
+
+  function handleToggleOnlyEnabled() {
+    setOnlyEnabled(!onlyEnabled)
+  }
+
+  async function verifyPermissions() {
+    const userHasCreateMembersPermission = await verifyUserPermissions("create_members", userPermissions)
+    setCreateMemberPermission(userHasCreateMembersPermission)
+
+    const userHasEditMembersPermission = await verifyUserPermissions("edit_members", userPermissions)
+    setEditMemberPermission(userHasEditMembersPermission)
+  }
+
+  // TODO: bolar atualização de dados, para evitar muitas chamadas
+  // useEffect(() => {
+  //   loadUsers()
+
+  //   const unsubscribe = window.addEventListener("focus", () => {
+  //     setReload(!reload)
+  //   })
+
+  //   return unsubscribe
+  // }, [reload, onlyEnabled])
+
+  useEffect(() => {
+    verifyPermissions()
+  }, [])
+
+  useEffect(() => {
+    loadMembers()
+  }, [onlyEnabled, isMemberModalOpen, search])
+
   return (
     <Container>
       <Head>
         <title>Mark One | Membros</title>
       </Head>
-      <h1>Members</h1>
+
+      <div className="header">
+        <h1 className="title">Membros</h1>
+
+        <button onClick={handleAddMember} type="button" disabled={!createMemberPermission}>
+          <FaPlus />
+            Novo membro
+        </button>
+      </div>
+
+      <div className="filterSection">
+        <div className="headerOptions">
+            <div className="ho cbActive">
+              <Checkbox   
+                title="Somente ativos" 
+                active={onlyEnabled} 
+                handleToggleActive={handleToggleOnlyEnabled} 
+              />
+            </div>
+            <div className="ho searchBar">
+              <SearchBar 
+                placeholder="Nome, usuário ou e-mail" 
+                onChange={(event) => handleSearchFilter(event.target.value)} 
+              />            
+            </div>
+            <div className="ho bttnFilters">
+              {/* <button className="filterBttn" type="button">
+                  Filtrar    
+                  <FaChevronUp className="faChevronDownIcon"/>
+              </button> */}
+          </div>     
+        </div>
+      </div>
+
+      <div className="scroll-div">
+        <table className="styled-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nome</th>             
+              <th>Contato</th>
+              <th>E-mail</th>
+              <th>Tipo Sanguineo</th>
+              <th>Plano</th>
+              <th>Status</th>
+              <th>Ultima Atividade em</th>
+              <th>Cadastrado em</th>
+              <th>Desativado em</th>
+              <th>Desativado por</th>
+            </tr>
+          </thead>
+          <tbody>
+            {members.map((member) => (
+              <tr key={member.name}>
+                <td>
+                  {/* <FaEdit color="var(--blue)" /> */}
+                  <button className="edit" onClick={() => handleEditMember(member)} disabled={!editMemberPermission}>
+                    <FaEdit color="var(--blue)" size={18} />
+                  </button>
+                </td>
+                <td>{member.name}</td>
+                <td>{member.phone}</td>
+                <td>{member.email}</td>
+                <td>{member.healthIssues}</td>
+                <td>{member.plan_id}</td>                
+                <td>{member.disabled ? "Desativo" : "Ativo"}</td>
+                <td>{new Date(member.crValidity).toLocaleDateString()}</td>
+                <td>{/* data da ultima atividade, verificar possibilidade de novo atributo */}</td>
+                <td>{new Date(member.createdAt).toLocaleDateString()}</td>
+                <td>{member.disabledAt && new Date(member.disabledAt).toLocaleDateString()}</td>
+                <td>{member.disabledByUser?.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* <MemberModal isOpen={isMemberModalOpen} onRequestClose={handleCloseMemberModal} memberId={selectedMember || ""} /> */}
     </Container>
-  )
+    )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
