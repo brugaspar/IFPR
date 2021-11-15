@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
-import { FaEdit, FaPlus } from "react-icons/fa"
+import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
@@ -138,11 +138,31 @@ export default function Users() {
           Novo usuário
         </button>
       </div>
+      <div className="filterSection">
+        <div className="headerOptions">
+            <div className="ho cbActive">
+              <Checkbox   
+                title="Somente ativos" 
+                active={onlyEnabled} 
+                handleToggleActive={handleToggleOnlyEnabled} 
+              />
+            </div>
+            <div className="ho searchBar">
+              <SearchBar 
+                placeholder="Nome, usuário ou e-mail" 
+                onChange={(event) => handleSearchFilter(event.target.value)} 
+              />            
+            </div>
+            <div className="ho bttnFilters">
+              <button className="filterBttn" type="button">
+                  Filtrar    
+                  <FaChevronUp className="faChevronDownIcon"/>
+              </button>
+          </div>     
+        </div>
+      </div>
 
       <div className="scroll-div">
-        <SearchBar placeholder="Nome, usuário ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
-        <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-
         <table className="styled-table">
           <thead>
             <tr>
@@ -151,10 +171,10 @@ export default function Users() {
               <th>Usuário</th>
               <th>E-mail</th>
               <th>Status</th>
-              <th>Cadastro</th>
+              <th>Cadastrado em</th>
               <th>Última edição</th>
-              <th>Data de desativação</th>
-              <th>Último usuário que desativou</th>
+              <th>Desativado em </th>
+              <th>Desativado por</th>
             </tr>
           </thead>
           <tbody>
