@@ -27,36 +27,48 @@ model Permissions {
 }
 
 model Users {
-  id              String             @id @default(uuid())
-  name            String
-  email           String             @unique
-  password        String
-  username        String             @unique
-  permissions     Json
-  disabled        Boolean            @default(false)
-  disabledAt      DateTime?          @map("disabled_at")
-  createdAt       DateTime           @default(now()) @map("created_at")
-  updatedAt       DateTime           @default(now()) @updatedAt @map("updated_at")
-  lastDisabledBy  String?            @map("last_disabled_by")
-  disabledByUser  Users?             @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
-  disabledUsers   Users[]            @relation("UserToDisabled")
-  lastUpdatedBy   String?            @map("last_updated_by")
-  updatedByUser   Users?             @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
-  updatedUsers    Users[]            @relation("UserToUpdated")
-  createdBy       String?            @map("created_by")
-  createdByUser   Users?             @relation("UserToCreated", fields: [createdBy], references: [id])
-  createdUsers    Users[]            @relation("UserToCreated")
-  logs            Logs[]
-  disabledPlans   Plans[]            @relation("PlanToDisabled")
-  updatedPlanes   Plans[]            @relation("PlanToUpdated")
-  createdPlans    Plans[]            @relation("PlanToCreated")
-  disabledMembers Members[]          @relation("MemberToDisabled")
-  updatedMembers  Members[]          @relation("MemberToUpdated")
-  createdMembers  Members[]          @relation("MemberToCreated")
-  updatedAddress  MembersAddresses[] @relation("AddressToUpdated")
-  createdAddress  MembersAddresses[] @relation("AddressToCreated")
-  updatedDocument MembersDocuments[] @relation("DocumentToUpdated")
-  createdDocument MembersDocuments[] @relation("DocumentToCreated")
+  id                     String             @id @default(uuid())
+  name                   String
+  email                  String             @unique
+  password               String
+  username               String             @unique
+  permissions            Json
+  disabled               Boolean            @default(false)
+  disabledAt             DateTime?          @map("disabled_at")
+  createdAt              DateTime           @default(now()) @map("created_at")
+  updatedAt              DateTime           @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy         String?            @map("last_disabled_by")
+  disabledByUser         Users?             @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
+  disabledUsers          Users[]            @relation("UserToDisabled")
+  lastUpdatedBy          String?            @map("last_updated_by")
+  updatedByUser          Users?             @relation("UserToUpdated", fields: [lastUpdatedBy], references: [id])
+  updatedUsers           Users[]            @relation("UserToUpdated")
+  createdBy              String?            @map("created_by")
+  createdByUser          Users?             @relation("UserToCreated", fields: [createdBy], references: [id])
+  createdUsers           Users[]            @relation("UserToCreated")
+  logs                   Logs[]
+  disabledPlans          Plans[]            @relation("PlanToDisabled")
+  updatedPlans           Plans[]            @relation("PlanToUpdated")
+  createdPlans           Plans[]            @relation("PlanToCreated")
+  disabledMembers        Members[]          @relation("MemberToDisabled")
+  updatedMembers         Members[]          @relation("MemberToUpdated")
+  createdMembers         Members[]          @relation("MemberToCreated")
+  updatedAddresses       MembersAddresses[] @relation("AddressToUpdated")
+  createdAddresses       MembersAddresses[] @relation("AddressToCreated")
+  updatedDocuments       MembersDocuments[] @relation("DocumentToUpdated")
+  createdDocuments       MembersDocuments[] @relation("DocumentToCreated")
+  updatedActivities      Activities[]       @relation("ActivityToUpdated")
+  createdActivities      Activities[]       @relation("ActivityToCreated")
+  activitiesAsSeller     Activities[]
+  disabledProductsBrands ProductsBrands[]   @relation("ProductsBrandsToDisabled")
+  updatedProductsBrands  ProductsBrands[]   @relation("ProductsBrandsToUpdated")
+  createdProductsBrands  ProductsBrands[]   @relation("ProductsBrandsToCreated")
+  disabledProductsGroups ProductsGroups[]   @relation("ProductsGroupsToDisabled")
+  updatedProductsGroups  ProductsGroups[]   @relation("ProductsGroupsToUpdated")
+  createdProductsGroups  ProductsGroups[]   @relation("ProductsGroupsToCreated")
+  disabledProducts       Products[]         @relation("ProductsToDisabled")
+  updatedProducts        Products[]         @relation("ProductsToUpdated")
+  createdProducts        Products[]         @relation("ProductsToCreated")
 
 
   @@map("users")
@@ -192,6 +204,7 @@ model Members {
   plan             Plans              @relation(fields: [planId], references: [id])
   memberAddresses  MembersAddresses[]
   memberDocuments  MembersDocuments[]
+  memberActivities Activities[]
 
   @@map("members")
 }
@@ -232,4 +245,108 @@ model MembersDocuments {
   createdByUser Users?    @relation("DocumentToCreated", fields: [createdBy], references: [id])
 
   @@map("members_documents")
+}
+
+model ProductsBrands {
+  id             String     @id @default(uuid())
+  name           String
+  disabled       Boolean    @default(false)
+  disabledAt     DateTime?  @map("disabled_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy String?    @map("last_disabled_by")
+  disabledByUser Users?     @relation("ProductsBrandsToDisabled", fields: [lastDisabledBy], references: [id])
+  lastUpdatedBy  String?    @map("last_updated_by")
+  updatedByUser  Users?     @relation("ProductsBrandsToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy      String?    @map("created_by")
+  createdByUser  Users?     @relation("ProductsBrandsToCreated", fields: [createdBy], references: [id])
+  products       Products[]
+
+  @@map("products_brands")
+}
+
+model ProductsGroups {
+  id             String     @id @default(uuid())
+  name           String
+  disabled       Boolean    @default(false)
+  disabledAt     DateTime?  @map("disabled_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy String?    @map("last_disabled_by")
+  disabledByUser Users?     @relation("ProductsGroupsToDisabled", fields: [lastDisabledBy], references: [id])
+  lastUpdatedBy  String?    @map("last_updated_by")
+  updatedByUser  Users?     @relation("ProductsGroupsToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy      String?    @map("created_by")
+  createdByUser  Users?     @relation("ProductsGroupsToCreated", fields: [createdBy], references: [id])
+  products       Products[]
+
+  @@map("products_groups")
+}
+
+model Products {
+  id              String            @id @default(uuid())
+  name            String
+  quantity        Float
+  minimumQuantity Float             @map("minimum_quantity")
+  price           Float
+  brandId         String            @map("brand_id")
+  brand           ProductsBrands    @relation(fields: [brandId], references: [id])
+  groupId         String            @map("group_id")
+  group           ProductsGroups    @relation(fields: [groupId], references: [id])
+  disabled        Boolean           @default(false)
+  disabledAt      DateTime?         @map("disabled_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  lastDisabledBy  String?           @map("last_disabled_by")
+  disabledByUser  Users?            @relation("ProductsToDisabled", fields: [lastDisabledBy], references: [id])
+  lastUpdatedBy   String?           @map("last_updated_by")
+  updatedByUser   Users?            @relation("ProductsToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy       String?           @map("created_by")
+  createdByUser   Users?            @relation("ProductsToCreated", fields: [createdBy], references: [id])
+  activityItem    ActivitiesItems[]
+
+  @@map("products")
+}
+
+enum ActivitiesStatus {
+  open
+  in_progress
+  closed
+  cancelled
+}
+
+model Activities {
+  id              String            @id @default(uuid())
+  status          ActivitiesStatus  @default(open)
+  total           Float
+  totalQuantity   Float             @map("total_quantity")
+  totalItems      Float             @map("total_items")
+  observation     String?
+  cancelledReason String?
+  sellerId        String            @map("seller_id")
+  seller          Users             @relation(fields: [sellerId], references: [id])
+  memberId        String            @map("member_id")
+  member          Members           @relation(fields: [memberId], references: [id])
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  lastUpdatedBy   String?           @map("last_updated_by")
+  updatedByUser   Users?            @relation("ActivityToUpdated", fields: [lastUpdatedBy], references: [id])
+  createdBy       String?           @map("created_by")
+  createdByUser   Users?            @relation("ActivityToCreated", fields: [createdBy], references: [id])
+  items           ActivitiesItems[]
+
+  @@map("activities")
+}
+
+model ActivitiesItems {
+  id         String     @id @default(uuid())
+  activityId String     @map("activity_id")
+  activity   Activities @relation(fields: [activityId], references: [id])
+  productId  String     @map("product_id")
+  product    Products   @relation(fields: [productId], references: [id])
+  quantity   Float
+  price      Float
+  subtotal   Float
+
+  @@map("activities_items")
 }

@@ -6,6 +6,7 @@ import permissionsRouter from "./permissions.routes"
 import plansRouter from "./plans.routes"
 import membersRouter from "./members.routes"
 import logsRouter from "./logs.routes"
+import productsRouter from "./products.routes"
 
 const router = Router()
 
@@ -15,5 +16,6 @@ router.use(permissionsRouter)
 router.use(plansRouter)
 router.use(membersRouter)
 router.use(logsRouter)
+router.use(productsRouter)
 
 export { router }

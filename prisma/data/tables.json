@@ -28,5 +28,20 @@
   },
   {
     "name": "members_documents"
+  },
+  {
+    "name": "products_brands"
+  },
+  {
+    "name": "products_groups"
+  },
+  {
+    "name": "products"
+  },
+  {
+    "name": "activities"
+  },
+  {
+    "name": "activities_items"
   }
 ]

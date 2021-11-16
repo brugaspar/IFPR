@@ -82,5 +82,77 @@
     "slug": "list_logs",
     "description": "Permite visualizar os LOG gerados pelo sistema",
     "table": "general_logs"
+  },
+  {
+    "name": "Visualizar marcas de produtos",
+    "slug": "list_brands",
+    "description": "Permite a visualização da lista de marcas cadastradas.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Incluir marcas de produtos",
+    "slug": "create_brands",
+    "description": "Permite a inclusão de uma novo marca no sistema.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Editar marcas de produtos",
+    "slug": "edit_brands",
+    "description": "Permite a edição dos dados cadastrais das marcas.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Ativar ou desativar marcas de produtos",
+    "slug": "disable_brands",
+    "description": "Permite ativar ou desativar o cadastro de uma marca do sistema.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Visualizar grupos de produtos",
+    "slug": "list_groups",
+    "description": "Permite a visualização da lista de grupos cadastrados.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Incluir grupos de produtos",
+    "slug": "create_groups",
+    "description": "Permite a inclusão de um novo grupo no sistema.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Editar grupos de produtos",
+    "slug": "edit_groups",
+    "description": "Permite a edição dos dados cadastrais dos grupos.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Ativar ou desativar grupos de produtos",
+    "slug": "disable_groups",
+    "description": "Permite ativar ou desativar o cadastro de um grupo do sistema.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Visualizar produtos",
+    "slug": "list_products",
+    "description": "Permite a visualização da lista de produtos cadastrados.",
+    "table": "products"
+  },
+  {
+    "name": "Incluir produtos",
+    "slug": "create_products",
+    "description": "Permite a inclusão de um novo produto no sistema.",
+    "table": "products"
+  },
+  {
+    "name": "Editar produtos",
+    "slug": "edit_products",
+    "description": "Permite a edição dos dados cadastrais dos produtos.",
+    "table": "products"
+  },
+  {
+    "name": "Ativar ou desativar produtos",
+    "slug": "disable_products",
+    "description": "Permite ativar ou desativar o cadastro de um produto do sistema.",
+    "table": "products"
   }
 ]
