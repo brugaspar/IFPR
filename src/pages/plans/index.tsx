@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { UserModal } from "../../components/UserModal"
+import { PlansModal } from "../../components/PlansModal"
 import { Checkbox } from "../../components/Checkbox"
 import { SearchBar } from "../../components/SearchBar"
 
@@ -21,18 +21,21 @@ type Plan = {
   id: string
   name: string
   description: string
-  value: string
-  renew_value: boolean
+  value: number
+  renewValue: number
   createdAt: string
   disabled: boolean
   updatedAt: string
-  updatedByUser: Plan | null
   disabledAt: string
-  disableByUser: Plan | null
+  targetExemption: boolean
+  shootingDrillsPerYear: number
+  gunTargetDiscount: number
+  gunExemption: boolean
+  courseDiscount: number
+  disabledByUser: string
 }
 
 export default function Plans() {
-  // const [reload, setReload] = useState(false)
   const { user } = useAuth()
   const userPermissions = user?.permissions || []
 
@@ -60,7 +63,6 @@ export default function Plans() {
       setReload(!reload)
     }, 500)
   }
-
 
   async function loadPlans() {
     const response = await api.get("/plans", {
@@ -133,31 +135,24 @@ export default function Plans() {
 
         <button onClick={handleAddPlan} type="button" disabled={!createPlanPermission}>
           <FaPlus />
-            Novo plano
+          Novo plano
         </button>
       </div>
 
       <div className="filterSection">
         <div className="headerOptions">
-            <div className="ho cbActive">
-              <Checkbox   
-                title="Somente ativos" 
-                active={onlyEnabled} 
-                handleToggleActive={handleToggleOnlyEnabled} 
-              />
-            </div>
-            <div className="ho searchBar">
-              <SearchBar 
-                placeholder="Nome ou tipo" 
-                onChange={(event) => handleSearchFilter(event.target.value)} 
-              />            
-            </div>
-            <div className="ho bttnFilters">
-              {/* <button className="filterBttn" type="button">
-                  Filtrar    
+          <div className="ho cbActive">
+            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
+          </div>
+          <div className="ho searchBar">
+            <SearchBar placeholder="Nome ou tipo" onChange={(event) => handleSearchFilter(event.target.value)} />
+          </div>
+          <div className="ho bttnFilters">
+            {/* <button className="filterBttn" type="button">
+                  Filtrar
                   <FaChevronUp className="faChevronDownIcon"/>
               </button> */}
-          </div>     
+          </div>
         </div>
       </div>
 
@@ -166,14 +161,15 @@ export default function Plans() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>             
+              <th>Nome</th>
               <th>Descrição</th>
               <th>Valor</th>
-              <th>Valor para Renovação</th>
-              <th>Criado em </th>
+              <th>Valor de Renovação</th>
+              <th>Data de cadastro</th>
               <th>Status</th>
-              <th>Atualizado em</th>
-              <th>Atualizado por</th>
+              <th>Isenção de armas</th>
+              <th>Isenção de alvos</th>
+              <th>Última edição</th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -189,23 +185,24 @@ export default function Plans() {
                 </td>
                 <td>{plan.name}</td>
                 <td>{plan.description}</td>
-                <td>{plan.value}</td>
-                <td>{plan.renew_value}</td>
-                <td>{new Date(plan.createdAt).toLocaleDateString()}</td> 
-                <td>{plan.disabled ? "Desativo" : "Ativo"}</td>               
-                <td>{new Date(plan.updatedAt).toLocaleDateString()}</td>
-                <td>{plan.updatedByUser?.name}</td>             
+                <td>{plan.value ? plan.value.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
+                <td>{plan.renewValue ? plan.renewValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
+                <td>{new Date(plan.createdAt).toLocaleDateString()}</td>
+                <td>{plan.disabled ? "Inativo" : "Ativo"}</td>
+                <td>{plan.gunExemption ? "Sim" : "Não"}</td>
+                <td>{plan.targetExemption ? "Sim" : "Não"}</td>
+                <td>{new Date(plan.updatedAt).toLocaleString()}</td>
                 <td>{plan.disabledAt && new Date(plan.disabledAt).toLocaleDateString()}</td>
-                <td>{plan.disableByUser?.name}</td>
+                <td>{plan.disabledByUser}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* <PlanModal isOpen={isPlanModalOpen} onRequestClose={handleClosePlanModal} memberId={selectedPlan || ""} /> */}
+      <PlansModal isOpen={isPlanModalOpen} onRequestClose={handleClosePlanModal} planId={selectedPlan || ""} />
     </Container>
-    )
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
