@@ -48,9 +48,14 @@ class PlansController {
   }
 
   async index(request: Request, response: Response) {
+    const { onlyEnabled = true, search = "" } = request.query as any
+
     await checkRequestUser(request.userId)
 
-    const plans = await plansRepository.findAll()
+    const plans = await plansRepository.findAll({
+      onlyEnabled: JSON.parse(onlyEnabled),
+      search,
+    })
 
     return response.status(200).json(plans)
   }
