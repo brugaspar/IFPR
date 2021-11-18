@@ -86,7 +86,7 @@ export default function Home() {
         </div>
 
         <div className="sign-in">
-          <img src="/images/logo.png" alt="Mark One" />
+          <img src="/images/logo_com_slogan.png" alt="Mark One" />
 
           <form onSubmit={handleSignIn}>
             <label htmlFor="username">Usuário</label>
