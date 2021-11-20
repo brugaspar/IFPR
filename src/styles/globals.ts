@@ -60,6 +60,12 @@ export const GlobalStyle = createGlobalStyle`
     color: var(--text-title);
   }
 
+  table{
+    th{
+      white-space: nowrap;
+    }
+  }
+
   button {
     cursor: pointer;
   }
