@@ -1,17 +1,19 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
+  overflow:hidden;
   > img {
     position: fixed;
     bottom: 0;
     left: 0;
     height: 100%;
-    z-index: -1;
+    width:50%;
+    z-index: -1;   
   }
 `
 
 export const Content = styled.div`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -32,8 +34,8 @@ export const Content = styled.div`
     }
 
     img {
-      width: 32rem;
-      margin: 6rem 0;
+      width: 28rem;
+      margin: 5% 0;
     }
 
     p {
