@@ -13,12 +13,14 @@ type RequestProduct = {
   brandId: string
   groupId: string
   disabled: boolean
+  isService: boolean
 }
 
 type Product = {
   id: string
   name: string
   quantity: number
+  is_service: boolean
   minimum_quantity: number
   price: number
   brand_id: string
@@ -113,6 +115,7 @@ class ProductsRepository {
       select
         p.id,
         p.name,
+        p.is_service,
         p.quantity,
         p.minimum_quantity,
         p.price,
@@ -162,6 +165,7 @@ class ProductsRepository {
         lastUpdatedBy: product.last_updated_by,
         createdBy: product.created_by,
         disabledByUser: product.disabled_by_user,
+        isService: product.is_service,
       }
     })
 

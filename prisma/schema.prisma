@@ -286,6 +286,7 @@ model ProductsGroups {
 
 model Products {
   id              String            @id @default(uuid())
+  isService       Boolean           @default(false) @map("is_service")
   name            String
   quantity        Float
   minimumQuantity Float             @map("minimum_quantity")
