@@ -10,7 +10,7 @@ type FilterCity = {
 
 class CitiesController {
   async index(request: Request, response: Response) {
-    const { search }: FilterCity = request.query as any
+    const { search = "" }: FilterCity = request.query as any
 
     await checkRequestUser(request.userId)
 

@@ -55,10 +55,6 @@ type RequestMember = {
   }
 }
 
-type FilterMember = {
-  onlyEnabled: boolean
-}
-
 type MemberDocument = {
   fieldname: string
   originalname: string
@@ -155,19 +151,21 @@ class MemberController {
       request.userId
     )
 
-    for (const document of memberDocuments) {
-      const documentData = {
-        name: document.key,
-        path: `http://localhost:3030/files/${document.key}`,
-      }
+    if (memberDocuments) {
+      for (const document of memberDocuments) {
+        const documentData = {
+          name: document.key,
+          path: `http://localhost:3030/files/${document.key}`,
+        }
 
-      await documentsRepository.store(
-        {
-          ...documentData,
-          memberId: storedMember,
-        },
-        request.userId
-      )
+        await documentsRepository.store(
+          {
+            ...documentData,
+            memberId: storedMember,
+          },
+          request.userId
+        )
+      }
     }
 
     await addressesRepository.store(
@@ -182,7 +180,7 @@ class MemberController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true }: FilterMember = request.body
+    const { onlyEnabled = true, search = "" } = request.query as any
 
     const schema = {
       onlyEnabled: yup.boolean(),
@@ -192,7 +190,10 @@ class MemberController {
 
     await checkRequestUser(request.userId)
 
-    const members = await membersRepository.findAll(onlyEnabled)
+    const members = await membersRepository.findAll({
+      onlyEnabled: JSON.parse(onlyEnabled),
+      search,
+    })
 
     return response.status(200).json(members)
   }
@@ -237,16 +238,7 @@ class MemberController {
       maritalStatus: yup.mixed().oneOf(["single", "married", "widower", "legally_separated", "divorced"]),
       bloodTyping: yup
         .mixed()
-        .oneOf([
-          "APositive",
-          "ANegative",
-          "BPositive",
-          "BNegative",
-          "ABPositive",
-          "ABNegative",
-          "OPositive",
-          "ONegative",
-        ]),
+        .oneOf(["APositive", "ANegative", "BPositive", "BNegative", "ABPositive", "ABNegative", "OPositive", "ONegative"]),
       disabled: yup.string(),
       planId: yup.string(),
       address: yup.object().shape({
@@ -263,7 +255,13 @@ class MemberController {
 
     await checkRequestUser(request.userId)
 
-    if (member.email) {
+    const memberExists = await membersRepository.findById(id)
+
+    if (!memberExists) {
+      throw new AppError("Membro não encontrado")
+    }
+
+    if (member.email && member.email !== memberExists.email) {
       const emailExists = await membersRepository.findByEmail(member.email)
 
       if (emailExists) {

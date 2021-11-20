@@ -19,7 +19,7 @@ app.use(morgan("dev"))
 
 app.use("/api/v1", router)
 
-app.use("/files", authenticationMiddleware, express.static("uploads"))
+app.use("/files", express.static("uploads"))
 
 app.use(errorsMiddleware)
 
