@@ -117,6 +117,8 @@ class ProductsGroupsRepository {
       from
         products_groups pg
       ${whereClause}
+      order by
+        pg.created_at
     `
 
     const productsGroups = await pg.query<ProductGroup>(query)

@@ -138,6 +138,8 @@ class PlansRepository {
       from
         members_plans p
       ${whereClause}
+      order by
+        p.created_at
     `
 
     const plans = await pg.query<Plan>(query)

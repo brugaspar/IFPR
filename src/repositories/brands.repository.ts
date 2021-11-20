@@ -117,6 +117,8 @@ class ProductsBrandsRepository {
       from
         products_brands pb
       ${whereClause}
+      order by
+        pb.created_at
     `
 
     const productsBrands = await pg.query<ProductBrand>(query)

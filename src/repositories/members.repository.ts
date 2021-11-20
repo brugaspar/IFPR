@@ -7,15 +7,7 @@ import logsRepository from "./logs.repository"
 
 type Gender = "male" | "female" | "other"
 type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
-type BloodTyping =
-  | "APositive"
-  | "ANegative"
-  | "BPositive"
-  | "BNegative"
-  | "ABPositive"
-  | "ABNegative"
-  | "OPositive"
-  | "ONegative"
+type BloodTyping = "APositive" | "ANegative" | "BPositive" | "BNegative" | "ABPositive" | "ABNegative" | "OPositive" | "ONegative"
 
 type RequestMember = {
   name: string
@@ -184,6 +176,8 @@ class MembersRepository {
       from
         members m
       ${whereClause}
+      order by
+        m.created_at
     `
 
     const members = await pg.query<Member>(query)
@@ -285,10 +279,7 @@ class MembersRepository {
   }
 
   async update({ member, requestUserId, memberId }: UpdateMemberProps) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(
-      member.disabled,
-      requestUserId
-    )
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(member.disabled, requestUserId)
 
     const { id } = await prisma.members.update({
       data: {

@@ -5,36 +5,52 @@ import { getDisabledInfo } from "../helpers/disabled.helper"
 
 import logsRepository from "./logs.repository"
 
+type ActivityStatus = "open" | "in_progress" | "closed" | "cancelled"
+
+type RequestActivityItem = {
+  activityId: string
+  productId: string
+  quantity: number
+  price: number
+  subtotal: number
+}
+
 type RequestActivity = {
-  name: string
-  email: string
-  password: string
-  username: string
-  permissions: string[]
-  disabled: boolean
+  status: ActivityStatus
+  total: number
+  totalQuantity: number
+  totalItems: number
+  observation: string
+  cancelledReason: string
+  sellerId: string
+  memberId: string
+  finishedAt: string
 }
 
 type Activity = {
   id: string
-  name: string
-  email: string
-  password: string
-  username: string
-  permissions: string[]
-  disabled: boolean
-  disabled_at: string
+  status: string
+  total: string
+  total_quantity: string
+  total_items: string
+  observation: string
+  cancelled_reason: string
+  seller_id: string
+  member_id: string
   created_at: string
   updated_at: string
-  last_disabled_by: string
   last_updated_by: string
+  cancelled_by_user: string
   created_by: string
-  disabled_by_user: string
+  seller_name: string
+  member_name: string
+  cancelled_at: string
 }
 
 type UpdateActivityProps = {
-  user: RequestActivity
+  activity: RequestActivity
   requestUserId: string
-  userId: string
+  activityId: string
 }
 
 type FilterActivity = {
@@ -47,15 +63,13 @@ const pgPool = new Pool()
 
 class ActivitiesRepository {
   async store(activity: RequestActivity, requestUserId: string) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(activity.disabled, requestUserId)
+    const { lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(false, requestUserId)
 
-    const { id } = await prisma.users.create({
+    const { id } = await prisma.activities.create({
       data: {
         ...activity,
         createdBy,
         lastUpdatedBy,
-        disabledAt,
-        lastDisabledBy,
       },
       select: {
         id: true,
@@ -72,34 +86,28 @@ class ActivitiesRepository {
     return id
   }
 
-  async findByUsername(username: string) {
-    const user = await prisma.users.findUnique({
-      where: {
-        username,
+  async storeItem(item: RequestActivityItem) {
+    const { id } = await prisma.activitiesItems.create({
+      data: item,
+      select: {
+        id: true,
       },
     })
 
-    return user
-  }
-
-  async findByEmail(email: string) {
-    const user = await prisma.users.findUnique({
-      where: {
-        email,
-      },
-    })
-
-    return user
+    return id
   }
 
   async findById(id: string) {
-    const user = await prisma.users.findUnique({
+    const activities = await prisma.activities.findUnique({
       where: {
         id,
       },
+      include: {
+        items: true,
+      },
     })
 
-    return user
+    return activities
   }
 
   async findAll({ onlyEnabled = true, search = "" }: FilterActivity) {
@@ -120,11 +128,7 @@ class ActivitiesRepository {
     splittedSearch.forEach((word, index) => {
       searchText += `
         (
-          upper(unaccent(u.name)) like upper(unaccent('%${word}%'))
-          or
-          upper(unaccent(u.username)) like upper(unaccent('%${word}%'))
-          or
-          upper(unaccent(u.email)) like upper(unaccent('%${word}%'))
+          upper(unaccent(m.name)) like upper(unaccent('%${word}%'))
         )
       `
 
@@ -135,7 +139,7 @@ class ActivitiesRepository {
 
     let whereClause = `
       where
-        ${onlyEnabled ? `u.disabled = false and` : ""}
+        ${onlyEnabled ? `a.disabled = false and` : ""}
         ${searchText}
     `
 
@@ -143,77 +147,110 @@ class ActivitiesRepository {
 
     const query = `
       select
-        u.id,
-        u.name,
-        u.username,
-        u.email,
-        u.permissions,
-        u.disabled,
-        u.disabled_at,
-        u.created_at,
-        u.updated_at,
-        u.last_disabled_by,
-        u.last_updated_by,
-        u.created_by,
-        (select u2.name from users u2 where u2.id = u.last_disabled_by) disabled_by_user
+        a.id,
+        a.status,
+        a.total,
+        a.total_quantity,
+        a.total_items,
+        a.observation,
+        a.cancelled_reason,
+        a.seller_id,
+        u2.name seller_name,
+        a.member_id,
+        m.name member_name,
+        a.created_at,
+        a.cancelled_at,
+        a.updated_at,
+        a.last_updated_by,
+        a.created_by,
+        (select u.name from users u where u.id = a.last_cancelled_by) cancelled_by_user
       from
-        users u
+        activities a
+      left join
+        members m on m.id = a.member_id
+      left join
+        users u2 on u2.id = a.seller_id
       ${whereClause}
+      order by
+        a.created_at
     `
 
-    const users = await pg.query<Activity>(query)
+    const activities = await pg.query<Activity>(query)
 
     await pg.release()
 
-    if (!users) {
+    if (!activities) {
       return []
     }
 
-    const parsedUsersResult = users.rows.map((user) => {
-      const disabledAt = user.disabled_at ? new Date(user.disabled_at).toISOString() : null
-      const createdAt = user.created_at ? new Date(user.created_at).toISOString() : null
-      const updatedAt = user.updated_at ? new Date(user.updated_at).toISOString() : null
+    const parsedActivitiesResult = activities.rows.map((activity) => {
+      const cancelledAt = activity.cancelled_at ? new Date(activity.cancelled_at).toISOString() : null
+      const createdAt = activity.created_at ? new Date(activity.created_at).toISOString() : null
+      const updatedAt = activity.updated_at ? new Date(activity.updated_at).toISOString() : null
 
       return {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        permissions: user.permissions,
-        disabled: user.disabled,
-        disabledAt,
+        id: activity.id,
+        status: activity.status,
+        total: activity.total,
+        totalQuantity: activity.total_quantity,
+        totalItems: activity.total_items,
+        observation: activity.observation,
+        cancelledReason: activity.cancelled_reason,
+        seller: {
+          id: activity.seller_id,
+          name: activity.seller_name,
+        },
+        member: {
+          id: activity.member_id,
+          name: activity.member_name,
+        },
         createdAt,
         updatedAt,
-        lastDisabledBy: user.last_disabled_by,
-        lastUpdatedBy: user.last_updated_by,
-        createdBy: user.created_by,
-        disabledByUser: user.disabled_by_user,
+        cancelledAt,
+        lastUpdatedBy: activity.last_updated_by,
+        canceledByUser: activity.cancelled_by_user,
+        createdBy: activity.created_by,
       }
     })
 
-    return parsedUsersResult
+    return parsedActivitiesResult
   }
 
-  async update({ user, requestUserId, userId }: UpdateActivityProps) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(user.disabled, requestUserId)
+  async update({ activity, requestUserId, activityId }: UpdateActivityProps) {
+    const { lastUpdatedBy, logUserId } = getDisabledInfo(false, requestUserId)
 
-    const { id } = await prisma.users.update({
+    let cancelledAt = null
+    let finishedAt = null
+    let lastCancelledBy = null
+
+    if (activity.status === "cancelled") {
+      cancelledAt = new Date()
+      lastCancelledBy = requestUserId
+    } else if (activity.status === "open") {
+      cancelledAt = null
+      finishedAt = null
+      lastCancelledBy = null
+    } else if (activity.status === "closed") {
+      finishedAt = new Date()
+    }
+
+    const { id } = await prisma.activities.update({
       data: {
-        ...user,
-        password: user.password || undefined,
-        disabledAt,
-        lastDisabledBy,
+        ...activity,
         lastUpdatedBy,
+        cancelledAt,
+        finishedAt,
+        lastCancelledBy,
       },
       where: {
-        id: userId,
+        id: activityId,
       },
       select: {
         id: true,
       },
     })
 
-    await logsRepository.store("users", {
+    await logsRepository.store("activities", {
       action: "update",
       description: "Registro atualizado por usuário",
       referenceId: id,

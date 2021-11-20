@@ -59,6 +59,8 @@ model Users {
   createdDocuments       MembersDocuments[] @relation("DocumentToCreated")
   updatedActivities      Activities[]       @relation("ActivityToUpdated")
   createdActivities      Activities[]       @relation("ActivityToCreated")
+  cancelledActivities    Activities[]       @relation("ActivitiesToCancelled")
+  finishedActivities     Activities[]       @relation("ActivityToFinished")
   activitiesAsSeller     Activities[]
   disabledProductsBrands ProductsBrands[]   @relation("ProductsBrandsToDisabled")
   updatedProductsBrands  ProductsBrands[]   @relation("ProductsBrandsToUpdated")
@@ -69,7 +71,6 @@ model Users {
   disabledProducts       Products[]         @relation("ProductsToDisabled")
   updatedProducts        Products[]         @relation("ProductsToUpdated")
   createdProducts        Products[]         @relation("ProductsToCreated")
-
 
   @@map("users")
 }
@@ -333,6 +334,12 @@ model Activities {
   updatedByUser   Users?            @relation("ActivityToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy       String?           @map("created_by")
   createdByUser   Users?            @relation("ActivityToCreated", fields: [createdBy], references: [id])
+  lastCancelledBy String?           @map("last_cancelled_by")
+  cancelledAt     DateTime?         @map("cancelled_at")
+  cancelledByUser Users?            @relation("ActivitiesToCancelled", fields: [lastCancelledBy], references: [id])
+  finishedAt      DateTime?         @map("finished_at")
+  finishedBy      String?           @map("finished_by")
+  finishedByUser  Users?            @relation("ActivityToFinished", fields: [finishedBy], references: [id])
   items           ActivitiesItems[]
 
   @@map("activities")

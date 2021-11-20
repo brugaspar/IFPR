@@ -159,6 +159,8 @@ class UsersRepository {
       from
         users u
       ${whereClause}
+      order by
+        u.created_at
     `
 
     const users = await pg.query<User>(query)
