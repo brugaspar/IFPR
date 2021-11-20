@@ -8,9 +8,13 @@ import {
   FaFolderOpen,
   FaGavel,
   FaHome,
+  FaObjectGroup,
   FaQuestion,
+  FaRegListAlt,
   FaServer,
   FaSignOutAlt,
+  FaTag,
+  FaToolbox,
   FaUser,
   FaUsers,
 } from "react-icons/fa"
@@ -36,14 +40,28 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const [listPlansPermission, setListPlansPermission] = useState(false)
   const [listUsersPermission, setListUsersPermission] = useState(false)
   const [listLogsPermission, setListLogssPermission] = useState(false)
+  const [listProductsPermission, setListProductsPermission] = useState(false)
 
   const [hideClass, setHideClass] = useState(true)
+  const [hideClassProduct, setHideClassProduct] = useState(true)
 
   function handleToggleHideClass() {
     if (!hideClass && !isOpen) {
       toggleSidebar()
     } else {
       setHideClass(!hideClass)
+    }
+
+    if (!isOpen) {
+      toggleSidebar()
+    }
+  }
+
+  function handleToggleHideClassProduct() {
+    if (!hideClassProduct && !isOpen) {
+      toggleSidebar()
+    } else {
+      setHideClassProduct(!hideClassProduct)
     }
 
     if (!isOpen) {
@@ -82,6 +100,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
     const userHasListLogsPermission = await verifyUserPermissions("list_logs", userPermissions)
     setListLogssPermission(userHasListLogsPermission)
+
+    const userHasListProductsPermission = await verifyUserPermissions("list_products", userPermissions)
+    setListProductsPermission(userHasListProductsPermission)
   }
 
   useEffect(() => {
@@ -142,6 +163,55 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
               <span className="label">Planos</span>
             </button>
+            <button
+              className="list-button"
+              title="Produtos"
+              // onClick={() => handleNavigateToPage("/products")}
+              onClick={handleToggleHideClassProduct}
+              disabled={!listProductsPermission}
+            >
+              <span className="icon">
+                <FaTag />
+              </span>
+
+              <div className={hideClassProduct ? "has-submenu" : "has-submenu open"}>
+                <span className="label">Produtos</span>
+
+                <span className="label-icon">▼</span>
+              </div>
+            </button>
+
+            <button
+              className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
+              title="Cadastro"
+              onClick={() => handleNavigateToPage("/products")}
+            >
+              <span className="icon submenu">
+                <FaRegListAlt />
+              </span>
+              <span className="label">Cadastro</span>
+            </button>
+            <button
+              className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
+              title="Marcas"
+              onClick={() => handleNavigateToPage("/brands")}
+            >
+              <span className="icon submenu">
+                <FaToolbox />
+              </span>
+              <span className="label">Marcas</span>
+            </button>
+            <button
+              className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
+              title="Grupos"
+              onClick={() => handleNavigateToPage("/groups")}
+            >
+              <span className="icon submenu">
+                <FaObjectGroup />
+              </span>
+              <span className="label">Grupos</span>
+            </button>
+
             <button
               className="list-button"
               title="Usuários"

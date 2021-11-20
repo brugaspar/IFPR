@@ -145,7 +145,7 @@ export default function Plans() {
             <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
           </div>
           <div className="ho searchBar">
-            <SearchBar placeholder="Nome ou tipo" onChange={(event) => handleSearchFilter(event.target.value)} />
+            <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
           </div>
           <div className="ho bttnFilters">
             {/* <button className="filterBttn" type="button">

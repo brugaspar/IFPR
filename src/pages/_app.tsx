@@ -1,4 +1,5 @@
 import "react-toastify/dist/ReactToastify.css"
+import "react-widgets/styles.css"
 
 import Head from "next/head"
 import { AppProps } from "next/app"

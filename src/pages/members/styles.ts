@@ -5,7 +5,7 @@ export const Container = styled.div`
   height: calc(100vh - 7rem);
   width: calc(100vw - 5rem);
   padding: 2rem;
-  
+
   margin: 7rem 0 0 5rem;
 
   .header {
@@ -52,54 +52,52 @@ export const Container = styled.div`
     }
   }
 
-  .filterSection{
-    .headerOptions{   
+  .filterSection {
+    .headerOptions {
       position: relative;
-      margin-top:2rem;
+      margin-top: 2rem;
       display: flex;
       align-items: center;
-      height:4rem;
+      height: 4rem;
 
-      .filterBttn{
-          background: ${darken(0.03, "#232323")};
-          color:white;
-          border:none;
-          height:3rem;
-          width:6.5rem;
-          border-radius: 0.25rem;
-          font-size: 1rem;
-          font-family: "Mukta";
+      .filterBttn {
+        background: ${darken(0.03, "#232323")};
+        color: white;
+        border: none;
+        height: 3rem;
+        width: 6.5rem;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+        font-family: "Mukta";
 
-          .faChevronDownIcon{
-          float:right;
-          margin-right:1rem;
-          margin-top:0.3rem;
-          
-          }
+        .faChevronDownIcon {
+          float: right;
+          margin-right: 1rem;
+          margin-top: 0.3rem;
+        }
+      }
+
+      .ho {
+        align-self: center;
+        position: flex;
+
+        &.cbActive {
+          vertical-align: middle;
+          margin-left: 1rem;
+          margin-top: -1.2rem;
+          float: left;
         }
 
-      .ho{
-        align-self:center;
-        position:flex;  
-
-        &.cbActive{
-          vertical-align:middle;
-          margin-left:1rem;
-          margin-top:-1.2rem;
-          float:left;
-        }
-
-        &.searchBar{
-          margin-left:15rem;
+        &.searchBar {
+          margin-left: 15rem;
           flex-direction: row;
-          float:left;
+          float: left;
         }
 
-        &.bttnFilters{
-          float:left;
-          margin-left:1.5rem;
-          color:white;
-          
+        &.bttnFilters {
+          float: left;
+          margin-left: 1.5rem;
+          color: white;
         }
       }
     }
@@ -107,7 +105,8 @@ export const Container = styled.div`
 
   .scroll-div {
     overflow-x: auto;
-    height: calc(100vh - 15rem);
+    /* height: calc(100vh - 15rem); */
+    height: calc(100vh - 20rem);
     margin-top: 2rem;
 
     &::-webkit-scrollbar {

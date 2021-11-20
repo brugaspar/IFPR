@@ -140,25 +140,18 @@ export default function Users() {
       </div>
       <div className="filterSection">
         <div className="headerOptions">
-            <div className="ho cbActive">
-              <Checkbox   
-                title="Somente ativos" 
-                active={onlyEnabled} 
-                handleToggleActive={handleToggleOnlyEnabled} 
-              />
-            </div>
-            <div className="ho searchBar">
-              <SearchBar 
-                placeholder="Nome, usuário ou e-mail" 
-                onChange={(event) => handleSearchFilter(event.target.value)} 
-              />            
-            </div>
-            <div className="ho bttnFilters">
-              <button className="filterBttn" type="button">
-                  Filtrar    
-                  <FaChevronUp className="faChevronDownIcon"/>
-              </button>
-          </div>     
+          <div className="ho cbActive">
+            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
+          </div>
+          <div className="ho searchBar">
+            <SearchBar placeholder="Nome, usuário ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
+          </div>
+          <div className="ho bttnFilters">
+            <button className="filterBttn" type="button">
+              Filtrar
+              <FaChevronUp className="faChevronDownIcon" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -173,7 +166,7 @@ export default function Users() {
               <th>Status</th>
               <th>Cadastrado em</th>
               <th>Última edição</th>
-              <th>Desativado em </th>
+              <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
           </thead>

@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { UserModal } from "../../components/UserModal"
+import { MembersModal } from "../../components/MembersModal"
 import { Checkbox } from "../../components/Checkbox"
 import { SearchBar } from "../../components/SearchBar"
 
@@ -20,16 +20,29 @@ import { Container } from "./styles"
 type Member = {
   id: string
   name: string
-  phone:string
+  rg: string
+  issuingAuthority: string
+  issuedAt: string
+  cpf: string
+  naturalityCityId: string
+  motherName: string
+  fatherName: string
+  profession: string
   email: string
-  healthIssues: string
-  plan_id: string
-  disabled: boolean
+  phone: string
+  cellPhone: string
+  crNumber: string
   crValidity: string
-  // last_activity:string
+  birthDate: string
+  healthIssues: string
+  gender: string
+  maritalStatus: string
+  bloodTyping: string
+  disabled: boolean
   createdAt: string
+  planId: string
   disabledAt: string
-  disabledByUser: Member | null
+  disabledByUser: string
 }
 
 export default function Members() {
@@ -61,7 +74,6 @@ export default function Members() {
       setReload(!reload)
     }, 500)
   }
-
 
   async function loadMembers() {
     const response = await api.get("/members", {
@@ -121,7 +133,7 @@ export default function Members() {
 
   useEffect(() => {
     loadMembers()
-  }, [onlyEnabled, isMemberModalOpen, search])
+  }, [onlyEnabled, isMemberModalOpen, reload])
 
   return (
     <Container>
@@ -134,31 +146,24 @@ export default function Members() {
 
         <button onClick={handleAddMember} type="button" disabled={!createMemberPermission}>
           <FaPlus />
-            Novo membro
+          Novo membro
         </button>
       </div>
 
       <div className="filterSection">
         <div className="headerOptions">
-            <div className="ho cbActive">
-              <Checkbox   
-                title="Somente ativos" 
-                active={onlyEnabled} 
-                handleToggleActive={handleToggleOnlyEnabled} 
-              />
-            </div>
-            <div className="ho searchBar">
-              <SearchBar 
-                placeholder="Nome, usuário ou e-mail" 
-                onChange={(event) => handleSearchFilter(event.target.value)} 
-              />            
-            </div>
-            <div className="ho bttnFilters">
-              {/* <button className="filterBttn" type="button">
-                  Filtrar    
+          <div className="ho cbActive">
+            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
+          </div>
+          <div className="ho searchBar">
+            <SearchBar placeholder="Nome ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
+          </div>
+          <div className="ho bttnFilters">
+            {/* <button className="filterBttn" type="button">
+                  Filtrar
                   <FaChevronUp className="faChevronDownIcon"/>
               </button> */}
-          </div>     
+          </div>
         </div>
       </div>
 
@@ -167,14 +172,17 @@ export default function Members() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>             
-              <th>Contato</th>
+              <th>Nome</th>
               <th>E-mail</th>
-              <th>Tipo Sanguineo</th>
-              <th>Plano</th>
+              <th>RG</th>
+              <th>CPF</th>
+              <th>Profissão</th>
+              <th>N° CR</th>
+              <th>Validade CR</th>
+              <th>Nascimento</th>
               <th>Status</th>
-              <th>Ultima Atividade em</th>
-              <th>Cadastrado em</th>
+              <th>Cadastro</th>
+              <th>Última edição</th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -189,25 +197,27 @@ export default function Members() {
                   </button>
                 </td>
                 <td>{member.name}</td>
-                <td>{member.phone}</td>
                 <td>{member.email}</td>
-                <td>{member.healthIssues}</td>
-                <td>{member.plan_id}</td>                
+                <td>{member.rg}</td>
+                <td>{member.cpf}</td>
+                <td>{member.profession}</td>
+                <td>{member.crNumber}</td>
+                <td>{new Date(member.crValidity).toLocaleDateString()}</td>
+                <td>{new Date(member.birthDate).toLocaleDateString()}</td>
                 <td>{member.disabled ? "Desativo" : "Ativo"}</td>
                 <td>{new Date(member.crValidity).toLocaleDateString()}</td>
-                <td>{/* data da ultima atividade, verificar possibilidade de novo atributo */}</td>
                 <td>{new Date(member.createdAt).toLocaleDateString()}</td>
                 <td>{member.disabledAt && new Date(member.disabledAt).toLocaleDateString()}</td>
-                <td>{member.disabledByUser?.name}</td>
+                <td>{member.disabledByUser}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* <MemberModal isOpen={isMemberModalOpen} onRequestClose={handleCloseMemberModal} memberId={selectedMember || ""} /> */}
+      <MembersModal isOpen={isMemberModalOpen} onRequestClose={handleCloseMemberModal} memberId={selectedMember || ""} />
     </Container>
-    )
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
