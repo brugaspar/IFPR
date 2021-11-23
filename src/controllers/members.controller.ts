@@ -13,15 +13,7 @@ import documentsRepository from "../repositories/documents.repository"
 
 type Gender = "male" | "female" | "other"
 type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
-type BloodTyping =
-  | "APositive"
-  | "ANegative"
-  | "BPositive"
-  | "BNegative"
-  | "ABPositive"
-  | "ABNegative"
-  | "OPositive"
-  | "ONegative"
+type BloodTyping = "APositive" | "ANegative" | "BPositive" | "BNegative" | "ABPositive" | "ABNegative" | "OPositive" | "ONegative"
 
 type RequestMember = {
   name: string
@@ -73,50 +65,41 @@ class MemberController {
     const memberDocuments: MemberDocument[] = request.files as any
 
     const schema = {
-      name: yup.string().required(),
-      rg: yup.string().required(),
-      issuingAuthority: yup.string().required(),
+      name: yup.string().required("Nome é obrigatório"),
+      rg: yup.string().required("RG é obrigatório"),
+      issuingAuthority: yup.string().required("Órgão emissor do RG é obrigatório"),
       cpf: yup.string().required(),
-      naturalityCityId: yup.string().required(),
+      naturalityCityId: yup.string().required("Cidade de naturalidade é obrigatória"),
       motherName: yup.string(),
       fatherName: yup.string(),
-      profession: yup.string().required(),
+      profession: yup.string().required("Profissão é obrigatória"),
       email: yup.string(),
       phone: yup.string(),
-      cellPhone: yup.string().required(),
-      crNumber: yup.string().required(),
-      issuedAt: yup.date().required(),
-      birthDate: yup.date().required(),
-      crValidity: yup.date().required(),
+      cellPhone: yup.string().required("Celular é obrigatório"),
+      crNumber: yup.string().required("Número do CR é obrigatório"),
+      issuedAt: yup.date().required("Data de emissão do RG é obrigatória"),
+      birthDate: yup.date().required("Data de nascimento é obrigatória"),
+      crValidity: yup.date().required("Validade do CR é obrigatória"),
       healthIssues: yup.string(),
-      gender: yup.mixed().oneOf(["male", "female", "other"]).required(),
+      gender: yup.mixed().oneOf(["male", "female", "other"]).required("Gênero é obrigatório"),
       maritalStatus: yup
         .mixed()
         .oneOf(["single", "married", "widower", "legally_separated", "divorced"])
-        .required(),
+        .required("Estado civil é obrigatório"),
       bloodTyping: yup
         .mixed()
-        .oneOf([
-          "APositive",
-          "ANegative",
-          "BPositive",
-          "BNegative",
-          "ABPositive",
-          "ABNegative",
-          "OPositive",
-          "ONegative",
-        ])
-        .required(),
+        .oneOf(["APositive", "ANegative", "BPositive", "BNegative", "ABPositive", "ABNegative", "OPositive", "ONegative"])
+        .required("Tipo sanguíneo é obrigatório"),
       disabled: yup.string(),
       planId: yup.string().required(),
-      address: yup.object().shape({
-        street: yup.string().required("Endereço é obrigatório"),
-        number: yup.string().required("Número é obrigatório"),
-        neighbourhood: yup.string().required("Bairro é obrigatório"),
-        complement: yup.string(),
-        zipcode: yup.string().required("CEP é obrigatório"),
-        cityId: yup.number().required("Cidade é obrigatória"),
-      }),
+      // address: yup.object().shape({
+      //   street: yup.string().required("Endereço é obrigatório"),
+      //   number: yup.string().required("Número é obrigatório"),
+      //   neighbourhood: yup.string().required("Bairro é obrigatório"),
+      //   complement: yup.string(),
+      //   zipcode: yup.string().required("CEP é obrigatório"),
+      //   cityId: yup.number().required("Cidade é obrigatória"),
+      // }),
     }
 
     await checkBodySchema(schema, request.body)
@@ -168,13 +151,13 @@ class MemberController {
       }
     }
 
-    await addressesRepository.store(
-      {
-        ...JSON.parse(address as any as string),
-        memberId: storedMember,
-      },
-      request.userId
-    )
+    // await addressesRepository.store(
+    //   {
+    //     ...JSON.parse(address as any as string),
+    //     memberId: storedMember,
+    //   },
+    //   request.userId
+    // )
 
     return response.status(201).json({ id: storedMember })
   }
