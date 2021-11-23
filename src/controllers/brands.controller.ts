@@ -75,7 +75,7 @@ class ProductsBrandsController {
     const productBrandExists = await brandsRepository.findById(id)
 
     if (!productBrandExists) {
-      throw new AppError("Produto não encontrado")
+      throw new AppError("Marca não encontrada")
     }
 
     const updatedProductBrand = await brandsRepository.update({

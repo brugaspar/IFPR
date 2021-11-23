@@ -7,6 +7,7 @@ import plansRouter from "./plans.routes"
 import membersRouter from "./members.routes"
 import logsRouter from "./logs.routes"
 import productsRouter from "./products.routes"
+import activitiesRouter from "./activities.routes"
 
 const router = Router()
 
@@ -17,5 +18,6 @@ router.use(plansRouter)
 router.use(membersRouter)
 router.use(logsRouter)
 router.use(productsRouter)
+router.use(activitiesRouter)
 
 export { router }

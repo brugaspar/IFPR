@@ -17,6 +17,7 @@ type RequestProduct = {
   brandId: string
   groupId: string
   disabled: boolean
+  isService: boolean
 }
 
 class ProductsController {
@@ -31,6 +32,7 @@ class ProductsController {
       brandId: yup.string().required("Marca é obrigatória"),
       groupId: yup.string().required("Grupo é obrigatório"),
       disabled: yup.boolean(),
+      isService: yup.boolean(),
     }
 
     await checkBodySchema(schema, request.body)

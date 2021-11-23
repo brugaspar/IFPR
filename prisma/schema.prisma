@@ -324,7 +324,7 @@ model Activities {
   totalQuantity   Float             @map("total_quantity")
   totalItems      Float             @map("total_items")
   observation     String?
-  cancelledReason String?
+  cancelledReason String?           @map("cancelled_reason")
   sellerId        String            @map("seller_id")
   seller          Users             @relation(fields: [sellerId], references: [id])
   memberId        String            @map("member_id")

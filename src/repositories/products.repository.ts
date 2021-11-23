@@ -24,7 +24,9 @@ type Product = {
   minimum_quantity: number
   price: number
   brand_id: string
+  brand_name: string
   group_id: string
+  group_name: string
   disabled: boolean
   disabled_at: string
   created_at: string
@@ -95,6 +97,10 @@ class ProductsRepository {
       searchText += `
         (
           upper(unaccent(p.name)) like upper(unaccent('%${word}%'))
+          or
+          upper(unaccent(pg.name)) like upper(unaccent('%${word}%'))
+          or
+          upper(unaccent(pb.name)) like upper(unaccent('%${word}%'))
         )
       `
 
@@ -128,9 +134,15 @@ class ProductsRepository {
         p.last_disabled_by,
         p.last_updated_by,
         p.created_by,
-        (select u.name from users u where u.id = p.last_disabled_by) disabled_by_user
+        (select u.name from users u where u.id = p.last_disabled_by) disabled_by_user,
+        pg.name group_name,
+        pb.name brand_name
       from
         products p
+      left join
+        products_groups pg on pg.id = p.group_id
+      left join
+        products_brands pb on pb.id = p.brand_id
       ${whereClause}
       order by
         p.created_at
@@ -155,8 +167,14 @@ class ProductsRepository {
         quantity: product.quantity,
         minimum_quantity: product.minimum_quantity,
         price: product.price,
-        brandId: product.brand_id,
-        groupId: product.group_id,
+        brand: {
+          id: product.brand_id,
+          name: product.brand_name,
+        },
+        group: {
+          id: product.group_id,
+          name: product.group_name,
+        },
         disabled: product.disabled,
         disabledAt,
         createdAt,

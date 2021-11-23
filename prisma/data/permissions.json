@@ -154,5 +154,29 @@
     "slug": "disable_products",
     "description": "Permite ativar ou desativar o cadastro de um produto do sistema.",
     "table": "products"
+  },
+  {
+    "name": "Visualizar atividades",
+    "slug": "list_activities",
+    "description": "Permite a visualização da lista de atividades cadastradas.",
+    "table": "activities"
+  },
+  {
+    "name": "Incluir atividades",
+    "slug": "create_activities",
+    "description": "Permite a inclusão de uma nova atividade no sistema.",
+    "table": "activities"
+  },
+  {
+    "name": "Editar atividades",
+    "slug": "edit_activities",
+    "description": "Permite a edição dos dados cadastrais das atividades.",
+    "table": "activities"
+  },
+  {
+    "name": "Cancelar atividades",
+    "slug": "cancel_activities",
+    "description": "Permite cancelar atividades do sistema.",
+    "table": "activities"
   }
 ]

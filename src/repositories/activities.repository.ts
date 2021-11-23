@@ -15,6 +15,12 @@ type RequestActivityItem = {
   subtotal: number
 }
 
+// type UpdateActivityItem = {
+//   quantity: number
+//   price: number
+//   subtotal: number
+// }
+
 type RequestActivity = {
   status: ActivityStatus
   total: number
@@ -45,6 +51,11 @@ type Activity = {
   seller_name: string
   member_name: string
   cancelled_at: string
+  product_id: string
+  quantity: number
+  price: number
+  subtotal: number
+  finished_at: string
 }
 
 type UpdateActivityProps = {
@@ -54,7 +65,6 @@ type UpdateActivityProps = {
 }
 
 type FilterActivity = {
-  onlyEnabled: boolean
   search: string
 }
 
@@ -97,6 +107,21 @@ class ActivitiesRepository {
     return id
   }
 
+  // async updateItem(item: UpdateActivityItem, itemId: string) {
+  //   console.log(item, itemId)
+  //   const { id } = await prisma.activitiesItems.update({
+  //     data: item,
+  //     select: {
+  //       id: true,
+  //     },
+  //     where: {
+  //       id: itemId,
+  //     },
+  //   })
+
+  //   return id
+  // }
+
   async findById(id: string) {
     const activities = await prisma.activities.findUnique({
       where: {
@@ -110,7 +135,7 @@ class ActivitiesRepository {
     return activities
   }
 
-  async findAll({ onlyEnabled = true, search = "" }: FilterActivity) {
+  async findAll({ search = "" }: FilterActivity) {
     //? Antigo SELECT, com case-sensitive e considerando acentos
     // const users = await prisma.users.findMany({
     //   where: {
@@ -139,7 +164,6 @@ class ActivitiesRepository {
 
     let whereClause = `
       where
-        ${onlyEnabled ? `a.disabled = false and` : ""}
         ${searchText}
     `
 
@@ -163,6 +187,7 @@ class ActivitiesRepository {
         a.updated_at,
         a.last_updated_by,
         a.created_by,
+        a.finished_at,
         (select u.name from users u where u.id = a.last_cancelled_by) cancelled_by_user
       from
         activities a
@@ -177,10 +202,33 @@ class ActivitiesRepository {
 
     const activities = await pg.query<Activity>(query)
 
-    await pg.release()
-
     if (!activities) {
       return []
+    }
+
+    let items: any = []
+
+    for (const activity of activities.rows) {
+      const itemsQuery = `
+        select
+          ai.id,
+          ai.product_id,
+          ai.quantity,
+          ai.price,
+          ai.subtotal
+        from
+          activities_items ai
+        where
+          ai.activity_id = '${activity.id}'
+      `
+
+      items = await pg.query<Activity>(itemsQuery)
+
+      if (!items) {
+        items = []
+      } else {
+        items = items.rows
+      }
     }
 
     const parsedActivitiesResult = activities.rows.map((activity) => {
@@ -207,11 +255,15 @@ class ActivitiesRepository {
         createdAt,
         updatedAt,
         cancelledAt,
+        finishedAt: activity.finished_at,
         lastUpdatedBy: activity.last_updated_by,
         canceledByUser: activity.cancelled_by_user,
         createdBy: activity.created_by,
+        items,
       }
     })
+
+    await pg.release()
 
     return parsedActivitiesResult
   }
@@ -230,6 +282,7 @@ class ActivitiesRepository {
       cancelledAt = null
       finishedAt = null
       lastCancelledBy = null
+      activity.cancelledReason = ""
     } else if (activity.status === "closed") {
       finishedAt = new Date()
     }
