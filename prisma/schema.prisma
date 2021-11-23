@@ -34,9 +34,9 @@ model Users {
   username               String             @unique
   permissions            Json
   disabled               Boolean            @default(false)
-  disabledAt             DateTime?          @map("disabled_at")
-  createdAt              DateTime           @default(now()) @map("created_at")
-  updatedAt              DateTime           @default(now()) @updatedAt @map("updated_at")
+  disabledAt             DateTime?          @map("disabled_at") @db.Timestamptz
+  createdAt              DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy         String?            @map("last_disabled_by")
   disabledByUser         Users?             @relation("UserToDisabled", fields: [lastDisabledBy], references: [id])
   disabledUsers          Users[]            @relation("UserToDisabled")
@@ -93,7 +93,7 @@ model Logs {
   referenceId String    @map("reference_id")
   userId      String?   @map("user_id")
   user        Users?    @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now()) @map("created_at")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
 
   @@map("general_logs")
 }
@@ -130,9 +130,9 @@ model Plans {
   gunExemption          Boolean   @map("gun_exemption")
   targetExemption       Boolean   @map("target_exemption")
   disabled              Boolean   @default(false)
-  disabledAt            DateTime? @map("disabled_at")
-  createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at")
+  disabledAt            DateTime? @map("disabled_at") @db.Timestamptz
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy        String?   @map("last_disabled_by")
   disabledByUser        Users?    @relation("PlanToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy         String?   @map("last_updated_by")
@@ -184,7 +184,7 @@ model Members {
   phone            String?
   cellPhone        String             @map("cell_phone")
   crNumber         String             @map("cr_number")
-  issuedAt         DateTime           @map("issued_at")
+  issuedAt         DateTime           @map("issued_at") @db.Timestamptz
   birthDate        DateTime           @map("birth_date")
   crValidity       DateTime           @map("cr_validity")
   healthIssues     String?            @map("health_issues")
@@ -192,9 +192,9 @@ model Members {
   maritalStatus    MaritalStatus      @map("marital_status")
   bloodTyping      BloodTyping        @map("blood_typing")
   disabled         Boolean            @default(false)
-  disabledAt       DateTime?          @map("disabled_at")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @default(now()) @updatedAt @map("updated_at")
+  disabledAt       DateTime?          @map("disabled_at") @db.Timestamptz
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy   String?            @map("last_disabled_by")
   disabledByUser   Users?             @relation("MemberToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy    String?            @map("last_updated_by")
@@ -221,8 +221,8 @@ model MembersAddresses {
   memberId      String   @map("member_id")
   member        Members  @relation(fields: [memberId], references: [id])
   city          Cities   @relation(fields: [cityId], references: [id])
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastUpdatedBy String?  @map("last_updated_by")
   updatedByUser Users?   @relation("AddressToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy     String?  @map("created_by")
@@ -238,8 +238,8 @@ model MembersDocuments {
   validity      DateTime?
   memberId      String    @map("member_id")
   member        Members   @relation(fields: [memberId], references: [id])
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastUpdatedBy String?   @map("last_updated_by")
   updatedByUser Users?    @relation("DocumentToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy     String?   @map("created_by")
@@ -252,9 +252,9 @@ model ProductsBrands {
   id             String     @id @default(uuid())
   name           String
   disabled       Boolean    @default(false)
-  disabledAt     DateTime?  @map("disabled_at")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at")
+  disabledAt     DateTime?  @map("disabled_at") @db.Timestamptz
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy String?    @map("last_disabled_by")
   disabledByUser Users?     @relation("ProductsBrandsToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy  String?    @map("last_updated_by")
@@ -270,9 +270,9 @@ model ProductsGroups {
   id             String     @id @default(uuid())
   name           String
   disabled       Boolean    @default(false)
-  disabledAt     DateTime?  @map("disabled_at")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at")
+  disabledAt     DateTime?  @map("disabled_at") @db.Timestamptz
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy String?    @map("last_disabled_by")
   disabledByUser Users?     @relation("ProductsGroupsToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy  String?    @map("last_updated_by")
@@ -296,9 +296,9 @@ model Products {
   groupId         String            @map("group_id")
   group           ProductsGroups    @relation(fields: [groupId], references: [id])
   disabled        Boolean           @default(false)
-  disabledAt      DateTime?         @map("disabled_at")
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  disabledAt      DateTime?         @map("disabled_at") @db.Timestamptz
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastDisabledBy  String?           @map("last_disabled_by")
   disabledByUser  Users?            @relation("ProductsToDisabled", fields: [lastDisabledBy], references: [id])
   lastUpdatedBy   String?           @map("last_updated_by")
@@ -329,16 +329,16 @@ model Activities {
   seller          Users             @relation(fields: [sellerId], references: [id])
   memberId        String            @map("member_id")
   member          Members           @relation(fields: [memberId], references: [id])
-  createdAt       DateTime          @default(now()) @map("created_at")
-  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at")
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   lastUpdatedBy   String?           @map("last_updated_by")
   updatedByUser   Users?            @relation("ActivityToUpdated", fields: [lastUpdatedBy], references: [id])
   createdBy       String?           @map("created_by")
   createdByUser   Users?            @relation("ActivityToCreated", fields: [createdBy], references: [id])
   lastCancelledBy String?           @map("last_cancelled_by")
-  cancelledAt     DateTime?         @map("cancelled_at")
+  cancelledAt     DateTime?         @map("cancelled_at") @db.Timestamptz
   cancelledByUser Users?            @relation("ActivitiesToCancelled", fields: [lastCancelledBy], references: [id])
-  finishedAt      DateTime?         @map("finished_at")
+  finishedAt      DateTime?         @map("finished_at") @db.Timestamptz
   finishedBy      String?           @map("finished_by")
   finishedByUser  Users?            @relation("ActivityToFinished", fields: [finishedBy], references: [id])
   items           ActivitiesItems[]
