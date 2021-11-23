@@ -4,7 +4,10 @@
   "main": "src/server.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts"
+    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts",
+    "start": "node src/server.js",
+    "generate-js": "tsc",
+    "exclude-js": "cd src && del /f /s /q *.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

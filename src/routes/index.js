@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+const express_1 = require("express");
+const users_routes_1 = __importDefault(require("./users.routes"));
+const cities_routes_1 = __importDefault(require("./cities.routes"));
+const permissions_routes_1 = __importDefault(require("./permissions.routes"));
+const plans_routes_1 = __importDefault(require("./plans.routes"));
+const members_routes_1 = __importDefault(require("./members.routes"));
+const logs_routes_1 = __importDefault(require("./logs.routes"));
+const products_routes_1 = __importDefault(require("./products.routes"));
+const activities_routes_1 = __importDefault(require("./activities.routes"));
+const router = (0, express_1.Router)();
+exports.router = router;
+router.use(users_routes_1.default);
+router.use(cities_routes_1.default);
+router.use(permissions_routes_1.default);
+router.use(plans_routes_1.default);
+router.use(members_routes_1.default);
+router.use(logs_routes_1.default);
+router.use(products_routes_1.default);
+router.use(activities_routes_1.default);
