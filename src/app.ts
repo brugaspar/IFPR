@@ -7,18 +7,13 @@ import morgan from "morgan"
 
 import { router } from "./routes"
 
-import { authenticationMiddleware } from "./middlewares/authentication.middleware"
+// import { authenticationMiddleware } from "./middlewares/authentication.middleware"
 
 import { errorsMiddleware } from "./middlewares/errors.middleware"
 
 const app = express()
 
-app.use(
-  cors({
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    origin: "https://mark-one-frontend.vercel.app",
-  })
-)
+app.use(cors())
 app.use(express.json())
 app.use(morgan("dev"))
 
