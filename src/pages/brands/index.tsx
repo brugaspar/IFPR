@@ -16,6 +16,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
+import { FilterContainer } from "../../components/FilterContainer"
 
 type ProductBrand = {
   id: string
@@ -110,7 +111,7 @@ export default function ProductBrands() {
 
   useEffect(() => {
     loadProductBrands()
-  }, [onlyEnabled, isProductBrandModalOpen, search])
+  }, [onlyEnabled, isProductBrandModalOpen, reload])
 
   return (
     <Container>
@@ -127,7 +128,7 @@ export default function ProductBrands() {
         </button>
       </div>
 
-      <div className="filterSection">
+      {/* <div className="filterSection">
         <div className="headerOptions">
           <div className="ho cbActive">
             <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
@@ -136,13 +137,20 @@ export default function ProductBrands() {
             <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
           </div>
           <div className="ho bttnFilters">
-            {/* <button className="filterBttn" type="button">
+            <button className="filterBttn" type="button">
                   Filtrar
                   <FaChevronUp className="faChevronDownIcon"/>
-              </button> */}
+              </button>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <FilterContainer
+        onlyEnabled={onlyEnabled}
+        handleToggleOnlyEnabled={handleToggleOnlyEnabled}
+        placeholder="Nome da marca"
+        handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
+      />
 
       <div className="scroll-div">
         <table className="styled-table">
@@ -150,7 +158,6 @@ export default function ProductBrands() {
             <tr>
               <th>#</th>
               <th>Nome</th>
-
             </tr>
           </thead>
           <tbody>
@@ -169,7 +176,11 @@ export default function ProductBrands() {
         </table>
       </div>
 
-      <ProductBrandsModal isOpen={isProductBrandModalOpen} onRequestClose={handleCloseProductBrandModal} brandId={selectedBrand || ""} />
+      <ProductBrandsModal
+        isOpen={isProductBrandModalOpen}
+        onRequestClose={handleCloseProductBrandModal}
+        brandId={selectedBrand || ""}
+      />
     </Container>
   )
 }

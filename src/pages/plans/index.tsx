@@ -173,10 +173,10 @@ export default function Plans() {
               <th>Descrição</th>
               <th>Valor</th>
               <th>Valor de Renovação</th>
-              <th>Data de cadastro</th>
               <th>Status</th>
               <th>Isenção de armas</th>
               <th>Isenção de alvos</th>
+              <th>Data de cadastro</th>
               <th>Última edição</th>
               <th>Desativado em</th>
               <th>Desativado por</th>
@@ -195,10 +195,10 @@ export default function Plans() {
                 <td>{plan.description}</td>
                 <td>{plan.value ? plan.value.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
                 <td>{plan.renewValue ? plan.renewValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
-                <td>{new Date(plan.createdAt).toLocaleDateString()}</td>
                 <td>{plan.disabled ? "Inativo" : "Ativo"}</td>
                 <td>{plan.gunExemption ? "Sim" : "Não"}</td>
                 <td>{plan.targetExemption ? "Sim" : "Não"}</td>
+                <td>{new Date(plan.createdAt).toLocaleDateString()}</td>
                 <td>{new Date(plan.updatedAt).toLocaleString()}</td>
                 <td>{plan.disabledAt && new Date(plan.disabledAt).toLocaleDateString()}</td>
                 <td>{plan.disabledByUser}</td>

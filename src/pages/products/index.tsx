@@ -16,6 +16,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
+import { FilterContainer } from "../../components/FilterContainer"
 
 type Product = {
   id: string
@@ -23,9 +24,20 @@ type Product = {
   quantity: number
   minimumQuantity: number
   price: number
-  brandId: string
-  groupId: string
+  brand: {
+    id: string
+    name: string
+  }
+  group: {
+    id: string
+    name: string
+  }
   disabled: boolean
+  isService: boolean
+  createdAt: string
+  updatedAt: string
+  disabledAt: string
+  disabledByUser: string
 }
 
 export default function Products() {
@@ -115,7 +127,7 @@ export default function Products() {
 
   useEffect(() => {
     loadProducts()
-  }, [onlyEnabled, isProductModalOpen, search])
+  }, [onlyEnabled, isProductModalOpen, reload])
 
   return (
     <Container>
@@ -132,7 +144,7 @@ export default function Products() {
         </button>
       </div>
 
-      <div className="filterSection">
+      {/* <div className="filterSection">
         <div className="headerOptions">
           <div className="ho cbActive">
             <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
@@ -141,13 +153,20 @@ export default function Products() {
             <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
           </div>
           <div className="ho bttnFilters">
-            {/* <button className="filterBttn" type="button">
+            <button className="filterBttn" type="button">
                   Filtrar
                   <FaChevronUp className="faChevronDownIcon"/>
-              </button> */}
+              </button>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <FilterContainer
+        onlyEnabled={onlyEnabled}
+        handleToggleOnlyEnabled={handleToggleOnlyEnabled}
+        placeholder="Nome, marca ou grupo"
+        handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
+      />
 
       <div className="scroll-div">
         <table className="styled-table">
@@ -155,7 +174,16 @@ export default function Products() {
             <tr>
               <th>#</th>
               <th>Nome</th>
-
+              <th>Marca</th>
+              <th>Grupo</th>
+              <th>Tipo</th>
+              <th>Estoque atual</th>
+              <th>Estoque mínimo</th>
+              <th>Preço</th>
+              <th>Cadastrado em</th>
+              <th>Última edição</th>
+              <th>Desativado em</th>
+              <th>Desativado por</th>
             </tr>
           </thead>
           <tbody>
@@ -168,6 +196,16 @@ export default function Products() {
                   </button>
                 </td>
                 <td>{product.name}</td>
+                <td>{product.brand.name}</td>
+                <td>{product.group.name}</td>
+                <td>{product.isService ? "Serviço" : "Produto"}</td>
+                <td>{product.quantity}</td>
+                <td>{product.minimumQuantity}</td>
+                <td>{product.price ? product.price.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
+                <td>{new Date(product.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(product.updatedAt).toLocaleString()}</td>
+                <td>{product.disabledAt && new Date(product.disabledAt).toLocaleDateString()}</td>
+                <td>{product.disabledByUser}</td>
               </tr>
             ))}
           </tbody>
