@@ -4,11 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require(".prisma/client");
-const pg_1 = require("pg");
+// import { Pool } from "pg"
+const pg_configuration_1 = require("../configuration/pg.configuration");
 const disabled_helper_1 = require("../helpers/disabled.helper");
 const logs_repository_1 = __importDefault(require("./logs.repository"));
 const prisma = new client_1.PrismaClient();
-const pgPool = new pg_1.Pool();
+// const pgPool = new Pool()
 class ProductsRepository {
     async store(product, requestUserId) {
         const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = (0, disabled_helper_1.getDisabledInfo)(product.disabled, requestUserId);
@@ -62,7 +63,7 @@ class ProductsRepository {
         ${onlyEnabled ? `p.disabled = false and` : ""}
         ${searchText}
     `;
-        const pg = await pgPool.connect();
+        const pg = await pg_configuration_1.pgPool.connect();
         const query = `
       select
         p.id,

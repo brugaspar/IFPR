@@ -1,5 +1,6 @@
 import { PrismaClient } from ".prisma/client"
-import { Pool } from "pg"
+// import { Pool } from "pg"
+import { pgPool } from "../configuration/pg.configuration"
 
 import { getDisabledInfo } from "../helpers/disabled.helper"
 
@@ -77,7 +78,7 @@ type FilterMember = {
 }
 
 const prisma = new PrismaClient()
-const pgPool = new Pool()
+// const pgPool = new Pool()
 
 class MembersRepository {
   async store(member: RequestMember, requestUserId: string) {
