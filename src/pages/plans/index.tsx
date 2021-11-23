@@ -16,6 +16,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
+import { FilterContainer } from "../../components/FilterContainer"
 
 type Plan = {
   id: string
@@ -139,7 +140,7 @@ export default function Plans() {
         </button>
       </div>
 
-      <div className="filterSection">
+      {/* <div className="filterSection">
         <div className="headerOptions">
           <div className="ho cbActive">
             <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
@@ -148,13 +149,20 @@ export default function Plans() {
             <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
           </div>
           <div className="ho bttnFilters">
-            {/* <button className="filterBttn" type="button">
+            <button className="filterBttn" type="button">
                   Filtrar
                   <FaChevronUp className="faChevronDownIcon"/>
-              </button> */}
+              </button>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <FilterContainer
+        onlyEnabled={onlyEnabled}
+        handleToggleOnlyEnabled={handleToggleOnlyEnabled}
+        placeholder="Nome do plano"
+        handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
+      />
 
       <div className="scroll-div">
         <table className="styled-table">
