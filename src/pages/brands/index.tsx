@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { ProductsModal } from "../../components/ProductsModal"
+import { ProductBrandsModal } from "../../components/ProductBrandsModal"
 import { Checkbox } from "../../components/Checkbox"
 import { SearchBar } from "../../components/SearchBar"
 
@@ -17,30 +17,25 @@ import { api } from "../../services/api.service"
 
 import { Container } from "./styles"
 
-type Product = {
+type ProductBrand = {
   id: string
   name: string
-  quantity: number
-  minimumQuantity: number
-  price: number
-  brandId: string
-  groupId: string
   disabled: boolean
 }
 
-export default function Products() {
+export default function ProductBrands() {
   const { user } = useAuth()
   const userPermissions = user?.permissions || []
 
-  const [products, setProducts] = useState<Product[]>([])
-  const [selectedProduct, setSelectedProduct] = useState<string | null>("")
+  const [brands, setBrands] = useState<ProductBrand[]>([])
+  const [selectedBrand, setSelectedBrand] = useState<string | null>("")
 
   const [onlyEnabled, setOnlyEnabled] = useState(true)
 
-  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
+  const [isProductBrandModalOpen, setIsProductBrandModalOpen] = useState(false)
 
-  const [createProductPermission, setCreateProductPermission] = useState(false)
-  const [editProductPermission, setEditProductPermission] = useState(false)
+  const [createProductBrandPermission, setCreateProductBrandPermission] = useState(false)
+  const [editProductBrandPermission, setEditProductBrandPermission] = useState(false)
 
   const [search, setSearch] = useState("")
   const [reload, setReload] = useState(false)
@@ -57,33 +52,33 @@ export default function Products() {
     }, 500)
   }
 
-  async function loadProducts() {
-    const response = await api.get("/products", {
+  async function loadProductBrands() {
+    const response = await api.get("/brands", {
       params: {
         onlyEnabled,
         search,
       },
     })
 
-    setProducts(response.data)
+    setBrands(response.data)
   }
 
-  function handleOpenProductModal() {
-    setIsProductModalOpen(true)
+  function handleOpenProductBrandModal() {
+    setIsProductBrandModalOpen(true)
   }
 
-  function handleCloseProductModal() {
-    setIsProductModalOpen(false)
+  function handleCloseProductBrandModal() {
+    setIsProductBrandModalOpen(false)
   }
 
-  function handleAddProduct() {
-    setSelectedProduct(null)
-    handleOpenProductModal()
+  function handleAddProductBrand() {
+    setSelectedBrand(null)
+    handleOpenProductBrandModal()
   }
 
-  function handleEditProduct(product: Product) {
-    setSelectedProduct(product.id)
-    handleOpenProductModal()
+  function handleEditProductBrand(brand: ProductBrand) {
+    setSelectedBrand(brand.id)
+    handleOpenProductBrandModal()
   }
 
   function handleToggleOnlyEnabled() {
@@ -91,11 +86,11 @@ export default function Products() {
   }
 
   async function verifyPermissions() {
-    const userHasCreateProductPermission = await verifyUserPermissions("create_products", userPermissions)
-    setCreateProductPermission(userHasCreateProductPermission)
+    const userHasCreateProductBrandPermission = await verifyUserPermissions("create_brands", userPermissions)
+    setCreateProductBrandPermission(userHasCreateProductBrandPermission)
 
-    const userHasEditProductPermission = await verifyUserPermissions("edit_products", userPermissions)
-    setEditProductPermission(userHasEditProductPermission)
+    const userHasEditProductBrandPermission = await verifyUserPermissions("edit_brands", userPermissions)
+    setEditProductBrandPermission(userHasEditProductBrandPermission)
   }
 
   // TODO: bolar atualização de dados, para evitar muitas chamadas
@@ -114,21 +109,21 @@ export default function Products() {
   }, [])
 
   useEffect(() => {
-    loadProducts()
-  }, [onlyEnabled, isProductModalOpen, search])
+    loadProductBrands()
+  }, [onlyEnabled, isProductBrandModalOpen, search])
 
   return (
     <Container>
       <Head>
-        <title>Mark One | Produtos</title>
+        <title>Mark One | Marcas</title>
       </Head>
 
       <div className="header">
-        <h1 className="title">Produtos</h1>
+        <h1 className="title">Marcas</h1>
 
-        <button onClick={handleAddProduct} type="button" disabled={!createProductPermission}>
+        <button onClick={handleAddProductBrand} type="button" disabled={!createProductBrandPermission}>
           <FaPlus />
-          Novo Produto
+          Nova Marca
         </button>
       </div>
 
@@ -159,22 +154,22 @@ export default function Products() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.name}>
+            {brands.map((brand) => (
+              <tr key={brand.name}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
-                  <button className="edit" onClick={() => handleEditProduct(product)} disabled={!editProductPermission}>
+                  <button className="edit" onClick={() => handleEditProductBrand(brand)} disabled={!editProductBrandPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
                 </td>
-                <td>{product.name}</td>
+                <td>{brand.name}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <ProductsModal isOpen={isProductModalOpen} onRequestClose={handleCloseProductModal} productId={selectedProduct || ""} />
+      <ProductBrandsModal isOpen={isProductBrandModalOpen} onRequestClose={handleCloseProductBrandModal} brandId={selectedBrand || ""} />
     </Container>
   )
 }
