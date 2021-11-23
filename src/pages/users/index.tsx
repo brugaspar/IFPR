@@ -132,7 +132,7 @@ export default function Users() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de usuários</h1>
+        <h1 className="title">Cadastro de Usuários</h1>
 
         <button onClick={handleAddUser} type="button" disabled={!createUserPermission}>
           <FaPlus />

@@ -143,7 +143,7 @@ export default function Members() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Membros</h1>
+        <h1 className="title">Cadastro de Membros</h1>
 
         <button onClick={handleAddMember} type="button" disabled={!createMemberPermission}>
           <FaPlus />

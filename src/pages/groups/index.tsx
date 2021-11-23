@@ -120,7 +120,7 @@ export default function ProductGroups() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Grupos</h1>
+        <h1 className="title">Cadastro de Grupos</h1>
 
         <button onClick={handleAddProductGroup} type="button" disabled={!createProductGroupPermission}>
           <FaPlus />

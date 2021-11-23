@@ -136,7 +136,7 @@ export default function Products() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Produtos</h1>
+        <h1 className="title">Cadastro de Produtos</h1>
 
         <button onClick={handleAddProduct} type="button" disabled={!createProductPermission}>
           <FaPlus />

@@ -120,7 +120,7 @@ export default function ProductBrands() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Marcas</h1>
+        <h1 className="title">Cadastro de Marcas</h1>
 
         <button onClick={handleAddProductBrand} type="button" disabled={!createProductBrandPermission}>
           <FaPlus />

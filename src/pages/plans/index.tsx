@@ -132,7 +132,7 @@ export default function Plans() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Planos</h1>
+        <h1 className="title">Cadastro de Planos</h1>
 
         <button onClick={handleAddPlan} type="button" disabled={!createPlanPermission}>
           <FaPlus />
