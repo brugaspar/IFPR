@@ -3,7 +3,7 @@ import Head from "next/head"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { Container } from "./styles"
+import { Container } from "../../styles/custom404.styles"
 
 export default function Custom404() {
   const router = useRouter()
@@ -23,10 +23,7 @@ export default function Custom404() {
 
       <h1>Página não encontrada</h1>
 
-      <button
-        type="button"
-        onClick={handleNavigateToHome}
-      >
+      <button type="button" onClick={handleNavigateToHome}>
         Voltar para o início
       </button>
     </Container>

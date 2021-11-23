@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next"
 
 import { getAccessToken } from "../../helpers/token.helper"
 
-import { Container } from "./styles"
+import { Container } from "../../styles/dashboard.styles"
 
 export default function Dashboard() {
   return (

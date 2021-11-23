@@ -15,7 +15,7 @@ export const Container = styled.div`
 
   h1 {
     font-size: 2.5rem;
-    margin: 4rem 0 ;
+    margin: 4rem 0;
   }
 
   button {

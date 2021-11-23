@@ -15,7 +15,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
 import { api } from "../../services/api.service"
 
-import { Container } from "./styles"
+import { Container } from "../../styles/activities.styles"
 import { FilterContainer } from "../../components/FilterContainer"
 
 type Activity = {

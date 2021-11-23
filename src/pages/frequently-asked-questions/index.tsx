@@ -4,7 +4,7 @@ import Head from "next/head"
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
-import { Container } from "./styles"
+import { Container } from "../../styles/faq.styles"
 
 export default function FrequentlyAskedQuestions() {
   return (
