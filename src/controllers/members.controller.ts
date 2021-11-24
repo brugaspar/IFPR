@@ -37,14 +37,14 @@ type RequestMember = {
   bloodTyping: BloodTyping
   disabled: boolean
   planId: string
-  address: {
+  addresses: {
     street: string
     number: string
     neighbourhood: string
     complement: string
     zipcode: string
     cityId: number
-  }
+  }[]
 }
 
 type MemberDocument = {
@@ -124,7 +124,7 @@ class MemberController {
     member.crValidity = new Date(member.crValidity).toISOString()
     member.birthDate = new Date(member.birthDate).toISOString()
 
-    const { address, ...memberData } = member
+    const { addresses, ...memberData } = member
 
     const storedMember = await membersRepository.store(
       {
@@ -151,13 +151,15 @@ class MemberController {
       }
     }
 
-    // await addressesRepository.store(
-    //   {
-    //     ...JSON.parse(address as any as string),
-    //     memberId: storedMember,
-    //   },
-    //   request.userId
-    // )
+    for (const address of addresses) {
+      await addressesRepository.store(
+        {
+          ...JSON.parse(address as any as string),
+          memberId: storedMember,
+        },
+        request.userId
+      )
+    }
 
     return response.status(201).json({ id: storedMember })
   }
@@ -224,14 +226,16 @@ class MemberController {
         .oneOf(["APositive", "ANegative", "BPositive", "BNegative", "ABPositive", "ABNegative", "OPositive", "ONegative"]),
       disabled: yup.string(),
       planId: yup.string(),
-      address: yup.object().shape({
-        street: yup.string(),
-        number: yup.string(),
-        neighbourhood: yup.string(),
-        complement: yup.string(),
-        zipcode: yup.string(),
-        cityId: yup.number(),
-      }),
+      addresses: yup.array(
+        yup.object().shape({
+          street: yup.string(),
+          number: yup.string(),
+          neighbourhood: yup.string(),
+          complement: yup.string(),
+          zipcode: yup.string(),
+          cityId: yup.number(),
+        })
+      ),
     }
 
     await checkBodySchema(schema, request.body)
@@ -260,7 +264,7 @@ class MemberController {
       }
     }
 
-    const { address, ...memberData } = member
+    const { addresses, ...memberData } = member
 
     const updatedMember = await membersRepository.update({
       member: memberData,
@@ -268,38 +272,40 @@ class MemberController {
       memberId: id,
     })
 
-    if (address) {
-      const addresses = await addressesRepository.findByZipcode(address.zipcode, updatedMember)
+    if (addresses.length) {
+      for (const address of addresses) {
+        const currentAddress = await addressesRepository.findByZipcode(address.zipcode, updatedMember)
 
-      if (addresses.length) {
-        for (const storedAddress of addresses) {
-          if (storedAddress.number === String(address.number)) {
-            await addressesRepository.update({
-              address: {
-                ...address,
-                memberId: updatedMember,
-              },
-              requestUserId: request.userId,
-              addressId: storedAddress.id,
-            })
-          } else {
-            await addressesRepository.store(
-              {
-                ...address,
-                memberId: updatedMember,
-              },
-              request.userId
-            )
+        if (currentAddress.length) {
+          for (const storedAddress of currentAddress) {
+            if (storedAddress.number === String(address.number)) {
+              await addressesRepository.update({
+                address: {
+                  ...address,
+                  memberId: updatedMember,
+                },
+                requestUserId: request.userId,
+                addressId: storedAddress.id,
+              })
+            } else {
+              await addressesRepository.store(
+                {
+                  ...address,
+                  memberId: updatedMember,
+                },
+                request.userId
+              )
+            }
           }
+        } else {
+          await addressesRepository.store(
+            {
+              ...address,
+              memberId: updatedMember,
+            },
+            request.userId
+          )
         }
-      } else {
-        await addressesRepository.store(
-          {
-            ...address,
-            memberId: updatedMember,
-          },
-          request.userId
-        )
       }
     }
 

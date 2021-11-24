@@ -166,7 +166,7 @@ class ProductsRepository {
         id: product.id,
         name: product.name,
         quantity: product.quantity,
-        minimum_quantity: product.minimum_quantity,
+        minimumQuantity: product.minimum_quantity,
         price: product.price,
         brand: {
           id: product.brand_id,

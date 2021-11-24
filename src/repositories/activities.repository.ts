@@ -67,6 +67,7 @@ type UpdateActivityProps = {
 
 type FilterActivity = {
   search: string
+  onlyEnabled: boolean
 }
 
 const prisma = new PrismaClient()
@@ -108,6 +109,14 @@ class ActivitiesRepository {
     return id
   }
 
+  async deleteItems(activityId: string) {
+    await prisma.activitiesItems.deleteMany({
+      where: {
+        activityId,
+      },
+    })
+  }
+
   // async updateItem(item: UpdateActivityItem, itemId: string) {
   //   console.log(item, itemId)
   //   const { id } = await prisma.activitiesItems.update({
@@ -136,7 +145,7 @@ class ActivitiesRepository {
     return activities
   }
 
-  async findAll({ search = "" }: FilterActivity) {
+  async findAll({ onlyEnabled, search = "" }: FilterActivity) {
     //? Antigo SELECT, com case-sensitive e considerando acentos
     // const users = await prisma.users.findMany({
     //   where: {
@@ -165,6 +174,7 @@ class ActivitiesRepository {
 
     let whereClause = `
       where
+        ${onlyEnabled ? `a.status = 'open' and` : "a.status in ('open', 'closed', 'cancelled') and"}
         ${searchText}
     `
 
@@ -207,7 +217,7 @@ class ActivitiesRepository {
       return []
     }
 
-    let items: any = []
+    let items: any[] = []
 
     for (const activity of activities.rows) {
       const itemsQuery = `
@@ -216,19 +226,21 @@ class ActivitiesRepository {
           ai.product_id,
           ai.quantity,
           ai.price,
-          ai.subtotal
+          ai.subtotal,
+          ai.activity_id
         from
           activities_items ai
         where
           ai.activity_id = '${activity.id}'
       `
 
-      items = await pg.query<Activity>(itemsQuery)
+      const stored = await pg.query<Activity>(itemsQuery)
 
-      if (!items) {
+      if (!stored) {
         items = []
       } else {
-        items = items.rows
+        // items = items.rows
+        items.push(stored.rows)
       }
     }
 
@@ -236,6 +248,22 @@ class ActivitiesRepository {
       const cancelledAt = activity.cancelled_at ? new Date(activity.cancelled_at).toISOString() : null
       const createdAt = activity.created_at ? new Date(activity.created_at).toISOString() : null
       const updatedAt = activity.updated_at ? new Date(activity.updated_at).toISOString() : null
+
+      let parsedItems: any[] = []
+
+      items.map((item) => {
+        for (const i of item) {
+          if (i.activity_id === activity.id) {
+            parsedItems.push({
+              id: i.id,
+              productId: i.product_id,
+              quantity: i.quantity,
+              price: i.price,
+              subtotal: i.subtotal,
+            })
+          }
+        }
+      })
 
       return {
         id: activity.id,
@@ -260,7 +288,7 @@ class ActivitiesRepository {
         lastUpdatedBy: activity.last_updated_by,
         canceledByUser: activity.cancelled_by_user,
         createdBy: activity.created_by,
-        items,
+        items: parsedItems,
       }
     })
 

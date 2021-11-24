@@ -36,9 +36,6 @@ class ActivitiesController {
 
     const schema = {
       status: yup.string().required(),
-      total: yup.number().required(),
-      totalQuantity: yup.number().required(),
-      totalItems: yup.number().required(),
       observation: yup.string(),
       cancelledReason: yup.string(),
       sellerId: yup.string().required(),
@@ -62,7 +59,25 @@ class ActivitiesController {
       items: undefined,
     }
 
-    const storedActivity = await activitiesRepository.store(parsedActivity, request.userId)
+    let activityTotal = 0
+    let activityTotalQuantity = 0
+    let activityTotalItems = 0
+
+    if (activity.items) {
+      activityTotal = activity.items.reduce((accumulator, item) => (accumulator += item.price * item.quantity), 0)
+      activityTotalQuantity = activity.items.reduce((accumulator, item) => (accumulator += item.quantity), 0)
+      activityTotalItems = activity.items.length
+    }
+
+    const storedActivity = await activitiesRepository.store(
+      {
+        ...parsedActivity,
+        total: activityTotal,
+        totalItems: activityTotalItems,
+        totalQuantity: activityTotalQuantity,
+      },
+      request.userId
+    )
 
     for (const item of activity.items) {
       await activitiesRepository.storeItem({
@@ -76,12 +91,13 @@ class ActivitiesController {
   }
 
   async index(request: Request, response: Response) {
-    const { search = "" } = request.query as any
+    const { onlyEnabled = true, search = "" } = request.query as any
 
     await checkRequestUser(request.userId)
 
     const activities = await activitiesRepository.findAll({
       search,
+      onlyEnabled: JSON.parse(onlyEnabled),
     })
 
     return response.status(200).json(activities)
@@ -108,9 +124,6 @@ class ActivitiesController {
 
     const schema = {
       status: yup.string(),
-      total: yup.number(),
-      totalQuantity: yup.number(),
-      totalItems: yup.number(),
       observation: yup.string(),
       cancelledReason: yup.string(),
       sellerId: yup.string(),
@@ -140,11 +153,35 @@ class ActivitiesController {
       items: undefined,
     }
 
+    if (activity.items) {
+      const activityTotal = activity.items.reduce((accumulator, item) => (accumulator += item.price * item.quantity), 0)
+      const activityTotalQuantity = activity.items.reduce((accumulator, item) => (accumulator += item.quantity), 0)
+      const activityTotalItems = activity.items.length
+
+      parsedActivity.total = activityTotal
+      parsedActivity.totalQuantity = activityTotalQuantity
+      parsedActivity.totalItems = activityTotalItems
+    }
+
     const updatedActivity = await activitiesRepository.update({
-      activity: parsedActivity,
+      activity: {
+        ...parsedActivity,
+      },
       requestUserId: request.userId,
       activityId: id,
     })
+
+    if (activity.items) {
+      await activitiesRepository.deleteItems(id)
+
+      for (const item of activity.items) {
+        await activitiesRepository.storeItem({
+          ...item,
+          activityId: id,
+          subtotal: item.price * item.quantity,
+        })
+      }
+    }
 
     // if (activity.items) {
     //   for (const item of activity.items) {
