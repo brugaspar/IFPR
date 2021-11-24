@@ -146,4 +146,22 @@ export const GlobalStyle = createGlobalStyle`
     outline: 0;
   }
 
+  .react-modal-content-address {
+    width: 100%;
+    max-width: 1000px;
+
+    margin-top: 5rem;
+
+    max-height: calc(100% - 7rem);
+
+    background: var(--background);
+
+    padding: 3rem;
+    position: relative;
+
+    border-radius: 0.25rem;
+
+    outline: 0;
+  }
+
 `

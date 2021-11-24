@@ -13,8 +13,20 @@ import { api } from "../../services/api.service"
 
 import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
+import { AddressModal } from "../AddressModal"
 
 import { Container, RowContainer } from "./styles"
+
+type Address = {
+  id: string
+  street: string
+  neighbourhood: string
+  number: string
+  complement: string
+  zipcode: string
+  cityId: string
+  memberId: string
+}
 
 type Member = {
   id: string
@@ -88,15 +100,29 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   const [maritalStatus, setMaritalStatus] = useState("")
   const [bloodTyping, setBloodTyping] = useState("")
   const [planId, setPlanId] = useState("")
+  const [addresses, setAddresses] = useState<Address[]>([])
 
   const [disabled, setDisabled] = useState(false)
 
   const [disableUsersPermission, setDisableUsersPermission] = useState(false)
 
+  const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
+
+  console.log("\nAddresses")
+  console.log(addresses)
+
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
     }
+  }
+
+  function handleOpenAdressModal() {
+    setIsAdressModalOpen(true)
+  }
+
+  function handleCloseAdressModal() {
+    setIsAdressModalOpen(false)
   }
 
   async function loadCities() {
@@ -150,6 +176,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
+          addresses,
         })
       } else {
         await api.post("members", {
@@ -174,6 +201,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
+          addresses,
         })
       }
 
@@ -225,6 +253,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     setBloodTyping(response.data.bloodTyping)
     setDisabled(response.data.disabled)
     setPlanId(response.data.planId)
+    setAddresses(response.data.memberAddresses)
   }
 
   function handleToggleDisabled() {
@@ -253,11 +282,16 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     setBloodTyping("")
     setDisabled(false)
     setPlanId("")
+    setAddresses([])
   }
 
   async function verifyPermissions() {
     const userHasDisableMembersPermission = await verifyUserPermissions("disable_members", userPermissions)
     setDisableUsersPermission(userHasDisableMembersPermission)
+  }
+
+  function onChangeAddresses(addresses: Address[]) {
+    setAddresses(addresses)
   }
 
   useEffect(() => {
@@ -342,6 +376,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe a data"
                 value={moment(issuedAt).format("yyyy-MM-DD")}
                 onChange={(event) => setIssuedAt(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
           </div>
@@ -372,6 +408,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar cidade"
                 messages={{
                   emptyFilter: "Cidade não encontrada",
+                  emptyList: "Nenhuma cidade cadastrada",
                 }}
                 value={naturalityCityId}
                 filter="contains"
@@ -487,6 +524,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe a data"
                 value={moment(crValidity).format("yyyy-MM-DD")}
                 onChange={(event) => setCrValididy(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
           </div>
@@ -501,6 +540,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o data"
                 value={moment(birthDate).format("yyyy-MM-DD")}
                 onChange={(event) => setBirthDate(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
 
@@ -533,6 +574,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o gênero"
                 messages={{
                   emptyFilter: "Gênero não encontrada",
+                  emptyList: "Nenhum gênero cadastrado",
                 }}
                 value={gender}
                 filter="contains"
@@ -557,6 +599,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o estado civil"
                 messages={{
                   emptyFilter: "Estado civil não encontrado",
+                  emptyList: "Nenhum estado civil cadastrado",
                 }}
                 value={maritalStatus}
                 filter="contains"
@@ -586,6 +629,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o tipo sanguíneo"
                 messages={{
                   emptyFilter: "Tipo sanguíneo não encontrado",
+                  emptyList: "Nenhum tipo sanguíneo cadastrado",
                 }}
                 value={bloodTyping}
                 filter="contains"
@@ -604,6 +648,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o plano"
                 messages={{
                   emptyFilter: "Plano não encontrado",
+                  emptyList: "Nenhum plano cadastrado",
                 }}
                 value={planId}
                 filter="contains"
@@ -612,14 +657,21 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             </RowContainer>
           </div>
 
-          <RowContainer width={25} align="center" className="margin-top">
-            <Checkbox
-              title="Desativado"
-              active={disabled}
-              handleToggleActive={handleToggleDisabled}
-              disabled={!disableUsersPermission}
-            />
-          </RowContainer>
+          <div className="row">
+            <RowContainer>
+              <Checkbox
+                title="Desativado"
+                active={disabled}
+                handleToggleActive={handleToggleDisabled}
+                disabled={!disableUsersPermission}
+              />
+            </RowContainer>
+            <RowContainer>
+              <button type="button" onClick={handleOpenAdressModal} className="addresses-button">
+                Endereços
+              </button>
+            </RowContainer>
+          </div>
 
           <div className="close">
             <button type="button" onClick={onRequestClose}>
@@ -628,6 +680,13 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
+
+        <AddressModal
+          isOpen={isAdressModalOpen}
+          onRequestClose={handleCloseAdressModal}
+          addresses={addresses}
+          onChangeAddresses={onChangeAddresses}
+        />
       </Container>
     </Modal>
   )
