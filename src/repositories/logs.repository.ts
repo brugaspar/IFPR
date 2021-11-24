@@ -47,17 +47,6 @@ class LogsRepository {
     })
   }
 
-  // async findAll({ search }: FilterLog) {
-  //   const logs = await prisma.logs.findMany({
-  //     include: {
-  //       table: true,
-  //       user: true,
-  //     },
-  //   })
-
-  //   return logs
-  // }
-
   async findAll({ search = "" }: FilterLog) {
     const splittedSearch = search.split(" ")
 

@@ -1,7 +1,4 @@
 import { Router } from "express"
-import multer from "multer"
-
-import multerConfiguration from "../configuration/multer.configuration"
 
 import { authenticationMiddleware } from "../middlewares/authentication.middleware"
 import { permissionsMiddleware } from "../middlewares/permissions.middleware"
@@ -14,16 +11,10 @@ membersRouter.post(
   "/members",
   authenticationMiddleware,
   permissionsMiddleware(["create_members", "list_members"]),
-  multer(multerConfiguration).array("files"),
   membersController.store
 )
 
-membersRouter.get(
-  "/members",
-  authenticationMiddleware,
-  permissionsMiddleware(["list_members"]),
-  membersController.index
-)
+membersRouter.get("/members", authenticationMiddleware, permissionsMiddleware(["list_members"]), membersController.index)
 
 membersRouter.get("/members/documents", authenticationMiddleware, membersController.findDocuments)
 
@@ -38,7 +29,6 @@ membersRouter.put(
   "/members/:id",
   authenticationMiddleware,
   permissionsMiddleware(["edit_members", "list_members"]),
-  multer(multerConfiguration).array("files"),
   membersController.update
 )
 

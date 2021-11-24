@@ -183,19 +183,6 @@ class ActivitiesController {
       }
     }
 
-    // if (activity.items) {
-    //   for (const item of activity.items) {
-    //     await activitiesRepository.updateItem(
-    //       {
-    //         price: item.price,
-    //         quantity: item.quantity,
-    //         subtotal: item.price * item.quantity,
-    //       },
-    //       item.id || ""
-    //     )
-    //   }
-    // }
-
     return response.status(200).json({ id: updatedActivity })
   }
 }

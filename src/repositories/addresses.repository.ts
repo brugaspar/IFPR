@@ -2,8 +2,6 @@ import { PrismaClient } from ".prisma/client"
 
 import { getDisabledInfo } from "../helpers/disabled.helper"
 
-import logsRepository from "./logs.repository"
-
 type Address = {
   street: string
   neighbourhood: string
@@ -37,13 +35,6 @@ class AddressesRepository {
       },
     })
 
-    // await logsRepository.store("members_addresses", {
-    //   action: "insert",
-    //   description: "Registro incluído por usuário",
-    //   referenceId: id,
-    //   userId: logUserId,
-    // })
-
     return id
   }
 
@@ -63,13 +54,6 @@ class AddressesRepository {
       },
     })
 
-    await logsRepository.store("members_addresses", {
-      action: "update",
-      description: "Registro atualizado por usuário",
-      referenceId: id,
-      userId: logUserId,
-    })
-
     return id
   }
 
@@ -80,13 +64,6 @@ class AddressesRepository {
       where: {
         id,
       },
-    })
-
-    await logsRepository.store("members_addresses", {
-      action: "delete",
-      description: "Registro excluído por usuário",
-      referenceId: id,
-      userId: logUserId,
     })
   }
 

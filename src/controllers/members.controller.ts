@@ -9,7 +9,6 @@ import { AppError } from "../handlers/errors.handler"
 import membersRepository from "../repositories/members.repository"
 import plansRepository from "../repositories/plans.repository"
 import addressesRepository from "../repositories/addresses.repository"
-import documentsRepository from "../repositories/documents.repository"
 
 type Gender = "male" | "female" | "other"
 type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
@@ -47,22 +46,9 @@ type RequestMember = {
   }[]
 }
 
-type MemberDocument = {
-  fieldname: string
-  originalname: string
-  encoding: string
-  mimetype: string
-  key: string
-  destination: string
-  filename: string
-  path: string
-  size: number
-}
-
 class MemberController {
   async store(request: Request, response: Response) {
     const member: RequestMember = request.body
-    const memberDocuments: MemberDocument[] = request.files as any
 
     const schema = {
       name: yup.string().required("Nome é obrigatório"),
@@ -133,23 +119,6 @@ class MemberController {
       },
       request.userId
     )
-
-    if (memberDocuments) {
-      for (const document of memberDocuments) {
-        const documentData = {
-          name: document.key,
-          path: `http://localhost:3030/files/${document.key}`,
-        }
-
-        await documentsRepository.store(
-          {
-            ...documentData,
-            memberId: storedMember,
-          },
-          request.userId
-        )
-      }
-    }
 
     for (const address of addresses) {
       await addressesRepository.store(

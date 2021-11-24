@@ -1,6 +1,5 @@
 import { Request, Response } from "express"
 import * as yup from "yup"
-import { string } from "yup/lib/locale"
 
 import { AppError } from "../handlers/errors.handler"
 import { checkBodySchema } from "../handlers/schema.handler"

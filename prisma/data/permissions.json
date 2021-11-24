@@ -178,5 +178,23 @@
     "slug": "cancel_activities",
     "description": "Permite cancelar atividades do sistema.",
     "table": "activities"
+  },
+  {
+    "name": "Incluir endereços",
+    "slug": "create_addresses",
+    "description": "Permite a inclusão de um novo endereço no sistema.",
+    "table": "members_addresses"
+  },
+  {
+    "name": "Editar endereços",
+    "slug": "edit_addresses",
+    "description": "Permite a edição dos dados cadastrais dos endereços.",
+    "table": "members_addresses"
+  },
+  {
+    "name": "Remover endereços",
+    "slug": "remove_addresses",
+    "description": "Permite remover endereços do sistema.",
+    "table": "members_addresses"
   }
 ]

@@ -1,60 +1,58 @@
-import { PrismaClient } from ".prisma/client";
-// import { Pool } from "pg"
-import { pgPool } from "../configuration/pg.configuration";
+import { PrismaClient } from ".prisma/client"
 
-import { getDisabledInfo } from "../helpers/disabled.helper";
+import { pgPool } from "../configuration/pg.configuration"
+import { getDisabledInfo } from "../helpers/disabled.helper"
 
-import logsRepository from "./logs.repository";
+import logsRepository from "./logs.repository"
 
 type RequestProduct = {
-  name: string;
-  quantity: number;
-  minimumQuantity: number;
-  price: number;
-  brandId: string;
-  groupId: string;
-  disabled: boolean;
-  isService: boolean;
-};
+  name: string
+  quantity: number
+  minimumQuantity: number
+  price: number
+  brandId: string
+  groupId: string
+  disabled: boolean
+  isService: boolean
+}
 
 type Product = {
-  id: string;
-  name: string;
-  quantity: number;
-  is_service: boolean;
-  minimum_quantity: number;
-  price: number;
-  brand_id: string;
-  brand_name: string;
-  group_id: string;
-  group_name: string;
-  disabled: boolean;
-  disabled_at: string;
-  created_at: string;
-  updated_at: string;
-  last_disabled_by: string;
-  last_updated_by: string;
-  created_by: string;
-  disabled_by_user: string;
-};
+  id: string
+  name: string
+  quantity: number
+  is_service: boolean
+  minimum_quantity: number
+  price: number
+  brand_id: string
+  brand_name: string
+  group_id: string
+  group_name: string
+  disabled: boolean
+  disabled_at: string
+  created_at: string
+  updated_at: string
+  last_disabled_by: string
+  last_updated_by: string
+  created_by: string
+  disabled_by_user: string
+}
 
 type UpdateProductProps = {
-  product: RequestProduct;
-  requestUserId: string;
-  productId: string;
-};
+  product: RequestProduct
+  requestUserId: string
+  productId: string
+}
 
 type FilterProduct = {
-  onlyEnabled: boolean;
-  search: string;
-};
+  onlyEnabled: boolean
+  search: string
+}
 
-const prisma = new PrismaClient();
-// const pgPool = new Pool()
+const prisma = new PrismaClient()
 
 class ProductsRepository {
   async store(product: RequestProduct, requestUserId: string) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(product.disabled, requestUserId);
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(product.disabled, requestUserId)
 
     const { id } = await prisma.products.create({
       data: {
@@ -67,16 +65,16 @@ class ProductsRepository {
       select: {
         id: true,
       },
-    });
+    })
 
     await logsRepository.store("products", {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
       userId: logUserId,
-    });
+    })
 
-    return id;
+    return id
   }
 
   async findById(id: string) {
@@ -84,15 +82,15 @@ class ProductsRepository {
       where: {
         id,
       },
-    });
+    })
 
-    return product;
+    return product
   }
 
   async findAll({ onlyEnabled = true, search = "" }: FilterProduct) {
-    const splittedSearch = search.split(" ");
+    const splittedSearch = search.split(" ")
 
-    let searchText = "";
+    let searchText = ""
 
     splittedSearch.forEach((word, index) => {
       searchText += `
@@ -103,20 +101,20 @@ class ProductsRepository {
           or
           upper(unaccent(pb.name)) like upper(unaccent('%${word}%'))
         )
-      `;
+      `
 
       if (index !== splittedSearch.length - 1) {
-        searchText += "and";
+        searchText += "and"
       }
-    });
+    })
 
     let whereClause = `
       where
         ${onlyEnabled ? `p.disabled = false and` : ""}
         ${searchText}
-    `;
+    `
 
-    const pg = await pgPool.connect();
+    const pg = await pgPool.connect()
 
     const query = `
       select
@@ -147,20 +145,20 @@ class ProductsRepository {
       ${whereClause}
       order by
         p.created_at
-    `;
+    `
 
-    const products = await pg.query<Product>(query);
+    const products = await pg.query<Product>(query)
 
-    await pg.release();
+    await pg.release()
 
     if (!products) {
-      return [];
+      return []
     }
 
     const parsedProductsResult = products.rows.map((product) => {
-      const disabledAt = product.disabled_at ? new Date(product.disabled_at).toISOString() : null;
-      const createdAt = product.created_at ? new Date(product.created_at).toISOString() : null;
-      const updatedAt = product.updated_at ? new Date(product.updated_at).toISOString() : null;
+      const disabledAt = product.disabled_at ? new Date(product.disabled_at).toISOString() : null
+      const createdAt = product.created_at ? new Date(product.created_at).toISOString() : null
+      const updatedAt = product.updated_at ? new Date(product.updated_at).toISOString() : null
 
       return {
         id: product.id,
@@ -185,14 +183,14 @@ class ProductsRepository {
         createdBy: product.created_by,
         disabledByUser: product.disabled_by_user,
         isService: product.is_service,
-      };
-    });
+      }
+    })
 
-    return parsedProductsResult;
+    return parsedProductsResult
   }
 
   async update({ product, requestUserId, productId }: UpdateProductProps) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(product.disabled, requestUserId);
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(product.disabled, requestUserId)
 
     const { id } = await prisma.products.update({
       data: {
@@ -207,7 +205,7 @@ class ProductsRepository {
       select: {
         id: true,
       },
-    });
+    })
 
     if (disabledAt) {
       await logsRepository.store("products", {
@@ -215,17 +213,17 @@ class ProductsRepository {
         description: "Registro desativado por usuário",
         referenceId: id,
         userId: logUserId,
-      });
+      })
     } else {
       await logsRepository.store("products", {
         action: "update",
         description: "Registro atualizado por usuário",
         referenceId: id,
         userId: logUserId,
-      });
+      })
     }
 
-    return id;
+    return id
   }
 
   async updateQuantity(productId: string, quantity: number) {
@@ -236,8 +234,8 @@ class ProductsRepository {
       where: {
         id: productId,
       },
-    });
+    })
   }
 }
 
-export default new ProductsRepository();
+export default new ProductsRepository()

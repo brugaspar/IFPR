@@ -1,7 +1,6 @@
 import { PrismaClient } from ".prisma/client"
-// import { Pool } from "pg"
-import { pgPool } from "../configuration/pg.configuration"
 
+import { pgPool } from "../configuration/pg.configuration"
 import { getDisabledInfo } from "../helpers/disabled.helper"
 
 import logsRepository from "./logs.repository"
@@ -78,7 +77,6 @@ type FilterMember = {
 }
 
 const prisma = new PrismaClient()
-// const pgPool = new Pool()
 
 class MembersRepository {
   async store(member: RequestMember, requestUserId: string) {
@@ -108,16 +106,6 @@ class MembersRepository {
   }
 
   async findAll({ onlyEnabled = true, search = "" }: FilterMember) {
-    //? Antigo SELECT, com case-sensitive e considerando acentos
-    // const users = await prisma.users.findMany({
-    //   where: {
-    //     disabled: onlyEnabled ? false : undefined,
-    //   },
-    //   include: {
-    //     disabledByUser: true,
-    //   },
-    // })
-
     const splittedSearch = search.split(" ")
 
     let searchText = ""

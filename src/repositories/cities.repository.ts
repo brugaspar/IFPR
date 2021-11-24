@@ -16,20 +16,6 @@ type City = {
 
 class CitiesRepository {
   async findAll({ search }: FilterCity) {
-    //? Antigo SELECT, com case-sensitive e considerando acentos
-    // const cities = await prisma.cities.findMany({
-    //   select: {
-    //     id: true,
-    //     name: true,
-    //     state: true,
-    //   },
-    //   where: {
-    //     name: {
-    //       contains: search,
-    //     },
-    //   },
-    // })
-
     const cities = await prisma.$queryRaw<City[]>`
       select
         c.id,

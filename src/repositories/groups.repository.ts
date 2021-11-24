@@ -1,7 +1,6 @@
 import { PrismaClient } from ".prisma/client"
-// import { Pool } from "pg"
-import { pgPool } from "../configuration/pg.configuration"
 
+import { pgPool } from "../configuration/pg.configuration"
 import { getDisabledInfo } from "../helpers/disabled.helper"
 
 import logsRepository from "./logs.repository"
@@ -36,7 +35,6 @@ type FilterProductGroup = {
 }
 
 const prisma = new PrismaClient()
-// const pgPool = new Pool()
 
 class ProductsGroupsRepository {
   async store(productGroup: RequestProductGroup, requestUserId: string) {

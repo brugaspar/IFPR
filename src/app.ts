@@ -7,8 +7,6 @@ import morgan from "morgan"
 
 import { router } from "./routes"
 
-// import { authenticationMiddleware } from "./middlewares/authentication.middleware"
-
 import { errorsMiddleware } from "./middlewares/errors.middleware"
 
 const app = express()
@@ -18,8 +16,6 @@ app.use(express.json())
 app.use(morgan("dev"))
 
 app.use("/api/v1", router)
-
-app.use("/files", express.static("uploads"))
 
 app.use(errorsMiddleware)
 

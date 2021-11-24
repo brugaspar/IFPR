@@ -26,10 +26,6 @@ export function permissionsMiddleware(permissions: string[]) {
       }
     })
 
-    // const permissionExists = userPermissions
-    //   .map((permission) => permission)
-    //   .some((permission) => permissions.includes(permission))
-
     if (nonexistentPermissions.length) {
       throw new AppError("Usuário sem permissão", 401)
     }

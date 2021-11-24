@@ -30,13 +30,6 @@ export function errorsMiddleware(error: Error, request: Request, response: Respo
 
   saveError(error)
 
-  console.log("\nError:\n")
-  console.log(error)
-
-  console.log("\nDetails:\n")
-  console.log(error.message)
-  console.log("\n\n")
-
   return response.status(500).json({
     message: "Erro interno no servidor, tente novamente",
   })

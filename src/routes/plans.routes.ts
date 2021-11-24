@@ -7,26 +7,11 @@ import plansController from "../controllers/plans.controller"
 
 const plansRouter = Router()
 
-plansRouter.post(
-  "/plans",
-  authenticationMiddleware,
-  permissionsMiddleware(["create_plans", "list_plans"]),
-  plansController.store
-)
+plansRouter.post("/plans", authenticationMiddleware, permissionsMiddleware(["create_plans", "list_plans"]), plansController.store)
 
-plansRouter.get(
-  "/plans",
-  authenticationMiddleware,
-  permissionsMiddleware(["list_plans"]),
-  plansController.index
-)
+plansRouter.get("/plans", authenticationMiddleware, permissionsMiddleware(["list_plans"]), plansController.index)
 
-plansRouter.get(
-  "/plans/:id",
-  authenticationMiddleware,
-  permissionsMiddleware(["list_plans", "edit_plans"]),
-  plansController.show
-)
+plansRouter.get("/plans/:id", authenticationMiddleware, permissionsMiddleware(["list_plans", "edit_plans"]), plansController.show)
 
 plansRouter.put(
   "/plans/:id",
