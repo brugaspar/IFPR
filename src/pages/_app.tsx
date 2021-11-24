@@ -5,7 +5,7 @@ import Head from "next/head"
 import { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import { ToastContainer } from "react-toastify"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { AuthProvider } from "../contexts/AuthContext"
 
@@ -18,16 +18,31 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   const [sidebar, setSidebar] = useState(false)
 
+  const [isDark, setIsDark] = useState(true)
+
   function handleSidebarToggle() {
     setSidebar(!sidebar)
   }
 
+  function handleBrowserTheme() {
+    const prefersColorScheme = window.matchMedia("(prefers-color-scheme: dark)")
+    if (prefersColorScheme.matches) {
+      setIsDark(true)
+    } else {
+      setIsDark(false)
+    }
+  }
+
   const showComponent = router.pathname !== "/" && router.pathname !== "/404"
+
+  useEffect(() => {
+    handleBrowserTheme()
+  }, [])
 
   return (
     <AuthProvider>
       <Head>
-        <link rel="shortcut icon" href="/images/icon.png" type="image/png" />
+        <link rel="shortcut icon" href={isDark ? "/images/icon.png" : "/images/icon-black.png"} type="image/png" />
       </Head>
 
       {showComponent && (
