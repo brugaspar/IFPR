@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { UserModal } from "../../components/UserModal"
+import { ActivityModal } from "../../components/ActivityModal"
 import { Checkbox } from "../../components/Checkbox"
 import { SearchBar } from "../../components/SearchBar"
 
@@ -232,7 +232,7 @@ export default function Activities() {
         </table>
       </div>
 
-      {/* <UserModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} userId={selectedActivity || ""} /> */}
+      <ActivityModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} /> 
     </Container>
   )
 }
