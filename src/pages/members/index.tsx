@@ -17,6 +17,7 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/members.styles"
 import { FilterContainer } from "../../components/FilterContainer"
+import { cpfMask } from "../../helpers/mask"
 
 type Member = {
   id: string
@@ -207,7 +208,7 @@ export default function Members() {
                 <td>{member.name}</td>
                 <td>{member.email}</td>
                 <td>{member.rg}</td>
-                <td>{member.cpf}</td>
+                <td>{cpfMask(member.cpf)}</td>
                 <td>{member.profession}</td>
                 <td>{member.crNumber}</td>
                 <td>{new Date(member.crValidity).toLocaleDateString()}</td>

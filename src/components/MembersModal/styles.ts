@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const Container = styled.div`
-  height: 45rem;
+  height: 100%;
   overflow-y: scroll;
   padding-right: 1rem;
   padding-left: 1rem;
@@ -143,7 +143,7 @@ export const Container = styled.div`
       }
     }
   }
-`;
+`
 
 export const RowContainer = styled.div<{ width?: number; align?: string }>`
   width: ${(props) => (props.width ? props.width : 49)}%;
@@ -174,4 +174,4 @@ export const RowContainer = styled.div<{ width?: number; align?: string }>`
   &.margin-top {
     margin-top: 0.8rem;
   }
-`;
+`

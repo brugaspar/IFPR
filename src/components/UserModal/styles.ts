@@ -87,7 +87,7 @@ export const RowContainer = styled.div<{ width?: number; align?: string }>`
   .permissions-button {
     height: 3rem;
     width: 100%;
-    border: 0;
+    border: 1px solid var(--text-body);
     border-radius: 0.25rem;
 
     background: var(--shape-dark);

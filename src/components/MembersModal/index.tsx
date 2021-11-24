@@ -5,6 +5,7 @@ import { Combobox } from "react-widgets"
 import moment from "moment"
 
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
+import { cellPhoneMask, cpfMask, phoneMask } from "../../helpers/mask"
 
 import { useAuth } from "../../hooks/useAuth"
 
@@ -129,17 +130,17 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
       if (memberId) {
         await api.put(`members/${memberId}`, {
           name,
-          rg,
+          rg: rg.replace(/\D/g, ""),
           issuingAuthority,
           issuedAt,
-          cpf,
+          cpf: cpf.replace(/\D/g, ""),
           naturalityCityId,
           motherName,
           fatherName,
           profession,
           email,
-          phone,
-          cellPhone,
+          phone: phone.replace(/\D/g, ""),
+          cellPhone: cellPhone.replace(/\D/g, ""),
           crNumber,
           crValidity,
           birthDate,
@@ -153,17 +154,17 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
       } else {
         await api.post("members", {
           name,
-          rg,
+          rg: rg.replace(/\D/g, ""),
           issuingAuthority,
           issuedAt,
-          cpf,
+          cpf: cpf.replace(/\D/g, ""),
           naturalityCityId,
           motherName,
           fatherName,
           profession,
           email,
-          phone,
-          cellPhone,
+          phone: phone.replace(/\D/g, ""),
+          cellPhone: cellPhone.replace(/\D/g, ""),
           crNumber,
           crValidity,
           birthDate,
@@ -300,6 +301,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o nome"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
+                maxLength={120}
               />
             </RowContainer>
 
@@ -312,6 +314,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o RG"
                 value={rg}
                 onChange={(event) => setRg(event.target.value)}
+                maxLength={15}
               />
             </RowContainer>
           </div>
@@ -326,6 +329,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o orgão emissor"
                 value={issuingAuthority}
                 onChange={(event) => setIssuingAuthority(event.target.value)}
+                maxLength={60}
               />
             </RowContainer>
 
@@ -351,7 +355,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 type="text"
                 placeholder="Informe o CPF"
                 value={cpf}
-                onChange={(event) => setCpf(event.target.value)}
+                onChange={(event) => setCpf(cpfMask(event.target.value))}
+                maxLength={14}
               />
             </RowContainer>
 
@@ -385,6 +390,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o nome da mãe"
                 value={motherName}
                 onChange={(event) => setMotherName(event.target.value)}
+                maxLength={120}
               />
             </RowContainer>
 
@@ -397,6 +403,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o nome do pai"
                 value={fatherName}
                 onChange={(event) => setFatherName(event.target.value)}
+                maxLength={120}
               />
             </RowContainer>
           </div>
@@ -411,6 +418,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe a profissão"
                 value={profession}
                 onChange={(event) => setProfession(event.target.value)}
+                maxLength={120}
               />
             </RowContainer>
 
@@ -419,10 +427,11 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
               <Input
                 inputType="default"
                 id="email"
-                type="text"
+                type="email"
                 placeholder="Informe o e-mail"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
+                maxLength={120}
               />
             </RowContainer>
           </div>
@@ -436,7 +445,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 type="text"
                 placeholder="Informe o telefone"
                 value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                onChange={(event) => setPhone(phoneMask(event.target.value))}
+                maxLength={14}
               />
             </RowContainer>
 
@@ -448,7 +458,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 type="text"
                 placeholder="Informe o celular"
                 value={cellPhone}
-                onChange={(event) => setCellPhone(event.target.value)}
+                onChange={(event) => setCellPhone(cellPhoneMask(event.target.value))}
+                maxLength={16}
               />
             </RowContainer>
           </div>
@@ -463,6 +474,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o CR"
                 value={crNumber}
                 onChange={(event) => setCrNumber(event.target.value)}
+                maxLength={10}
               />
             </RowContainer>
 

@@ -60,7 +60,7 @@ export default function Activities() {
   const [activities, setActivities] = useState<Activity[]>([])
   const [selectedActivity, setSelectedActivity] = useState<string | null>("")
 
-  // const [onlyEnabled, setOnlyEnabled] = useState(true)
+  const [onlyEnabled, setOnlyEnabled] = useState(true)
 
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false)
 
@@ -95,6 +95,7 @@ export default function Activities() {
       const response = await api.get("/activities", {
         params: {
           search,
+          onlyEnabled,
         },
       })
 
@@ -123,9 +124,9 @@ export default function Activities() {
     handleOpenActivityModal()
   }
 
-  // function handleToggleOnlyEnabled() {
-  //   setOnlyEnabled(!onlyEnabled)
-  // }
+  function handleToggleOnlyEnabled() {
+    setOnlyEnabled(!onlyEnabled)
+  }
 
   async function verifyPermissions() {
     const userHasCreateActivitiesPermission = await verifyUserPermissions("create_activities", userPermissions)
@@ -152,7 +153,7 @@ export default function Activities() {
 
   useEffect(() => {
     loadActivities()
-  }, [isActivityModalOpen, reload])
+  }, [isActivityModalOpen, reload, onlyEnabled])
 
   return (
     <Container>
@@ -187,7 +188,8 @@ export default function Activities() {
       </div> */}
 
       <FilterContainer
-        hasOnlyEnabled={false}
+        onlyEnabled={onlyEnabled}
+        handleToggleOnlyEnabled={handleToggleOnlyEnabled}
         placeholder="Nome do membro"
         handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
       />

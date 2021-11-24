@@ -168,7 +168,7 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
           <button
             type="button"
             onClick={() => {
-              const options = ["users", "members", "plans", "products", "brands", "groups"]
+              const options = ["users", "members", "plans", "products", "brands", "groups", "activities"]
               const basicPermissions: string[] = []
 
               options.map((option) => {
@@ -183,7 +183,7 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
           <button
             type="button"
             onClick={() => {
-              const options = ["users", "members", "plans", "products", "brands", "groups"]
+              const options = ["users", "members", "plans", "products", "brands", "groups", "activities"]
               const advancedPermissions: string[] = []
 
               options.map((option) => {
