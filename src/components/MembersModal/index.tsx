@@ -108,6 +108,9 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
   const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
 
+  console.log("\nAddresses")
+  console.log(addresses)
+
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
@@ -279,6 +282,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     setBloodTyping("")
     setDisabled(false)
     setPlanId("")
+    setAddresses([])
   }
 
   async function verifyPermissions() {
@@ -372,6 +376,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe a data"
                 value={moment(issuedAt).format("yyyy-MM-DD")}
                 onChange={(event) => setIssuedAt(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
           </div>
@@ -402,6 +408,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar cidade"
                 messages={{
                   emptyFilter: "Cidade não encontrada",
+                  emptyList: "Nenhuma cidade cadastrada",
                 }}
                 value={naturalityCityId}
                 filter="contains"
@@ -517,6 +524,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe a data"
                 value={moment(crValidity).format("yyyy-MM-DD")}
                 onChange={(event) => setCrValididy(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
           </div>
@@ -531,6 +540,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Informe o data"
                 value={moment(birthDate).format("yyyy-MM-DD")}
                 onChange={(event) => setBirthDate(event.target.value)}
+                min="1800-01-01"
+                max="2500-12-31"
               />
             </RowContainer>
 
@@ -563,6 +574,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o gênero"
                 messages={{
                   emptyFilter: "Gênero não encontrada",
+                  emptyList: "Nenhum gênero cadastrado",
                 }}
                 value={gender}
                 filter="contains"
@@ -587,6 +599,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o estado civil"
                 messages={{
                   emptyFilter: "Estado civil não encontrado",
+                  emptyList: "Nenhum estado civil cadastrado",
                 }}
                 value={maritalStatus}
                 filter="contains"
@@ -616,6 +629,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o tipo sanguíneo"
                 messages={{
                   emptyFilter: "Tipo sanguíneo não encontrado",
+                  emptyList: "Nenhum tipo sanguíneo cadastrado",
                 }}
                 value={bloodTyping}
                 filter="contains"
@@ -634,6 +648,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 placeholder="Selecionar o plano"
                 messages={{
                   emptyFilter: "Plano não encontrado",
+                  emptyList: "Nenhum plano cadastrado",
                 }}
                 value={planId}
                 filter="contains"
@@ -652,7 +667,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
               />
             </RowContainer>
             <RowContainer>
-              <button type="button" onClick={handleOpenAdressModal} className="permissions-button">
+              <button type="button" onClick={handleOpenAdressModal} className="addresses-button">
                 Endereços
               </button>
             </RowContainer>

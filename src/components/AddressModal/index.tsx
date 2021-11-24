@@ -14,6 +14,7 @@ import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
+import { maskCEP } from "../../helpers/mask"
 
 type Address = {
   id: string
@@ -59,6 +60,9 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
 
   const [disableProductGroupPermission, setDisableProductGroupPermission] = useState(false)
 
+  console.log("\nAddressesToShow")
+  console.log(addressesToShow)
+
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
@@ -81,6 +85,11 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
     event.preventDefault()
     onChangeAddresses(addressesToShow)
     onRequestClose()
+  }
+
+  async function handleModalClose() {
+    setAddressesToShow([])
+    resetFields()
   }
 
   // async function loadProductGroupById() {
@@ -141,7 +150,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
     setComplement("")
     setZipcode("")
     setCityId("")
-    setAddressesToShow([])
   }
 
   async function verifyPermissions() {
@@ -151,7 +159,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
 
   useEffect(() => {
     if (isOpen) {
-      verifyPermissions()
+      // verifyPermissions()
       loadCities()
     }
 
@@ -161,10 +169,10 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   }, [isOpen])
 
   useEffect(() => {
-    if (addresses.length > 0) {
+    if (isOpen) {
       setAddressesToShow(addresses)
     }
-  }, [addresses.length])
+  }, [addresses.length, isOpen])
 
   return (
     <Modal
@@ -174,7 +182,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
       className="react-modal-content-address"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc
-      onAfterClose={resetFields}
+      onAfterClose={handleModalClose}
     >
       <Container>
         <h1>{"Endereços"}</h1>
@@ -182,13 +190,13 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
         <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
           <div className="row">
             <RowContainer>
-              <label htmlFor="street">Rua</label>
+              <label htmlFor="street">Endereço</label>
               <Input
                 id="street"
                 type="text"
                 autoFocus
                 inputType="default"
-                placeholder="Informe a rua"
+                placeholder="Informe o endereço"
                 value={street}
                 onChange={(event) => setStreet(event.target.value)}
               />
@@ -246,7 +254,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                 inputType="default"
                 placeholder="Informe o CEP"
                 value={zipcode}
-                onChange={(event) => setZipcode(event.target.value)}
+                onChange={(event) => setZipcode(maskCEP(event.target.value))}
               />
             </RowContainer>
 
@@ -262,6 +270,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                 placeholder="Selecionar cidade"
                 messages={{
                   emptyFilter: "Cidade não encontrada",
+                  emptyList: "Nenhuma cidade cadastrada",
                 }}
                 value={cityId}
                 filter="contains"

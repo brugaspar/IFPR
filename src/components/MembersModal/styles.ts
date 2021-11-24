@@ -152,7 +152,7 @@ export const RowContainer = styled.div<{ width?: number; align?: string }>`
   flex-direction: column;
   align-items: ${(props) => (props.align ? props.align : "auto")};
 
-  .permissions-button {
+  .addresses-button {
     height: 3rem;
     width: 100%;
     border: 0;

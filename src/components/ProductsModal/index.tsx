@@ -69,7 +69,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
     }
   }
 
-
   async function loadBrands() {
     try {
       const response = await api.get("/brands")
@@ -94,7 +93,7 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
     }
   }
 
-   async function handleConfirm(event: FormEvent) {
+  async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
     try {
@@ -144,7 +143,7 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
         toast.error("Problemas internos", { toastId: "error" })
       }
     }
-   }
+  }
 
   async function loadProductById() {
     const response = await api.get(`products/${productId}`)
@@ -166,7 +165,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
   function handleToggleIsService() {
     setIsService(!isService)
   }
-
 
   function resetFields() {
     setName("")
@@ -235,7 +233,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
                 onChange={(event) => setPrice(event.target.value)}
               />
             </RowContainer>
-            
           </div>
 
           <div className="row">
@@ -250,8 +247,8 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}
               />
-              </RowContainer>
-              <RowContainer>
+            </RowContainer>
+            <RowContainer>
               <label htmlFor="minimumQuantity">Quantidade mínima</label>
               <Input
                 id="minimumQuantity"
@@ -262,7 +259,7 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
                 value={minimumQuantity}
                 onChange={(event) => setMinimumQuantity(event.target.value)}
               />
-              </RowContainer>
+            </RowContainer>
           </div>
 
           <div className="row">
@@ -277,13 +274,14 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
                 placeholder="Selecionar a marca"
                 messages={{
                   emptyFilter: "Marca não encontrada",
+                  emptyList: "Nenhuma marca cadastrada",
                 }}
                 value={brandId}
                 filter="contains"
                 onChange={({ id }: any) => setBrandId(id)}
               />
-              </RowContainer>
-              <RowContainer>
+            </RowContainer>
+            <RowContainer>
               <label htmlFor="groupId">Grupo</label>
               <Combobox
                 id="groupId"
@@ -294,32 +292,28 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
                 placeholder="Selecionar o grupo"
                 messages={{
                   emptyFilter: "Grupo não encontrado",
+                  emptyList: "Nenhum grupo cadastrado",
                 }}
                 value={groupId}
                 filter="contains"
                 onChange={({ id }: any) => setGroupId(id)}
               />
-              </RowContainer>
+            </RowContainer>
           </div>
 
           <div className="row">
-          <RowContainer  align="center" className="margin-top">
-              <Checkbox
-                title="Serviço"
-                active={isService}
-                handleToggleActive={handleToggleIsService}
-              />
-              </RowContainer>
-            <RowContainer  align="center" className="margin-top">
+            <RowContainer align="center" className="margin-top">
+              <Checkbox title="Serviço" active={isService} handleToggleActive={handleToggleIsService} />
+            </RowContainer>
+            <RowContainer align="center" className="margin-top">
               <Checkbox
                 title="Desativado"
                 active={disabled}
                 handleToggleActive={handleToggleDisabled}
                 disabled={!disableProductPermission}
               />
-              </RowContainer>
+            </RowContainer>
           </div>
-
 
           <div className="close">
             <button type="button" onClick={onRequestClose}>
