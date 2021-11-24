@@ -37,12 +37,12 @@ class AddressesRepository {
       },
     })
 
-    await logsRepository.store("members_addresses", {
-      action: "insert",
-      description: "Registro incluído por usuário",
-      referenceId: id,
-      userId: logUserId,
-    })
+    // await logsRepository.store("members_addresses", {
+    //   action: "insert",
+    //   description: "Registro incluído por usuário",
+    //   referenceId: id,
+    //   userId: logUserId,
+    // })
 
     return id
   }

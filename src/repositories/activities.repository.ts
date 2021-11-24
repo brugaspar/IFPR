@@ -332,12 +332,21 @@ class ActivitiesRepository {
       },
     })
 
-    await logsRepository.store("activities", {
-      action: "update",
-      description: "Registro atualizado por usuário",
-      referenceId: id,
-      userId: logUserId,
-    })
+    if (cancelledAt) {
+      await logsRepository.store("activities", {
+        action: "disable",
+        description: "Registro desativado por usuário",
+        referenceId: id,
+        userId: logUserId,
+      })
+    } else {
+      await logsRepository.store("activities", {
+        action: "update",
+        description: "Registro atualizado por usuário",
+        referenceId: id,
+        userId: logUserId,
+      })
+    }
 
     return id
   }

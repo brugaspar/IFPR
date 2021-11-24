@@ -216,12 +216,21 @@ class UsersRepository {
       },
     })
 
-    await logsRepository.store("users", {
-      action: "update",
-      description: "Registro atualizado por usuário",
-      referenceId: id,
-      userId: logUserId,
-    })
+    if (disabledAt) {
+      await logsRepository.store("users", {
+        action: "disable",
+        description: "Registro desativado por usuário",
+        referenceId: id,
+        userId: logUserId,
+      })
+    } else {
+      await logsRepository.store("users", {
+        action: "update",
+        description: "Registro atualizado por usuário",
+        referenceId: id,
+        userId: logUserId,
+      })
+    }
 
     return id
   }

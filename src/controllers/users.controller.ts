@@ -26,7 +26,7 @@ type RequestUpdateUser = RequestUser & {
 class UserController {
   async store(request: Request, response: Response) {
     const user: RequestUser = request.body
-    console.log(user)
+
     const schema = {
       name: yup.string().required("Nome é obrigatório"),
       email: yup.string().email().required("E-mail é obrigatório"),

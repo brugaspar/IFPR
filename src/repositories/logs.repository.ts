@@ -1,20 +1,38 @@
 import { PrismaClient } from ".prisma/client"
 
+import { pgPool } from "../configuration/pg.configuration"
+
 import tablesRepository from "./tables.repository"
 
 type Action = "insert" | "update" | "disable" | "sign_in_error" | "delete"
 
-type Log = {
+type RequestLog = {
   description: string
   action: Action
   referenceId: string
   userId?: string
 }
 
+type Log = {
+  id: string
+  description: string
+  action: string
+  reference_id: string
+  user_id: string
+  user_name: string
+  table_id: string
+  table_name: string
+  created_at: string
+}
+
+type FilterLog = {
+  search: string
+}
+
 const prisma = new PrismaClient()
 
 class LogsRepository {
-  async store(tableName: string, log: Log) {
+  async store(tableName: string, log: RequestLog) {
     const table = await tablesRepository.findByName(tableName)
 
     if (!table) {
@@ -29,15 +47,94 @@ class LogsRepository {
     })
   }
 
-  async findAll() {
-    const logs = await prisma.logs.findMany({
-      include: {
-        table: true,
-        user: true,
-      },
+  // async findAll({ search }: FilterLog) {
+  //   const logs = await prisma.logs.findMany({
+  //     include: {
+  //       table: true,
+  //       user: true,
+  //     },
+  //   })
+
+  //   return logs
+  // }
+
+  async findAll({ search = "" }: FilterLog) {
+    const splittedSearch = search.split(" ")
+
+    let searchText = ""
+
+    splittedSearch.forEach((word, index) => {
+      searchText += `
+        (
+          upper(unaccent(gl.description)) like upper(unaccent('%${word}%'))
+          or
+          upper(unaccent(u.name)) like upper(unaccent('%${word}%'))
+          or
+          upper(unaccent(gt.name)) like upper(unaccent('%${word}%'))
+        )
+      `
+
+      if (index !== splittedSearch.length - 1) {
+        searchText += "and"
+      }
     })
 
-    return logs
+    let whereClause = `
+      where
+        ${searchText}
+    `
+
+    const pg = await pgPool.connect()
+
+    const query = `
+      select
+        gl.id,
+        gl.description,
+        gl.action,
+        gl.created_at,
+        gl.table_id,
+        gt.name table_name,
+        gl.user_id,
+        u.name user_name
+      from
+        general_logs gl
+      left join
+        users u on u.id = gl.user_id
+      left join
+        general_tables gt on gt.id = gl.table_id
+      ${whereClause}
+      order by
+        gl.created_at desc
+    `
+
+    const logs = await pg.query<Log>(query)
+
+    await pg.release()
+
+    if (!logs) {
+      return []
+    }
+
+    const parsedLogsResult = logs.rows.map((log) => {
+      const createdAt = log.created_at ? new Date(log.created_at).toISOString() : null
+
+      return {
+        id: log.id,
+        description: log.description,
+        action: log.action,
+        createdAt,
+        table: {
+          id: log.table_id,
+          name: log.table_name,
+        },
+        user: {
+          id: log.user_id,
+          name: log.user_name,
+        },
+      }
+    })
+
+    return parsedLogsResult
   }
 }
 

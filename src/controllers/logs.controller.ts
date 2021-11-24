@@ -6,9 +6,11 @@ import logsRepository from "../repositories/logs.repository"
 
 class LogsController {
   async index(request: Request, response: Response) {
+    const { search = "" } = request.query as any
+
     await checkRequestUser(request.userId)
 
-    const logs = await logsRepository.findAll()
+    const logs = await logsRepository.findAll({ search })
 
     return response.status(200).json(logs)
   }
