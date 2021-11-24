@@ -1,3 +1,4 @@
+import { darken, transparentize } from "polished"
 import styled from "styled-components"
 
 export const Container = styled.div`
@@ -121,6 +122,92 @@ export const Container = styled.div`
         &:hover {
           filter: brightness(0.8);
         }
+      }
+    }
+  }
+
+  .scroll-div {
+    overflow-x: auto;
+    height: calc(100vh - 48rem);
+    margin-top: 2rem;
+
+    &::-webkit-scrollbar {
+      width: 0.2rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--shape-dark);
+      border-radius: 0.25rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0.25rem;
+      background: var(--text-dark);
+      border: 3px solid ${darken(0.16, "#323232")};
+    }
+  }
+
+  .styled-table {
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    font-family: "Mukta";
+    min-width: 400px;
+
+    thead tr {
+      background-color: var(--shape-dark);
+      color: #ffffff;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 0.75rem 0.9395rem;
+
+      &.row {
+        display: flex;
+
+        gap: 0.8rem;
+      }
+
+      &:first-child {
+        border-top-left-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+      }
+
+      &:last-child {
+        border-top-right-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+      }
+    }
+
+    tbody tr {
+      button.edit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        background: transparent;
+        width: 100%;
+      }
+
+      transition: filter 0.2s;
+
+      &.active-row {
+        font-weight: bold;
+        color: var(--green);
+      }
+
+      &:nth-of-type(even) {
+        background: ${transparentize(0.9, "#a1a3a5")};
+      }
+
+      &:last-of-type {
+        border-bottom: 2px solid var(--green);
+      }
+
+      &:hover {
+        filter: brightness(0.8);
       }
     }
   }

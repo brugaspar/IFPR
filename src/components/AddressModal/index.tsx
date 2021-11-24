@@ -12,10 +12,10 @@ import { api } from "../../services/api.service"
 import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
 
-
 import { Container, RowContainer } from "./styles"
+import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
-type Adress = {
+type Address = {
   id: string
   street: string
   neighbourhood: string
@@ -31,14 +31,14 @@ type City = {
   name: string
 }
 
-type AdressModalProps = {
+type AddressModalProps = {
   isOpen: boolean
   onRequestClose: () => void
 }
 
 Modal.setAppElement("#root")
 
-export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
+export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
   const { user } = useAuth()
 
   const userPermissions = user?.permissions || []
@@ -51,7 +51,6 @@ export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
   const [zipcode, setZipcode] = useState("")
   const [cityId, setCityId] = useState("")
   const [memberId, setMemberId] = useState("")
-
 
   const [disableProductGroupPermission, setDisableProductGroupPermission] = useState(false)
 
@@ -73,45 +72,41 @@ export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
     }
   }
 
-   async function handleConfirm(event: FormEvent) {
-  //   event.preventDefault()
-
-  //   try {
-  //     if (adressId) {
-  //       await api.put(`groups/${groupId}`, {
-  //         name,
-  //         disabled,
-  //       })
-  //     } else {
-  //       await api.post("groups", {
-  //         name,
-  //         disabled,
-  //       })
-  //     }
-
-  //     toast.dismiss("error")
-
-  //     if (groupId) {
-  //       toast.success("Grupo alterado com sucesso")
-  //     } else {
-  //       toast.success("Grupo incluído com sucesso")
-  //     }
-
-  //     onRequestClose()
-  //   } catch (error: any) {
-  //     if (error.response?.data?.message) {
-  //       if (Array.isArray(error.response.data.message)) {
-  //         for (const message of error.response.data.message) {
-  //           toast.error(message, { toastId: "error" })
-  //         }
-  //       } else {
-  //         toast.error(error.response.data.message, { toastId: "error" })
-  //       }
-  //     } else {
-  //       toast.error("Problemas internos", { toastId: "error" })
-  //     }
-  //   }
-    }
+  async function handleConfirm(event: FormEvent) {
+    //   event.preventDefault()
+    //   try {
+    //     if (adressId) {
+    //       await api.put(`groups/${groupId}`, {
+    //         name,
+    //         disabled,
+    //       })
+    //     } else {
+    //       await api.post("groups", {
+    //         name,
+    //         disabled,
+    //       })
+    //     }
+    //     toast.dismiss("error")
+    //     if (groupId) {
+    //       toast.success("Grupo alterado com sucesso")
+    //     } else {
+    //       toast.success("Grupo incluído com sucesso")
+    //     }
+    //     onRequestClose()
+    //   } catch (error: any) {
+    //     if (error.response?.data?.message) {
+    //       if (Array.isArray(error.response.data.message)) {
+    //         for (const message of error.response.data.message) {
+    //           toast.error(message, { toastId: "error" })
+    //         }
+    //       } else {
+    //         toast.error(error.response.data.message, { toastId: "error" })
+    //       }
+    //     } else {
+    //       toast.error("Problemas internos", { toastId: "error" })
+    //     }
+    //   }
+  }
 
   // async function loadProductGroupById() {
   //   const response = await api.get(`groups/${groupId}`)
@@ -123,8 +118,6 @@ export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
   // function handleToggleDisabled() {
   //   setDisabled(!disabled)
   // }
-
-
 
   function resetFields() {
     setStreet("")
@@ -156,13 +149,13 @@ export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       overlayClassName="react-modal-overlay"
-      className="react-modal-content"
+      className="react-modal-content-address"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc
       onAfterClose={resetFields}
     >
       <Container>
-        <h1>{ "Endereços"}</h1>
+        <h1>{"Endereços"}</h1>
 
         <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
           <div className="row">
@@ -262,26 +255,41 @@ export function AdressModal({ isOpen, onRequestClose }: AdressModalProps) {
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
-      </Container>
-      <Container>
-      <div className="scroll-div">
-        <table className="styled-table">
-          <thead>
-            <tr>
-              <th>Rua</th>
-              <th>Bairro</th>
-            </tr>
-          </thead>
-          <tbody>
-    
+
+        <div className="scroll-div">
+          <table className="styled-table">
+            <thead>
               <tr>
-                <td>Av Brasil</td>
-                <td>Centro</td>
+                <th>#</th>
+                <th>Rua</th>
+                <th>Bairro</th>
+                <th>Número</th>
+                <th>Complemento</th>
+                <th>CEP</th>
+                <th>Cidade</th>
               </tr>
-  
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="row">
+                  {/* <FaEdit color="var(--blue)" /> */}
+                  <button className="edit" onClick={() => {}}>
+                    <FaEdit color="var(--blue)" size={18} />
+                  </button>
+                  <button className="edit" onClick={() => {}}>
+                    <FaTrashAlt color="var(--red)" size={18} />
+                  </button>
+                </td>
+                <td>Av Brasil da silva junior sauro bolsonaro</td>
+                <td>Centro</td>
+                <td>1230</td>
+                <td>Sala 1</td>
+                <td>85868-050</td>
+                <td>Foz do Iguaçu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </Container>
     </Modal>
   )

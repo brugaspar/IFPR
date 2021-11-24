@@ -13,7 +13,7 @@ import { api } from "../../services/api.service"
 
 import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
-import { AdressModal } from "../AdressModal"
+import { AddressModal } from "../AddressModal"
 
 import { Container, RowContainer } from "./styles"
 
@@ -270,10 +270,6 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     const userHasDisableMembersPermission = await verifyUserPermissions("disable_members", userPermissions)
     setDisableUsersPermission(userHasDisableMembersPermission)
   }
-
-  
-
-  
 
   useEffect(() => {
     if (isOpen) {
@@ -627,23 +623,17 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             </RowContainer>
           </div>
 
-          <RowContainer width={25} align="center" className="margin-top">
-            <Checkbox
-              title="Desativado"
-              active={disabled}
-              handleToggleActive={handleToggleDisabled}
-              disabled={!disableUsersPermission}
-            />
-          </RowContainer>
-
           <div className="row">
-          <RowContainer width={35}>
-              <button
-                type="button"
-                onClick={handleOpenAdressModal}
-                className="permissions-button"
-    
-              >
+            <RowContainer>
+              <Checkbox
+                title="Desativado"
+                active={disabled}
+                handleToggleActive={handleToggleDisabled}
+                disabled={!disableUsersPermission}
+              />
+            </RowContainer>
+            <RowContainer>
+              <button type="button" onClick={handleOpenAdressModal} className="permissions-button">
                 Endereços
               </button>
             </RowContainer>
@@ -656,10 +646,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
-        <AdressModal
-          isOpen={isAdressModalOpen}
-          onRequestClose={handleCloseAdressModal}
-        />
+
+        <AddressModal isOpen={isAdressModalOpen} onRequestClose={handleCloseAdressModal} />
       </Container>
     </Modal>
   )
