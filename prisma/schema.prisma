@@ -312,7 +312,6 @@ model Products {
 
 enum ActivitiesStatus {
   open
-  in_progress
   closed
   cancelled
 }
