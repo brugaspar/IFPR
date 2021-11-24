@@ -152,6 +152,17 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
+    const parsedAddresses = addresses.map((address) => {
+      return {
+        street: address.street,
+        number: address.number,
+        neighbourhood: address.neighbourhood,
+        complement: address.complement,
+        zipcode: address.zipcode,
+        cityId: address.cityId,
+      }
+    })
+
     try {
       if (memberId) {
         await api.put(`members/${memberId}`, {
@@ -176,7 +187,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
-          addresses,
+          addresses: parsedAddresses,
         })
       } else {
         await api.post("members", {
@@ -201,7 +212,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
-          addresses,
+          addresses: parsedAddresses,
         })
       }
 

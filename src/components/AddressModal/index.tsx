@@ -110,7 +110,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
       neighbourhood,
       number,
       complement,
-      zipcode,
+      zipcode: zipcode.replace(/\D/g, ""),
       cityId,
       memberId,
     }
@@ -293,7 +293,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                   <th>Número</th>
                   <th>Complemento</th>
                   <th>CEP</th>
-                  <th>Cidade</th>
                 </tr>
               </thead>
               <tbody>
@@ -312,8 +311,7 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                     <td>{address.neighbourhood}</td>
                     <td>{address.number}</td>
                     <td>{address.complement}</td>
-                    <td>{address.zipcode}</td>
-                    <td>{address.cityId}</td>
+                    <td>{maskCEP(address.zipcode)}</td>
                   </tr>
                 ))}
               </tbody>
