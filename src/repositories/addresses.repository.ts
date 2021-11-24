@@ -90,6 +90,14 @@ class AddressesRepository {
     })
   }
 
+  async deleteByUser(memberId: string) {
+    await prisma.membersAddresses.deleteMany({
+      where: {
+        memberId,
+      },
+    })
+  }
+
   async findByZipcode(zipcode: string, memberId: string) {
     const addresses = await prisma.membersAddresses.findMany({
       where: {

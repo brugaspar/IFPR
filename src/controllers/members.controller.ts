@@ -273,39 +273,16 @@ class MemberController {
     })
 
     if (addresses.length) {
-      for (const address of addresses) {
-        const currentAddress = await addressesRepository.findByZipcode(address.zipcode, updatedMember)
+      await addressesRepository.deleteByUser(updatedMember)
 
-        if (currentAddress.length) {
-          for (const storedAddress of currentAddress) {
-            if (storedAddress.number === String(address.number)) {
-              await addressesRepository.update({
-                address: {
-                  ...address,
-                  memberId: updatedMember,
-                },
-                requestUserId: request.userId,
-                addressId: storedAddress.id,
-              })
-            } else {
-              await addressesRepository.store(
-                {
-                  ...address,
-                  memberId: updatedMember,
-                },
-                request.userId
-              )
-            }
-          }
-        } else {
-          await addressesRepository.store(
-            {
-              ...address,
-              memberId: updatedMember,
-            },
-            request.userId
-          )
-        }
+      for (const address of addresses) {
+        await addressesRepository.store(
+          {
+            ...address,
+            memberId: updatedMember,
+          },
+          request.userId
+        )
       }
     }
 
