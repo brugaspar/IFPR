@@ -13,6 +13,7 @@ import { api } from "../../services/api.service"
 
 import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
+import { AdressModal } from "../AdressModal"
 
 import { Container, RowContainer } from "./styles"
 
@@ -93,10 +94,20 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
   const [disableUsersPermission, setDisableUsersPermission] = useState(false)
 
+  const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
+
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
     }
+  }
+
+  function handleOpenAdressModal() {
+    setIsAdressModalOpen(true)
+  }
+
+  function handleCloseAdressModal() {
+    setIsAdressModalOpen(false)
   }
 
   async function loadCities() {
@@ -259,6 +270,10 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     const userHasDisableMembersPermission = await verifyUserPermissions("disable_members", userPermissions)
     setDisableUsersPermission(userHasDisableMembersPermission)
   }
+
+  
+
+  
 
   useEffect(() => {
     if (isOpen) {
@@ -621,6 +636,19 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             />
           </RowContainer>
 
+          <div className="row">
+          <RowContainer width={35}>
+              <button
+                type="button"
+                onClick={handleOpenAdressModal}
+                className="permissions-button"
+    
+              >
+                Endereços
+              </button>
+            </RowContainer>
+          </div>
+
           <div className="close">
             <button type="button" onClick={onRequestClose}>
               Cancelar (ESC)
@@ -628,6 +656,10 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
+        <AdressModal
+          isOpen={isAdressModalOpen}
+          onRequestClose={handleCloseAdressModal}
+        />
       </Container>
     </Modal>
   )
