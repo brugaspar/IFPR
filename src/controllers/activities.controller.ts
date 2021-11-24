@@ -8,7 +8,7 @@ import { checkRequestUser } from "../helpers/request.helper"
 
 import activitiesRepository from "../repositories/activities.repository"
 
-type ActivityStatus = "open" | "in_progress" | "closed" | "cancelled"
+type ActivityStatus = "open" | "closed" | "cancelled"
 
 type RequestActivityItem = {
   productId: string
