@@ -109,6 +109,13 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     verifyPermissions()
   }, [])
 
+  useEffect(() => {
+    if (!isOpen) {
+      setHideClass(true)
+      setHideClassProduct(true)
+    }
+  }, [isOpen])
+
   return (
     <Container className={isOpen ? "" : "close"}>
       <div className="logo-container">

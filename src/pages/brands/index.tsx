@@ -22,6 +22,10 @@ type ProductBrand = {
   id: string
   name: string
   disabled: boolean
+  createdAt: string
+  updatedAt: string
+  disabledAt: string
+  disabledByUser: string
 }
 
 export default function ProductBrands() {
@@ -158,6 +162,10 @@ export default function ProductBrands() {
             <tr>
               <th>#</th>
               <th>Nome</th>
+              <th>Cadastrado em</th>
+              <th>Última edição</th>
+              <th>Desativado em</th>
+              <th>Desativado por</th>
             </tr>
           </thead>
           <tbody>
@@ -170,6 +178,10 @@ export default function ProductBrands() {
                   </button>
                 </td>
                 <td>{brand.name}</td>
+                <td>{new Date(brand.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(brand.updatedAt).toLocaleString()}</td>
+                <td>{brand.disabledAt && new Date(brand.disabledAt).toLocaleDateString()}</td>
+                <td>{brand.disabledByUser}</td>
               </tr>
             ))}
           </tbody>

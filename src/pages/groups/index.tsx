@@ -22,6 +22,10 @@ type ProductGroup = {
   id: string
   name: string
   disabled: boolean
+  createdAt: string
+  updatedAt: string
+  disabledAt: string
+  disabledByUser: string
 }
 
 export default function ProductGroups() {
@@ -158,6 +162,10 @@ export default function ProductGroups() {
             <tr>
               <th>#</th>
               <th>Nome</th>
+              <th>Cadastrado em</th>
+              <th>Última edição</th>
+              <th>Desativado em</th>
+              <th>Desativado por</th>
             </tr>
           </thead>
           <tbody>
@@ -170,6 +178,10 @@ export default function ProductGroups() {
                   </button>
                 </td>
                 <td>{group.name}</td>
+                <td>{new Date(group.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(group.updatedAt).toLocaleString()}</td>
+                <td>{group.disabledAt && new Date(group.disabledAt).toLocaleDateString()}</td>
+                <td>{group.disabledByUser}</td>
               </tr>
             ))}
           </tbody>
