@@ -263,6 +263,7 @@ class MembersRepository {
         city: true,
         issuedAt: true,
         birthDate: true,
+        memberAddresses: true,
       },
     })
 
