@@ -1,20 +1,22 @@
-import { PrismaClient } from ".prisma/client"
+import { PrismaClient } from ".prisma/client";
 // import { Pool } from "pg"
-import { pgPool } from "../configuration/pg.configuration"
+import { pgPool } from "../configuration/pg.configuration";
+import { AppError } from "../handlers/errors.handler";
 
-import { getDisabledInfo } from "../helpers/disabled.helper"
+import { getDisabledInfo } from "../helpers/disabled.helper";
 
-import logsRepository from "./logs.repository"
+import logsRepository from "./logs.repository";
+import productsRepository from "./products.repository";
 
-type ActivityStatus = "open" | "in_progress" | "closed" | "cancelled"
+type ActivityStatus = "open" | "in_progress" | "closed" | "cancelled";
 
 type RequestActivityItem = {
-  activityId: string
-  productId: string
-  quantity: number
-  price: number
-  subtotal: number
-}
+  activityId: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  subtotal: number;
+};
 
 // type UpdateActivityItem = {
 //   quantity: number
@@ -23,59 +25,59 @@ type RequestActivityItem = {
 // }
 
 type RequestActivity = {
-  status: ActivityStatus
-  total: number
-  totalQuantity: number
-  totalItems: number
-  observation: string
-  cancelledReason: string
-  sellerId: string
-  memberId: string
-  finishedAt: string
-}
+  status: ActivityStatus;
+  total: number;
+  totalQuantity: number;
+  totalItems: number;
+  observation: string;
+  cancelledReason: string;
+  sellerId: string;
+  memberId: string;
+  finishedAt: string;
+};
 
 type Activity = {
-  id: string
-  status: string
-  total: string
-  total_quantity: string
-  total_items: string
-  observation: string
-  cancelled_reason: string
-  seller_id: string
-  member_id: string
-  created_at: string
-  updated_at: string
-  last_updated_by: string
-  cancelled_by_user: string
-  created_by: string
-  seller_name: string
-  member_name: string
-  cancelled_at: string
-  product_id: string
-  quantity: number
-  price: number
-  subtotal: number
-  finished_at: string
-}
+  id: string;
+  status: string;
+  total: string;
+  total_quantity: string;
+  total_items: string;
+  observation: string;
+  cancelled_reason: string;
+  seller_id: string;
+  member_id: string;
+  created_at: string;
+  updated_at: string;
+  last_updated_by: string;
+  cancelled_by_user: string;
+  created_by: string;
+  seller_name: string;
+  member_name: string;
+  cancelled_at: string;
+  product_id: string;
+  quantity: number;
+  price: number;
+  subtotal: number;
+  finished_at: string;
+};
 
 type UpdateActivityProps = {
-  activity: RequestActivity
-  requestUserId: string
-  activityId: string
-}
+  activity: RequestActivity;
+  requestUserId: string;
+  activityId: string;
+};
 
 type FilterActivity = {
-  search: string
-  onlyEnabled: boolean
-}
+  search: string;
+  onlyEnabled: boolean;
+};
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 // const pgPool = new Pool()
 
 class ActivitiesRepository {
   async store(activity: RequestActivity, requestUserId: string) {
-    const { lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(false, requestUserId)
+    const { lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(false, requestUserId);
 
     const { id } = await prisma.activities.create({
       data: {
@@ -86,16 +88,16 @@ class ActivitiesRepository {
       select: {
         id: true,
       },
-    })
+    });
 
     await logsRepository.store("activities", {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
       userId: logUserId,
-    })
+    });
 
-    return id
+    return id;
   }
 
   async storeItem(item: RequestActivityItem) {
@@ -104,17 +106,45 @@ class ActivitiesRepository {
       select: {
         id: true,
       },
-    })
+    });
 
-    return id
+    const product = await productsRepository.findById(item.productId);
+
+    if (!product) {
+      throw new AppError("Product não encontrado");
+    }
+
+    const quantity = product.quantity - item.quantity;
+
+    await productsRepository.updateQuantity(item.productId, quantity);
+
+    return id;
   }
 
   async deleteItems(activityId: string) {
+    const items = await prisma.activitiesItems.findMany({
+      where: {
+        activityId,
+      },
+    });
+
+    for (const item of items) {
+      const product = await productsRepository.findById(item.productId);
+
+      if (!product) {
+        throw new AppError("Product não encontrado");
+      }
+
+      const quantity = product.quantity + item.quantity;
+
+      await productsRepository.updateQuantity(item.productId, quantity);
+    }
+
     await prisma.activitiesItems.deleteMany({
       where: {
         activityId,
       },
-    })
+    });
   }
 
   // async updateItem(item: UpdateActivityItem, itemId: string) {
@@ -140,9 +170,9 @@ class ActivitiesRepository {
       include: {
         items: true,
       },
-    })
+    });
 
-    return activities
+    return activities;
   }
 
   async findAll({ onlyEnabled, search = "" }: FilterActivity) {
@@ -156,29 +186,29 @@ class ActivitiesRepository {
     //   },
     // })
 
-    const splittedSearch = search.split(" ")
+    const splittedSearch = search.split(" ");
 
-    let searchText = ""
+    let searchText = "";
 
     splittedSearch.forEach((word, index) => {
       searchText += `
         (
           upper(unaccent(m.name)) like upper(unaccent('%${word}%'))
         )
-      `
+      `;
 
       if (index !== splittedSearch.length - 1) {
-        searchText += "and"
+        searchText += "and";
       }
-    })
+    });
 
     let whereClause = `
       where
         ${onlyEnabled ? `a.status = 'open' and` : "a.status in ('open', 'closed', 'cancelled') and"}
         ${searchText}
-    `
+    `;
 
-    const pg = await pgPool.connect()
+    const pg = await pgPool.connect();
 
     const query = `
       select
@@ -209,15 +239,15 @@ class ActivitiesRepository {
       ${whereClause}
       order by
         a.created_at
-    `
+    `;
 
-    const activities = await pg.query<Activity>(query)
+    const activities = await pg.query<Activity>(query);
 
     if (!activities) {
-      return []
+      return [];
     }
 
-    let items: any[] = []
+    let items: any[] = [];
 
     for (const activity of activities.rows) {
       const itemsQuery = `
@@ -232,24 +262,24 @@ class ActivitiesRepository {
           activities_items ai
         where
           ai.activity_id = '${activity.id}'
-      `
+      `;
 
-      const stored = await pg.query<Activity>(itemsQuery)
+      const stored = await pg.query<Activity>(itemsQuery);
 
       if (!stored) {
-        items = []
+        items = [];
       } else {
         // items = items.rows
-        items.push(stored.rows)
+        items.push(stored.rows);
       }
     }
 
     const parsedActivitiesResult = activities.rows.map((activity) => {
-      const cancelledAt = activity.cancelled_at ? new Date(activity.cancelled_at).toISOString() : null
-      const createdAt = activity.created_at ? new Date(activity.created_at).toISOString() : null
-      const updatedAt = activity.updated_at ? new Date(activity.updated_at).toISOString() : null
+      const cancelledAt = activity.cancelled_at ? new Date(activity.cancelled_at).toISOString() : null;
+      const createdAt = activity.created_at ? new Date(activity.created_at).toISOString() : null;
+      const updatedAt = activity.updated_at ? new Date(activity.updated_at).toISOString() : null;
 
-      let parsedItems: any[] = []
+      let parsedItems: any[] = [];
 
       items.map((item) => {
         for (const i of item) {
@@ -260,10 +290,10 @@ class ActivitiesRepository {
               quantity: i.quantity,
               price: i.price,
               subtotal: i.subtotal,
-            })
+            });
           }
         }
-      })
+      });
 
       return {
         id: activity.id,
@@ -289,31 +319,31 @@ class ActivitiesRepository {
         canceledByUser: activity.cancelled_by_user,
         createdBy: activity.created_by,
         items: parsedItems,
-      }
-    })
+      };
+    });
 
-    await pg.release()
+    await pg.release();
 
-    return parsedActivitiesResult
+    return parsedActivitiesResult;
   }
 
   async update({ activity, requestUserId, activityId }: UpdateActivityProps) {
-    const { lastUpdatedBy, logUserId } = getDisabledInfo(false, requestUserId)
+    const { lastUpdatedBy, logUserId } = getDisabledInfo(false, requestUserId);
 
-    let cancelledAt = null
-    let finishedAt = null
-    let lastCancelledBy = null
+    let cancelledAt = null;
+    let finishedAt = null;
+    let lastCancelledBy = null;
 
     if (activity.status === "cancelled") {
-      cancelledAt = new Date()
-      lastCancelledBy = requestUserId
+      cancelledAt = new Date();
+      lastCancelledBy = requestUserId;
     } else if (activity.status === "open") {
-      cancelledAt = null
-      finishedAt = null
-      lastCancelledBy = null
-      activity.cancelledReason = ""
+      cancelledAt = null;
+      finishedAt = null;
+      lastCancelledBy = null;
+      activity.cancelledReason = "";
     } else if (activity.status === "closed") {
-      finishedAt = new Date()
+      finishedAt = new Date();
     }
 
     const { id } = await prisma.activities.update({
@@ -330,7 +360,7 @@ class ActivitiesRepository {
       select: {
         id: true,
       },
-    })
+    });
 
     if (cancelledAt) {
       await logsRepository.store("activities", {
@@ -338,18 +368,18 @@ class ActivitiesRepository {
         description: "Registro desativado por usuário",
         referenceId: id,
         userId: logUserId,
-      })
+      });
     } else {
       await logsRepository.store("activities", {
         action: "update",
         description: "Registro atualizado por usuário",
         referenceId: id,
         userId: logUserId,
-      })
+      });
     }
 
-    return id
+    return id;
   }
 }
 
-export default new ActivitiesRepository()
+export default new ActivitiesRepository();
