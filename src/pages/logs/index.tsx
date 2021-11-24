@@ -34,6 +34,20 @@ const logAction = {
 
 const logTable = {
   users: "Usuários",
+  members: "Membros",
+  general_tables: "Tabelas do Sistema",
+  general_logs: "Logs do Sistema",
+  permissions: "Permissões",
+  states: "Estados",
+  cities: "Cidades",
+  members_plans: "Planos",
+  members_addresses: "Endereços de Membros",
+  members_documents: "Documentos de Membros",
+  products_brands: "Marcas de Produtos",
+  products_groups: "Grupos de Produtos",
+  products: "Produtos",
+  activities: "Atividades",
+  activities_items: "Itens da Atividade",
 }
 
 export default function Logs() {
