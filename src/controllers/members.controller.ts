@@ -91,7 +91,7 @@ class MemberController {
         .oneOf(["APositive", "ANegative", "BPositive", "BNegative", "ABPositive", "ABNegative", "OPositive", "ONegative"])
         .required("Tipo sanguíneo é obrigatório"),
       disabled: yup.string(),
-      planId: yup.string().required(),
+      planId: yup.string().required("Plano é obrigatório"),
       // address: yup.object().shape({
       //   street: yup.string().required("Endereço é obrigatório"),
       //   number: yup.string().required("Número é obrigatório"),
@@ -154,7 +154,7 @@ class MemberController {
     for (const address of addresses) {
       await addressesRepository.store(
         {
-          ...JSON.parse(address as any as string),
+          ...address,
           memberId: storedMember,
         },
         request.userId
