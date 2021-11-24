@@ -17,6 +17,17 @@ import { AddressModal } from "../AddressModal"
 
 import { Container, RowContainer } from "./styles"
 
+type Address = {
+  id: string
+  street: string
+  neighbourhood: string
+  number: string
+  complement: string
+  zipcode: string
+  cityId: string
+  memberId: string
+}
+
 type Member = {
   id: string
   name: string
@@ -89,6 +100,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   const [maritalStatus, setMaritalStatus] = useState("")
   const [bloodTyping, setBloodTyping] = useState("")
   const [planId, setPlanId] = useState("")
+  const [addresses, setAddresses] = useState<Address[]>([])
 
   const [disabled, setDisabled] = useState(false)
 
@@ -161,6 +173,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
+          addresses,
         })
       } else {
         await api.post("members", {
@@ -185,6 +198,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           bloodTyping,
           planId,
           disabled,
+          addresses,
         })
       }
 
@@ -236,6 +250,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     setBloodTyping(response.data.bloodTyping)
     setDisabled(response.data.disabled)
     setPlanId(response.data.planId)
+    setAddresses(response.data.memberAddresses)
   }
 
   function handleToggleDisabled() {
@@ -269,6 +284,10 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   async function verifyPermissions() {
     const userHasDisableMembersPermission = await verifyUserPermissions("disable_members", userPermissions)
     setDisableUsersPermission(userHasDisableMembersPermission)
+  }
+
+  function onChangeAddresses(addresses: Address[]) {
+    setAddresses(addresses)
   }
 
   useEffect(() => {
@@ -647,7 +666,12 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
           </div>
         </form>
 
-        <AddressModal isOpen={isAdressModalOpen} onRequestClose={handleCloseAdressModal} />
+        <AddressModal
+          isOpen={isAdressModalOpen}
+          onRequestClose={handleCloseAdressModal}
+          addresses={addresses}
+          onChangeAddresses={onChangeAddresses}
+        />
       </Container>
     </Modal>
   )

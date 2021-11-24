@@ -88,6 +88,22 @@ export const Container = styled.div`
       color: var(--text-title);
     }
 
+    .add-button {
+      height: 3rem;
+      width: 100%;
+      background: var(--blue);
+      border: 0;
+      border-radius: 0.25rem;
+      margin-top: 2rem;
+      font-size: 1rem;
+
+      transition: filter 0.2s;
+
+      &:hover {
+        filter: brightness(0.8);
+      }
+    }
+
     .close {
       margin-top: 2rem;
       display: flex;
@@ -153,6 +169,7 @@ export const Container = styled.div`
     font-size: 1rem;
     font-family: "Mukta";
     min-width: 400px;
+    width: 100%;
 
     thead tr {
       background-color: var(--shape-dark);

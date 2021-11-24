@@ -150,6 +150,8 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     max-width: 1000px;
 
+    margin-top: 5rem;
+
     max-height: calc(100% - 7rem);
 
     background: var(--background);

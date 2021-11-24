@@ -34,15 +34,20 @@ type City = {
 type AddressModalProps = {
   isOpen: boolean
   onRequestClose: () => void
+  addresses: Address[]
+  onChangeAddresses: (addresses: Address[]) => void
 }
 
 Modal.setAppElement("#root")
 
-export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
+export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddresses }: AddressModalProps) {
   const { user } = useAuth()
+
+  const [addressesToShow, setAddressesToShow] = useState<Address[]>([])
 
   const userPermissions = user?.permissions || []
 
+  const [id, setId] = useState("")
   const [cities, setCities] = useState<City[]>([])
   const [street, setStreet] = useState("")
   const [neighbourhood, setNeighbourhood] = useState("")
@@ -73,39 +78,9 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
   }
 
   async function handleConfirm(event: FormEvent) {
-    //   event.preventDefault()
-    //   try {
-    //     if (adressId) {
-    //       await api.put(`groups/${groupId}`, {
-    //         name,
-    //         disabled,
-    //       })
-    //     } else {
-    //       await api.post("groups", {
-    //         name,
-    //         disabled,
-    //       })
-    //     }
-    //     toast.dismiss("error")
-    //     if (groupId) {
-    //       toast.success("Grupo alterado com sucesso")
-    //     } else {
-    //       toast.success("Grupo incluído com sucesso")
-    //     }
-    //     onRequestClose()
-    //   } catch (error: any) {
-    //     if (error.response?.data?.message) {
-    //       if (Array.isArray(error.response.data.message)) {
-    //         for (const message of error.response.data.message) {
-    //           toast.error(message, { toastId: "error" })
-    //         }
-    //       } else {
-    //         toast.error(error.response.data.message, { toastId: "error" })
-    //       }
-    //     } else {
-    //       toast.error("Problemas internos", { toastId: "error" })
-    //     }
-    //   }
+    event.preventDefault()
+    onChangeAddresses(addressesToShow)
+    onRequestClose()
   }
 
   // async function loadProductGroupById() {
@@ -119,13 +94,54 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
   //   setDisabled(!disabled)
   // }
 
+  function handleAddAddress() {
+    const address = {
+      id: id || String(Math.random() * 100),
+      street,
+      neighbourhood,
+      number,
+      complement,
+      zipcode,
+      cityId,
+      memberId,
+    }
+
+    const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
+    if (addressExists) {
+      const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
+      setAddressesToShow([...newArr, address])
+    } else {
+      setAddressesToShow([...addressesToShow, address])
+    }
+    resetFields()
+  }
+
+  function handleRemoveAddress(address: Address) {
+    if (addressesToShow.length >= 1) {
+      const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
+      setAddressesToShow(newArr)
+    }
+  }
+
+  function handleEditAddress(address: Address) {
+    setId(address.id)
+    setStreet(address.street)
+    setNeighbourhood(address.neighbourhood)
+    setNumber(address.number)
+    setComplement(address.complement)
+    setZipcode(address.zipcode)
+    setCityId(address.cityId)
+  }
+
   function resetFields() {
+    setId("")
     setStreet("")
     setNeighbourhood("")
     setNumber("")
     setComplement("")
     setZipcode("")
     setCityId("")
+    setAddressesToShow([])
   }
 
   async function verifyPermissions() {
@@ -143,6 +159,12 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
       //loadProductGroupById()
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (addresses.length > 0) {
+      setAddressesToShow(addresses)
+    }
+  }, [addresses.length])
 
   return (
     <Modal
@@ -229,7 +251,7 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
             </RowContainer>
 
             <RowContainer>
-              <label htmlFor="cityId">Cidade de naturalidade</label>
+              <label htmlFor="cityId">Cidade</label>
 
               <Combobox
                 id="cityId"
@@ -248,6 +270,47 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
             </RowContainer>
           </div>
 
+          <button type="button" className="add-button" onClick={handleAddAddress}>
+            Adicionar
+          </button>
+
+          <div className="scroll-div">
+            <table className="styled-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Rua</th>
+                  <th>Bairro</th>
+                  <th>Número</th>
+                  <th>Complemento</th>
+                  <th>CEP</th>
+                  <th>Cidade</th>
+                </tr>
+              </thead>
+              <tbody>
+                {addressesToShow.map((address) => (
+                  <tr key={address.id}>
+                    <td className="row">
+                      {/* <FaEdit color="var(--blue)" /> */}
+                      <button type="button" className="edit" onClick={() => handleEditAddress(address)}>
+                        <FaEdit color="var(--blue)" size={18} />
+                      </button>
+                      <button type="button" className="edit" onClick={() => handleRemoveAddress(address)}>
+                        <FaTrashAlt color="var(--red)" size={18} />
+                      </button>
+                    </td>
+                    <td>{address.street}</td>
+                    <td>{address.neighbourhood}</td>
+                    <td>{address.number}</td>
+                    <td>{address.complement}</td>
+                    <td>{address.zipcode}</td>
+                    <td>{address.cityId}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           <div className="close">
             <button type="button" onClick={onRequestClose}>
               Cancelar (ESC)
@@ -255,41 +318,6 @@ export function AddressModal({ isOpen, onRequestClose }: AddressModalProps) {
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
-
-        <div className="scroll-div">
-          <table className="styled-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Rua</th>
-                <th>Bairro</th>
-                <th>Número</th>
-                <th>Complemento</th>
-                <th>CEP</th>
-                <th>Cidade</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="row">
-                  {/* <FaEdit color="var(--blue)" /> */}
-                  <button className="edit" onClick={() => {}}>
-                    <FaEdit color="var(--blue)" size={18} />
-                  </button>
-                  <button className="edit" onClick={() => {}}>
-                    <FaTrashAlt color="var(--red)" size={18} />
-                  </button>
-                </td>
-                <td>Av Brasil da silva junior sauro bolsonaro</td>
-                <td>Centro</td>
-                <td>1230</td>
-                <td>Sala 1</td>
-                <td>85868-050</td>
-                <td>Foz do Iguaçu</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Container>
     </Modal>
   )
