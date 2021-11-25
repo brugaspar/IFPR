@@ -1,14 +1,13 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
-import { FaChevronDown, FaChevronUp, FaEdit, FaFilter, FaPlus } from "react-icons/fa"
+import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
 import { MembersModal } from "../../components/MembersModal"
-import { Checkbox } from "../../components/Checkbox"
-import { SearchBar } from "../../components/SearchBar"
+
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -42,13 +41,13 @@ type Member = {
   bloodTyping: string
   disabled: boolean
   createdAt: string
+  updatedAt: string
   planId: string
   disabledAt: string
   disabledByUser: string
 }
 
 export default function Members() {
-  // const [reload, setReload] = useState(false)
   const { user } = useAuth()
   const userPermissions = user?.permissions || []
 
@@ -65,7 +64,87 @@ export default function Members() {
   const [search, setSearch] = useState("")
   const [reload, setReload] = useState(false)
 
+  const [sort, setSort] = useState({ name: "", sort: "asc" })
+
   const timeoutRef = useRef<any>(0)
+
+  function sortTable(field: string) {
+    switch (field) {
+      case "name": {
+        if (sort.sort === "asc") {
+          setSort({ name: "name", sort: "desc" })
+        } else {
+          setSort({ name: "name", sort: "asc" })
+        }
+
+        break
+      }
+      case "email": {
+        if (sort.sort === "asc") {
+          setSort({ name: "email", sort: "desc" })
+        } else {
+          setSort({ name: "email", sort: "asc" })
+        }
+
+        break
+      }
+      case "profession": {
+        if (sort.sort === "asc") {
+          setSort({ name: "profession", sort: "desc" })
+        } else {
+          setSort({ name: "profession", sort: "asc" })
+        }
+
+        break
+      }
+
+      case "cr_validity": {
+        if (sort.sort === "asc") {
+          setSort({ name: "cr_validity", sort: "desc" })
+        } else {
+          setSort({ name: "cr_validity", sort: "asc" })
+        }
+
+        break
+      }
+      case "birth_date": {
+        if (sort.sort === "asc") {
+          setSort({ name: "birth_date", sort: "desc" })
+        } else {
+          setSort({ name: "birth_date", sort: "asc" })
+        }
+
+        break
+      }
+      case "created_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "created_at", sort: "desc" })
+        } else {
+          setSort({ name: "created_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "updated_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "updated_at", sort: "desc" })
+        } else {
+          setSort({ name: "updated_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "disabled": {
+        if (sort.sort === "asc") {
+          setSort({ name: "disabled", sort: "desc" })
+        } else {
+          setSort({ name: "disabled", sort: "asc" })
+        }
+
+        break
+      }
+    }
+  }
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -78,14 +157,21 @@ export default function Members() {
   }
 
   async function loadMembers() {
-    const response = await api.get("/members", {
-      params: {
-        onlyEnabled,
-        search,
-      },
-    })
+    try {
+      const response = await api.get("/members", {
+      
+        params: {
+          onlyEnabled,
+         search,
+          sort,
+       },
+     })
 
+    toast.dismiss("error")
     setMembers(response.data)
+    } catch (error) {
+      toast.error("Problemas internos ao carregar membros", { toastId: "error" })
+    }
   }
 
   function handleOpenMemberModal() {
@@ -118,24 +204,13 @@ export default function Members() {
     setEditMemberPermission(userHasEditMembersPermission)
   }
 
-  // TODO: bolar atualização de dados, para evitar muitas chamadas
-  // useEffect(() => {
-  //   loadUsers()
-
-  //   const unsubscribe = window.addEventListener("focus", () => {
-  //     setReload(!reload)
-  //   })
-
-  //   return unsubscribe
-  // }, [reload, onlyEnabled])
-
   useEffect(() => {
     verifyPermissions()
   }, [])
 
   useEffect(() => {
     loadMembers()
-  }, [onlyEnabled, isMemberModalOpen, reload])
+  }, [onlyEnabled, isMemberModalOpen, reload, sort])
 
   return (
     <Container>
@@ -152,22 +227,6 @@ export default function Members() {
         </button>
       </div>
 
-      {/* <div className="filterSection">
-        <div className="headerOptions">
-          <div className="ho cbActive">
-            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-          </div>
-          <div className="ho searchBar">
-            <SearchBar placeholder="Nome ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
-          </div>
-          <div className="ho bttnFilters">
-            <button className="filterBttn" type="button">
-              Filtrar
-              <FaChevronUp className="faChevronDownIcon"/>
-            </button>
-          </div>
-        </div>
-      </div> */}
 
       <FilterContainer
         onlyEnabled={onlyEnabled}
@@ -181,17 +240,33 @@ export default function Members() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>
-              <th>E-mail</th>
+              <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
+                Nome <FaChevronUp />
+                </th>
+              <th className={sort.name === "email" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("email")}>
+                E-mail <FaChevronUp />
+                </th>
               <th>RG</th>
               <th>CPF</th>
-              <th>Profissão</th>
+              <th className={sort.name === "profession" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("profession")}>
+                Profissão <FaChevronUp />
+                </th>
               <th>N° CR</th>
-              <th>Validade CR</th>
-              <th>Nascimento</th>
-              <th>Status</th>
-              <th>Cadastro</th>
-              <th>Última edição</th>
+              <th className={sort.name === "cr_validity" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("cr_validity")}>
+                Validade CR <FaChevronUp />
+                </th>
+              <th className={sort.name === "birth_date" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("birth_date")}>
+                Nascimento <FaChevronUp />
+                </th>
+              <th className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("disabled")}>
+                Status <FaChevronUp />
+                </th>
+                <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
+                Cadastro <FaChevronUp />
+                </th>
+                <th className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("updated_at")}>
+                Última edição <FaChevronUp />
+                </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -200,7 +275,6 @@ export default function Members() {
             {members.map((member) => (
               <tr key={member.name}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditMember(member)} disabled={!editMemberPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
@@ -216,6 +290,7 @@ export default function Members() {
                 <td>{member.disabled ? "Desativo" : "Ativo"}</td>
                 <td>{new Date(member.crValidity).toLocaleDateString()}</td>
                 <td>{new Date(member.createdAt).toLocaleDateString()}</td>
+                <td>{new Date(member.updatedAt).toLocaleDateString()}</td>
                 <td>{member.disabledAt && new Date(member.disabledAt).toLocaleDateString()}</td>
                 <td>{member.disabledByUser}</td>
               </tr>
@@ -241,7 +316,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_members", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {
