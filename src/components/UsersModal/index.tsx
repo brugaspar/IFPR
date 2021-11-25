@@ -14,15 +14,6 @@ import { PermissionsModal } from "../PermissionsModal"
 
 import { Container, RowContainer } from "./styles"
 
-type User = {
-  id: string
-  name: string
-  email: string
-  username: string
-  disabled: boolean
-  createdAt: string
-}
-
 type UsersModalProps = {
   isOpen: boolean
   onRequestClose: () => void

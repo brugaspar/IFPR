@@ -13,12 +13,6 @@ import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
 
-type ProductGroup = {
-  id: string
-  name: string
-  disabled: boolean
-}
-
 type ProductGroupsModalProps = {
   isOpen: boolean
   onRequestClose: () => void
@@ -43,7 +37,7 @@ export function ProductGroupsModal({ isOpen, onRequestClose, groupId }: ProductG
     }
   }
 
-   async function handleConfirm(event: FormEvent) {
+  async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
     try {
@@ -81,7 +75,7 @@ export function ProductGroupsModal({ isOpen, onRequestClose, groupId }: ProductG
         toast.error("Problemas internos", { toastId: "error" })
       }
     }
-   }
+  }
 
   async function loadProductGroupById() {
     const response = await api.get(`groups/${groupId}`)
@@ -93,8 +87,6 @@ export function ProductGroupsModal({ isOpen, onRequestClose, groupId }: ProductG
   function handleToggleDisabled() {
     setDisabled(!disabled)
   }
-
-
 
   function resetFields() {
     setName("")
@@ -143,7 +135,7 @@ export function ProductGroupsModal({ isOpen, onRequestClose, groupId }: ProductG
                 onChange={(event) => setName(event.target.value)}
               />
             </RowContainer>
-            
+
             <RowContainer width={25} align="center" className="margin-top">
               <Checkbox
                 title="Desativado"
@@ -152,8 +144,6 @@ export function ProductGroupsModal({ isOpen, onRequestClose, groupId }: ProductG
                 disabled={!disableProductGroupPermission}
               />
             </RowContainer>
-
-
           </div>
 
           <div className="close">

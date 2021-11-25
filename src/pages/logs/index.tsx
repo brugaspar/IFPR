@@ -1,17 +1,17 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
-
-import { getAccessToken } from "../../helpers/token.helper"
-import { verifyUserPermissions } from "../../helpers/permissions.helper"
-
-import { Container } from "../../styles/logs.styles"
-import { SearchBar } from "../../components/SearchBar"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
+
+import { getAccessToken } from "../../helpers/token.helper"
+
+import { SearchBar } from "../../components/SearchBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+import { PaginationBar } from "../../components/PaginationBar"
+
 import { api } from "../../services/api.service"
 
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
+import { Container } from "../../styles/logs.styles"
 
 type Log = {
   id: string
@@ -151,7 +151,8 @@ export default function Logs() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

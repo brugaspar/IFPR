@@ -123,11 +123,4 @@ export const Container = styled.div`
       }
     }
   }
-
-  .paginationDiv {
-    padding-left: 2rem;
-    margin-top: 0.5rem;
-    width: 90%;
-    height: 2rem;
-  }
 `

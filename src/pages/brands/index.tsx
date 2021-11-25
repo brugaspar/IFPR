@@ -8,6 +8,8 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { ProductBrandsModal } from "../../components/ProductBrandsModal"
 import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -15,9 +17,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/brands.styles"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type ProductBrand = {
   id: string
@@ -252,7 +251,8 @@ export default function ProductBrands() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

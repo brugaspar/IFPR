@@ -54,61 +54,9 @@ export const Container = styled.div`
     }
   }
 
-  .filterSection {
-    .headerOptions {
-      position: relative;
-      margin-top: 2rem;
-      display: flex;
-      align-items: center;
-      height: 4rem;
-
-      .filterBttn {
-        background: ${darken(0.03, "#232323")};
-        color: white;
-        border: none;
-        height: 3rem;
-        width: 6.5rem;
-        border-radius: 0.25rem;
-        font-size: 1rem;
-        font-family: "Mukta";
-
-        .faChevronDownIcon {
-          float: right;
-          margin-right: 1rem;
-          margin-top: 0.3rem;
-        }
-      }
-
-      .ho {
-        align-self: center;
-        position: flex;
-
-        &.cbActive {
-          vertical-align: middle;
-          margin-left: 1rem;
-          margin-top: -1.2rem;
-          float: left;
-        }
-
-        &.searchBar {
-          margin-left: 15rem;
-          flex-direction: row;
-          float: left;
-        }
-
-        &.bttnFilters {
-          float: left;
-          margin-left: 1.5rem;
-          color: white;
-        }
-      }
-    }
-  }
-
   .scroll-div {
     overflow-x: auto;
     overflow-y: auto;
-    /* height: calc(100vh - 15rem); */
     height: calc(100vh - 23rem);
     margin-top: 2rem;
 
@@ -157,8 +105,6 @@ export const Container = styled.div`
     }
 
     tbody tr {
-      /* cursor: pointer; */
-
       button.edit {
         display: flex;
         align-items: center;
@@ -187,12 +133,5 @@ export const Container = styled.div`
         filter: brightness(0.8);
       }
     }
-  }
-
-  .paginationDiv {
-    padding-left: 2rem;
-    margin-top: 0.5rem;
-    width: 90%;
-    height: 2rem;
   }
 `

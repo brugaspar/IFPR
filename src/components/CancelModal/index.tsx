@@ -1,21 +1,9 @@
 import Modal from "react-modal"
-import { FormEvent, KeyboardEvent, useEffect, useState } from "react"
-import { toast } from "react-toastify"
+import { FormEvent, KeyboardEvent, useState } from "react"
 
-import { verifyUserPermissions } from "../../helpers/permissions.helper"
-
-import { useAuth } from "../../hooks/useAuth"
-
-import { api } from "../../services/api.service"
-
-import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
 
-import { Container, RowContainer } from "./styles"
-
-type Cancel = {
-  cancelledReason: string
-}
+import { Container } from "./styles"
 
 type CancelModalProps = {
   isOpen: boolean

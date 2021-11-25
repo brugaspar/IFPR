@@ -1,5 +1,5 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
 import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
@@ -7,18 +7,17 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 
 import { MembersModal } from "../../components/MembersModal"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+import { FilterContainer } from "../../components/FilterContainer"
 
 import { getAccessToken } from "../../helpers/token.helper"
+import { cpfMask } from "../../helpers/mask"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/members.styles"
-import { FilterContainer } from "../../components/FilterContainer"
-import { cpfMask } from "../../helpers/mask"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type Member = {
   id: string
@@ -340,7 +339,8 @@ export default function Members() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

@@ -1,11 +1,10 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useRef, useState, FormEvent } from "react"
-import { BiCheckSquare, BiSquare } from "react-icons/bi"
 import { toast } from "react-toastify"
-import { Checkbox } from "../components/Checkbox"
 
 import { Input } from "../components/Input"
+import { Checkbox } from "../components/Checkbox"
 
 import { getAccessToken } from "../helpers/token.helper"
 import { useAuth } from "../hooks/useAuth"

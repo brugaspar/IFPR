@@ -2,29 +2,14 @@ import Modal from "react-modal"
 import { FormEvent, KeyboardEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Combobox } from "react-widgets"
-
-import { verifyUserPermissions } from "../../helpers/permissions.helper"
-
-import { useAuth } from "../../hooks/useAuth"
+import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
 import { api } from "../../services/api.service"
+
 import { Input } from "../Input"
 import { CancelModal } from "../CancelModal"
 
 import { Container, RowContainer } from "./styles"
-import { FaEdit, FaTrashAlt } from "react-icons/fa"
-
-type Activity = {
-  id: string
-  status: string
-  total: number
-  totalQuantity: number
-  totalItems: number
-  observation: string
-  cancelledReason: string
-  sellerId: string
-  memberId: string
-}
 
 type ActivityItems = {
   id: string
@@ -65,11 +50,6 @@ type ActivityModalProps = {
 Modal.setAppElement("#root")
 
 export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityModalProps) {
-  const { user } = useAuth()
-
-  const userPermissions = user?.permissions || []
-
-  const [id, setId] = useState("")
   const [status, setStatus] = useState("open")
   const [total, setTotal] = useState("")
   const [totalQuantity, setTotalQuantity] = useState("")
@@ -79,14 +59,11 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   const [sellerId, setSellerId] = useState("")
   const [memberId, setMemberId] = useState("")
 
-  // const [activityId, setActivityId] = useState("")
   const [productId, setProductId] = useState("")
   const [quantity, setQuantity] = useState("")
   const [price, setPrice] = useState("")
-  const [subtotal, setSubTotal] = useState("")
 
   const [selectedItem, setSelectedItem] = useState<ActivityItems | null>(null)
-  const [confirmedItems, setConfirmedItems] = useState<ActivityItems[]>([])
 
   const [items, setItems] = useState<ActivityItems[]>([])
   const [members, setMembers] = useState<Member[]>([])
@@ -130,7 +107,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     }
 
     const item = {
-      id: id || String(Math.random() * 100),
+      id: String(Math.random() * 100),
       activityId: activityId || "",
       productId: selectedItem?.productId || "",
       quantity,
@@ -228,10 +205,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
       return handleOpenCancelModal()
     }
 
-    // if (status === "cancelled" && !cancelledReason) {
-    //   return
-    // }
-
     const parsedItems = items.map((item) => {
       return {
         productId: item.productId,
@@ -285,27 +258,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     }
   }
 
-  function handleAddAddress() {
-    //   const address = {
-    //     id: id || String(Math.random() * 100),
-    //     street,
-    //     neighbourhood,
-    //     number,
-    //     complement,
-    //     zipcode: zipcode.replace(/\D/g, ""),
-    //     cityId,
-    //     memberId,
-    //   }
-    //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
-    //   if (addressExists) {
-    //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
-    //     setAddressesToShow([...newArr, address])
-    //   } else {
-    //     setAddressesToShow([...addressesToShow, address])
-    //   }
-    //   resetFields()
-  }
-
   async function loadActivityById() {
     const response = await api.get(`activities/${activityId}`)
 
@@ -315,7 +267,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     setSellerId(response.data.sellerId)
     setMemberId(response.data.memberId)
     setItems(response.data.items)
-    setConfirmedItems(response.data.items)
     setTotal(response.data.total)
     setTotalItems(response.data.totalItems)
     setTotalQuantity(response.data.totalQuantity)
@@ -330,7 +281,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     setProductId("")
     setQuantity("")
     setPrice("")
-    setSubTotal("")
     setMemberId("")
     setSellerId("")
     setObservation("")
@@ -356,10 +306,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   useEffect(() => {
     calculate()
   }, [reload])
-
-  // useEffect(() => {
-  //   setItems(confirmedItems)
-  // }, [confirmedItems])
 
   return (
     <Modal

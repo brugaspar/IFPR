@@ -1,11 +1,11 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
-  height:25rem;
-  margin-top:1%;
-  overflow-y:scroll-behavior;
-  overflow-x:hidden;
-  padding-right:0.4rem;
+  height: 25rem;
+  margin-top: 1%;
+  overflow-y: scroll-behavior;
+  overflow-x: hidden;
+  padding-right: 0.4rem;
 
   h1 {
     font-size: 1.5rem;
@@ -61,8 +61,6 @@ export const Container = styled.div`
 
         transition: filter 0.2s;
 
-        /* border: 1px solid rgba(255, 0, 0, 0.2); */
-        /* background: rgba(255, 0, 0, 0.05); */
         border: 1px solid var(--text-title);
 
         + button {
@@ -84,7 +82,7 @@ export const Container = styled.div`
 
   &::-webkit-scrollbar {
     width: 0.2rem;
-    margin-right:0.2rem;
+    margin-right: 0.2rem;
   }
 
   &::-webkit-scrollbar-track {

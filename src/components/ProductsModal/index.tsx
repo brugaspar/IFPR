@@ -14,18 +14,6 @@ import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
 
-type Product = {
-  id: string
-  name: string
-  quantity: number
-  minimumQuantity: number
-  price: number
-  brandId: string
-  groupId: string
-  disabled: boolean
-  isService: boolean
-}
-
 type Brand = {
   id: string
   name: string

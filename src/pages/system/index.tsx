@@ -1,8 +1,7 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 
 import { getAccessToken } from "../../helpers/token.helper"
-import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
 import { Container } from "../../styles/system.styles"
 

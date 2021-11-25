@@ -10,11 +10,11 @@ type PaginationBarProps = {
 export const PaginationBar = ({ pages, setCurrentPage }: PaginationBarProps) => {
   return (
     <Container>
-      <div className="paginationBar_div">
+      <div className="pagination-bar">
         <FaChevronLeft />
         {Array.from(Array(pages), (_, index) => {
           return (
-            <button key={index} className="paginationBar_bttn" onClick={() => setCurrentPage(Number(index))}>
+            <button key={index} className="pagination-bar-button" onClick={() => setCurrentPage(Number(index))}>
               {index + 1}
             </button>
           )

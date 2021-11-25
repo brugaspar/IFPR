@@ -196,4 +196,56 @@ export const GlobalStyle = createGlobalStyle`
     outline: 0;
   }
 
+  .custom-select {
+      color: var(--text-title);
+
+      .rw-widget-picker {
+        background: var(--shape-dark);
+        border: 0;
+      }
+
+      .rw-popup {
+        background: var(--shape-dark);
+
+        .rw-list {
+          &::-webkit-scrollbar {
+            width: 1rem;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: var(--background);
+          }
+
+          &::-webkit-scrollbar-thumb {
+            border-radius: 0.2rem;
+            background: var(--text-body);
+            border: 3px solid var(--text-body);
+          }
+        }
+
+        .rw-list-option {
+          color: var(--text-title);
+
+          &:hover {
+            background: var(--background);
+          }
+        }
+      }
+
+      .rw-input-addon {
+        background: var(--shape-dark);
+        border: 0;
+      }
+
+      svg {
+        color: white;
+      }
+    }
+
+    .pagination-div {
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 `

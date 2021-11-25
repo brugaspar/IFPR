@@ -76,34 +76,3 @@ export const Container = styled.div`
     }
   }
 `
-
-export const RowContainer = styled.div<{ width?: number; align?: string }>`
-  width: ${(props) => (props.width ? props.width : 49)}%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: ${(props) => (props.align ? props.align : "auto")};
-
-  .permissions-button {
-    height: 3rem;
-    width: 100%;
-    border: 0;
-    border-radius: 0.25rem;
-
-    background: var(--shape-dark);
-    color: var(--text-title);
-    font-size: 16px;
-
-    margin-top: 1.85rem;
-
-    transition: filter 0.2s;
-
-    &:hover {
-      filter: brightness(0.8);
-    }
-  }
-
-  &.margin-top {
-    margin-top: 0.8rem;
-  }
-`

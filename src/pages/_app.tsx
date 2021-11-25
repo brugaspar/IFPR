@@ -9,9 +9,10 @@ import { useEffect, useState } from "react"
 
 import { AuthProvider } from "../contexts/AuthContext"
 
-import { GlobalStyle } from "../styles/globals"
 import { Header } from "../components/Header"
 import { Sidebar } from "../components/Sidebar"
+
+import { GlobalStyle } from "../styles/globals"
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()

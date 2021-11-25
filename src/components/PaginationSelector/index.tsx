@@ -11,20 +11,20 @@ export const PaginationSelector = ({ itemsPerPage, setItemsPerPage }: Pagination
     <Container>
       <div>
         Exibir
-        <select className="pgSelector" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-          <option className="pgSelectorOpt" value="10">
+        <select className="pagination-selector" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
+          <option className="pagination-selector-option" value="10">
             10
           </option>
-          <option className="pgSelectorOpt" value="25">
+          <option className="pagination-selector-option" value="25">
             25
           </option>
-          <option className="pgSelectorOpt" value="50">
+          <option className="pagination-selector-option" value="50">
             50
           </option>
-          <option className="pgSelectorOpt" value="100">
+          <option className="pagination-selector-option" value="100">
             100
           </option>
-          <option className="pgSelectorOpt" value="500">
+          <option className="pagination-selector-option" value="500">
             500
           </option>
         </select>

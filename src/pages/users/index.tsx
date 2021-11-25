@@ -18,7 +18,6 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
 
-
 type User = {
   id: string
   name: string
@@ -270,10 +269,12 @@ export default function Users() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
+
       <UsersModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
     </Container>
   )

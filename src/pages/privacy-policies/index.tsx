@@ -1,8 +1,7 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 
 import { getAccessToken } from "../../helpers/token.helper"
-import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
 import { Container } from "../../styles/privacy-policies.styles"
 
@@ -29,7 +28,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_privacy_policies", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {

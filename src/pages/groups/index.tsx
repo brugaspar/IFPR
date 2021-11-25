@@ -8,6 +8,8 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { ProductGroupsModal } from "../../components/ProductGroupsModal"
 import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -15,9 +17,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/groups.styles"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type ProductGroup = {
   id: string
@@ -248,10 +247,12 @@ export default function ProductGroups() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
+
       <ProductGroupsModal
         isOpen={isProductGroupModalOpen}
         onRequestClose={handleCloseProductGroupModal}

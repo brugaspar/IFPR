@@ -2,19 +2,17 @@ import Modal from "react-modal"
 import { FormEvent, KeyboardEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Combobox } from "react-widgets"
+import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
+import { maskCEP } from "../../helpers/mask"
 
 import { useAuth } from "../../hooks/useAuth"
-
 import { api } from "../../services/api.service"
 
-import { Checkbox } from "../Checkbox"
 import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
-import { FaEdit, FaTrashAlt } from "react-icons/fa"
-import { maskCEP } from "../../helpers/mask"
 
 type Address = {
   id: string
@@ -24,7 +22,6 @@ type Address = {
   complement: string
   zipcode: string
   cityId: string
-  memberId: string
 }
 
 type City = {
@@ -56,7 +53,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   const [complement, setComplement] = useState("")
   const [zipcode, setZipcode] = useState("")
   const [cityId, setCityId] = useState("")
-  const [memberId, setMemberId] = useState("")
 
   const [removeAddressesPermission, setRemoveAddressesPermission] = useState(false)
   const [alterAddressesPermission, setAlterAddressesPermission] = useState(false)
@@ -115,16 +111,17 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
       complement,
       zipcode: zipcode.replace(/\D/g, ""),
       cityId,
-      memberId,
     }
 
     const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
+
     if (addressExists) {
       const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
       setAddressesToShow([...newArr, address])
     } else {
       setAddressesToShow([...addressesToShow, address])
     }
+
     resetFields()
   }
 
@@ -302,7 +299,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                 {addressesToShow.map((address) => (
                   <tr key={address.id}>
                     <td className="row">
-                      {/* <FaEdit color="var(--blue)" /> */}
                       <button
                         type="button"
                         className="edit"

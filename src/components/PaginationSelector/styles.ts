@@ -1,20 +1,20 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
-    float:left;
-    left: 0rem;
+  float: left;
 
-    .pgSelector{
-        background: var(--shape-dark);
-        border:none;
-        color:darkgray;
-        margin-left:0.4rem;
-        margin-right:0.4rem;
+  .pagination-selector {
+    border: 0;
+    border-radius: 0.25rem;
+    background: var(--shape-dark);
+    font-family: "Epilogue";
+    font-size: 1rem;
+    color: var(--text-body);
+    margin: 0 0.5rem;
+    padding: 0.2rem;
 
-        .pgSelectorOpt{
-            border:none;
-        }
+    .pagination-selector-option {
+      border: none;
     }
-
-
+  }
 `
