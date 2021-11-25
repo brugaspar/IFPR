@@ -40,6 +40,10 @@ type UpdateUserProps = {
 type FilterUser = {
   onlyEnabled: boolean
   search: string
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -101,7 +105,7 @@ class UsersRepository {
     return user
   }
 
-  async findAll({ onlyEnabled = true, search = "" }: FilterUser) {
+  async findAll({ onlyEnabled = true, search = "", sort }: FilterUser) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -130,6 +134,20 @@ class UsersRepository {
 
     const pg = await pgPool.connect()
 
+    let orderClause = ""
+
+    if (sort.name) {
+      orderClause = `
+        order by
+          u.${sort.name} ${sort.sort}
+      `
+    } else {
+      orderClause = `
+        order by
+          u.created_at
+      `
+    }
+
     const query = `
       select
         u.id,
@@ -148,8 +166,7 @@ class UsersRepository {
       from
         users u
       ${whereClause}
-      order by
-        u.created_at
+      ${orderClause}
     `
 
     const users = await pg.query<User>(query)
