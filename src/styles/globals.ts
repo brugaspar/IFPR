@@ -77,6 +77,9 @@ export const GlobalStyle = createGlobalStyle`
         }
       }
     }
+    td{
+      white-space: nowrap;
+    }
   }
 
   button {
