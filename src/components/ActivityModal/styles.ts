@@ -25,6 +25,10 @@ export const Container = styled.div`
       + .row {
         margin-top: 1rem;
       }
+
+      &.footer {
+        padding: 0 2rem;
+      }
     }
 
     .custom-select {

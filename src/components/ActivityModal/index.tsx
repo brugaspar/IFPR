@@ -13,13 +13,12 @@ import { Input } from "../Input"
 import { Container, RowContainer } from "./styles"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
-
 type Activity = {
   id: string
   status: string
   total: number
   totalQuantity: number
-  totalItems : number
+  totalItems: number
   observation: string
   cancelledReason: string
   sellerId: string
@@ -35,7 +34,7 @@ type ActivityItems = {
   subtotal: number
 }
 
-type Member =  {
+type Member = {
   id: string
   name: string
 }
@@ -61,39 +60,39 @@ Modal.setAppElement("#root")
 export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   const { user } = useAuth()
 
-
   const userPermissions = user?.permissions || []
 
   const [idActivity, setIdActivity] = useState("")
   const [status, setStatus] = useState("")
-  const [total, setTotal] = useState("")
-  const [totalQuantity, setTotalQuantity] = useState("")
-  const [totalItems, setTotalItems] = useState("")
+  const [total, setTotal] = useState(0)
+  const [totalQuantity, setTotalQuantity] = useState(0)
+  const [totalItems, setTotalItems] = useState(0)
   const [observation, setObservation] = useState("")
   const [cancelledReason, setCancelledReason] = useState("")
   const [sellerId, setSellerId] = useState("")
   const [memberId, setMemberId] = useState("")
 
-  const [idActivityItems, setIdActivityItems] = useState("")
   const [activityId, setActivityId] = useState("")
   const [productId, setProductId] = useState("")
-  const [quantity, setQuantity] = useState("")
-  const [price, setPrice] = useState("")
-  const [subtotal, setSubTotal] = useState("")
+  const [quantity, setQuantity] = useState(0)
+  const [price, setPrice] = useState(0)
+  const [subtotal, setSubTotal] = useState(0)
+
+  const [selectedItem, setSelectedItem] = useState<ActivityItems | null>(null)
 
   const [items, setItems] = useState<ActivityItems[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [sellers, setSellers] = useState<Seller[]>([])
 
-
+  function handleSelectItem(item: ActivityItems) {}
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
     }
   }
-  
+
   async function loadMembers() {
     try {
       const response = await api.get("/members")
@@ -130,8 +129,6 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
     }
   }
 
-
-
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
@@ -143,44 +140,37 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   }
 
   function handleAddAddress() {
-  //   const address = {
-  //     id: id || String(Math.random() * 100),
-  //     street,
-  //     neighbourhood,
-  //     number,
-  //     complement,
-  //     zipcode: zipcode.replace(/\D/g, ""),
-  //     cityId,
-  //     memberId,
-  //   }
-
-  //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
-  //   if (addressExists) {
-  //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
-  //     setAddressesToShow([...newArr, address])
-  //   } else {
-  //     setAddressesToShow([...addressesToShow, address])
-  //   }
-  //   resetFields()
-   }
-
-
+    //   const address = {
+    //     id: id || String(Math.random() * 100),
+    //     street,
+    //     neighbourhood,
+    //     number,
+    //     complement,
+    //     zipcode: zipcode.replace(/\D/g, ""),
+    //     cityId,
+    //     memberId,
+    //   }
+    //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
+    //   if (addressExists) {
+    //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
+    //     setAddressesToShow([...newArr, address])
+    //   } else {
+    //     setAddressesToShow([...addressesToShow, address])
+    //   }
+    //   resetFields()
+  }
 
   function resetFields() {
-    setIdActivityItems("")
     setActivityId("")
     setProductId("")
-    setQuantity("")
-    setPrice("")
-    setSubTotal("")
+    setQuantity(0)
+    setPrice(0)
+    setSubTotal(0)
     setMemberId("")
   }
 
-
-
   useEffect(() => {
     if (isOpen) {
-      // verifyPermissions()
       loadMembers()
       loadProducts()
       loadSellers()
@@ -193,7 +183,6 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      
     }
   }, [isOpen])
 
@@ -211,8 +200,8 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
         <h1>{"Atividade"}</h1>
 
         <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
-        <div className="row">
-          <RowContainer>
+          <div className="row">
+            <RowContainer>
               <label htmlFor="status">Status</label>
 
               <Combobox
@@ -259,18 +248,6 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
 
           <div className="row">
             <RowContainer>
-              <label htmlFor="observation">Observação</label>
-              <Input
-                id="observation"
-                type="text"
-                autoFocus
-                inputType="default"
-                placeholder="Observação"
-                value={observation}
-                onChange={(event) => setObservation(event.target.value)}
-              />
-              </RowContainer>
-              <RowContainer>
               <label htmlFor="memberId">Membro</label>
 
               <Combobox
@@ -289,11 +266,23 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 onChange={({ id }: any) => setMemberId(id)}
               />
             </RowContainer>
+            <RowContainer>
+              <label htmlFor="observation">Observação</label>
+              <Input
+                id="observation"
+                type="text"
+                autoFocus
+                inputType="default"
+                placeholder="Observação"
+                value={observation}
+                onChange={(event) => setObservation(event.target.value)}
+              />
+            </RowContainer>
           </div>
-          
+
           <div className="row">
             <RowContainer>
-              <label htmlFor="productId">Produtos</label>
+              <label htmlFor="productId">Produto</label>
 
               <Combobox
                 id="productId"
@@ -308,7 +297,7 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 }}
                 value={productId}
                 filter="contains"
-                onChange={({ id }: any) => setProductId(id)}
+                onChange={(item: any) => handleSelectItem(item)}
               />
             </RowContainer>
             <RowContainer>
@@ -320,15 +309,12 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 inputType="default"
                 placeholder="Informe a quantidade"
                 value={quantity}
-                onChange={(event) => setQuantity(event.target.value)}
+                onChange={(event) => setQuantity(Number(event.target.value))}
               />
             </RowContainer>
           </div>
 
-          <div className="row">
-            
-          </div>
-
+          <div className="row"></div>
 
           <button type="button" className="add-button" onClick={handleAddAddress}>
             Adicionar
@@ -346,30 +332,29 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 </tr>
               </thead>
               <tbody>
-          
-                  <tr>
-                    <td className="row">
-                      {/* <FaEdit color="var(--blue)" /> */}
-                      <button type="button" className="edit" >
-                        <FaEdit color="var(--blue)" size={18} />
-                      </button>
-                      <button type="button" className="edit" >
-                        <FaTrashAlt color="var(--red)" size={18} />
-                      </button>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-            
+                <tr>
+                  <td className="row">
+                    {/* <FaEdit color="var(--blue)" /> */}
+                    <button type="button" className="edit">
+                      <FaEdit color="var(--blue)" size={18} />
+                    </button>
+                    <button type="button" className="edit">
+                      <FaTrashAlt color="var(--red)" size={18} />
+                    </button>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
               </tbody>
             </table>
-            <div className="row">
-            <div>Quantidade de Items: {totalItems}</div>
+          </div>
+
+          <div className="row footer">
+            <div>Quantidade de Itens: {totalItems}</div>
             <div>Quantidade total: {totalQuantity}</div>
             <div>Total: {total}</div>
-            </div>
           </div>
 
           <div className="close">
