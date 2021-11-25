@@ -163,13 +163,13 @@ export const GlobalStyle = createGlobalStyle`
     width: 100%;
     max-width: 1000px;
 
-    margin-top: 5rem;
+    margin-top: 7rem;
 
     max-height: calc(100% - 7rem);
 
     background: var(--background);
 
-    padding: 3rem;
+    padding: 2.5rem;
     position: relative;
 
     border-radius: 0.25rem;
