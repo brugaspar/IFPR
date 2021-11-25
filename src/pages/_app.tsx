@@ -19,6 +19,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [sidebar, setSidebar] = useState(false)
 
   const [isDark, setIsDark] = useState(true)
+  const [isMobile, setMobile] = useState(false)
 
   function handleSidebarToggle() {
     setSidebar(!sidebar)
@@ -33,11 +34,26 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
   }
 
+  function handleDevice() {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    ) {
+      setMobile(true)
+    }
+  }
+
   const showComponent = router.pathname !== "/" && router.pathname !== "/404"
 
   useEffect(() => {
     handleBrowserTheme()
+    handleDevice()
   }, [])
+
+  if (isMobile) {
+    // return <MobileScreen />
+  }
 
   return (
     <AuthProvider>

@@ -5,6 +5,8 @@ export const Container = styled.div`
   height: calc(100vh - 7rem);
   width: calc(100vw - 5rem);
   padding: 2rem;
+  overflow-y: hidden;
+  overflow-x: hidden;
 
   margin: 7rem 0 0 5rem;
 
@@ -122,7 +124,6 @@ export const Container = styled.div`
       background: var(--text-dark);
       border: 3px solid ${darken(0.16, "#323232")};
     }
-
   }
 
   .styled-table {
@@ -186,10 +187,10 @@ export const Container = styled.div`
     }
   }
 
-  .paginationDiv{
-      padding-left:2rem;  
-      margin-top:0.5rem;   
-      width:90%;
-      height:2rem;
-    }
+  .paginationDiv {
+    padding-left: 2rem;
+    margin-top: 0.5rem;
+    width: 90%;
+    height: 2rem;
+  }
 `

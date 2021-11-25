@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components"
+import { darken } from "polished"
 
 export const GlobalStyle = createGlobalStyle`
   :root {
@@ -22,6 +23,21 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    &::-webkit-scrollbar {
+      width: 0.2rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--shape-dark);
+      border-radius: 0.25rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0.25rem;
+      background: var(--text-dark);
+      border: 3px solid ${darken(0.16, "#323232")};
+    }
   }
 
   @media(max-width: 1080px) {
