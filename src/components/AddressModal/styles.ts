@@ -27,55 +27,6 @@ export const Container = styled.div`
       }
     }
 
-    .custom-select {
-      color: var(--text-title);
-      .rw-widget-picker {
-        background: var(--shape-dark);
-        border: 0;
-
-        /* input {
-          border: 0;
-        } */
-      }
-
-      .rw-popup {
-        background: var(--shape-dark);
-
-        .rw-list {
-          &::-webkit-scrollbar {
-            width: 1rem;
-          }
-
-          &::-webkit-scrollbar-track {
-            background: var(--background);
-          }
-
-          &::-webkit-scrollbar-thumb {
-            border-radius: 0.2rem;
-            background: var(--text-body);
-            border: 3px solid var(--text-body);
-          }
-        }
-
-        .rw-list-option {
-          color: var(--text-title);
-
-          &:hover {
-            background: var(--background);
-          }
-        }
-      }
-
-      .rw-input-addon {
-        background: var(--shape-dark);
-        border: 0;
-      }
-
-      svg {
-        color: white;
-      }
-    }
-
     input {
       width: 100%;
       height: 3rem;
@@ -121,8 +72,6 @@ export const Container = styled.div`
 
         transition: filter 0.2s;
 
-        /* border: 1px solid rgba(255, 0, 0, 0.2); */
-        /* background: rgba(255, 0, 0, 0.05); */
         border: 1px solid var(--text-title);
 
         + button {

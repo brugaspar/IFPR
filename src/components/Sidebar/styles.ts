@@ -2,24 +2,6 @@ import styled from "styled-components"
 import { darken, transparentize } from "polished"
 
 export const Container = styled.div`
-  /* @keyframes fade-in {
-    from {
-      width: 5rem;
-    }
-    to {
-      width: 15rem;
-    }
-  }
-
-  @keyframes fade-out {
-    from {
-      width: 4rem;
-    }
-    to {
-      width: 3.2rem;
-    }
-  } */
-
   z-index: 999;
   position: fixed;
   top: 0;
@@ -43,12 +25,10 @@ export const Container = styled.div`
       opacity: 0;
       pointer-events: none;
       display: none;
-      /* animation: fade-out 0.3s normal forwards ease-in-out; */
     }
 
     img.icon {
       width: 15rem;
-      /* animation: fade-in 0.3s normal forwards ease-in-out; */
     }
   }
 

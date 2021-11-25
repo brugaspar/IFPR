@@ -1,12 +1,15 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
-import { FaChevronDown, FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
+import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
 import { PlansModal } from "../../components/PlansModal"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+import { FilterContainer } from "../../components/FilterContainer"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -14,10 +17,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/plans.styles"
-import { FilterContainer } from "../../components/FilterContainer"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type Plan = {
   id: string
@@ -275,7 +274,6 @@ export default function Plans() {
             {currentItens.map((plan) => (
               <tr key={plan.name}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditPlan(plan)} disabled={!editPlanPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
@@ -296,7 +294,8 @@ export default function Plans() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

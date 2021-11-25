@@ -7,6 +7,9 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 
 import { ProductsModal } from "../../components/ProductsModal"
+import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -14,10 +17,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/products.styles"
-import { FilterContainer } from "../../components/FilterContainer"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type Product = {
   id: string
@@ -330,7 +329,6 @@ export default function Products() {
             {currentItens.map((product) => (
               <tr key={product.name}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditProduct(product)} disabled={!editProductPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
@@ -352,7 +350,8 @@ export default function Products() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

@@ -13,7 +13,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 export function Input({ inputRef, inputType = "default", type, hasIcon = false, light = false, ...rest }: InputProps) {
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
-  const icon = inputType === "password" || inputType === "username" 
+  const icon = inputType === "password" || inputType === "username"
   const passwordType = secureTextEntry ? "password" : "text"
 
   function handleToggleSecureTextEntry() {

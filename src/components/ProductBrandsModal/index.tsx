@@ -13,12 +13,6 @@ import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
 
-type ProductBrand = {
-  id: string
-  name: string
-  disabled: boolean
-}
-
 type ProductBrandsModalProps = {
   isOpen: boolean
   onRequestClose: () => void
@@ -43,7 +37,7 @@ export function ProductBrandsModal({ isOpen, onRequestClose, brandId }: ProductB
     }
   }
 
-   async function handleConfirm(event: FormEvent) {
+  async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
     try {
@@ -81,7 +75,7 @@ export function ProductBrandsModal({ isOpen, onRequestClose, brandId }: ProductB
         toast.error("Problemas internos", { toastId: "error" })
       }
     }
-   }
+  }
 
   async function loadProductBrandById() {
     const response = await api.get(`brands/${brandId}`)
@@ -93,8 +87,6 @@ export function ProductBrandsModal({ isOpen, onRequestClose, brandId }: ProductB
   function handleToggleDisabled() {
     setDisabled(!disabled)
   }
-
-
 
   function resetFields() {
     setName("")

@@ -55,8 +55,6 @@ export const Container = styled.div`
 
         transition: filter 0.2s;
 
-        /* border: 1px solid rgba(255, 0, 0, 0.2); */
-        /* background: rgba(255, 0, 0, 0.05); */
         border: 1px solid var(--text-title);
 
         + button {

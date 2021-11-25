@@ -1,5 +1,5 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
 import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
@@ -7,8 +7,9 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 
 import { ActivityModal } from "../../components/ActivityModal"
-import { Checkbox } from "../../components/Checkbox"
-import { SearchBar } from "../../components/SearchBar"
+import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -16,10 +17,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/activities.styles"
-import { FilterContainer } from "../../components/FilterContainer"
-
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type Activity = {
   id: string
@@ -324,7 +321,6 @@ export default function Activities() {
             {currentItens.map((activity) => (
               <tr key={activity.id}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditActivity(activity)} disabled={!editActivityPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
@@ -344,7 +340,8 @@ export default function Activities() {
           </tbody>
         </table>
       </div>
-      <div className="paginationDiv">
+
+      <div className="pagination-div">
         <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>

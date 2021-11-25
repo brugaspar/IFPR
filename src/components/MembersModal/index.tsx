@@ -4,16 +4,15 @@ import { toast } from "react-toastify"
 import { Combobox } from "react-widgets"
 import moment from "moment"
 
+import { Checkbox } from "../Checkbox"
+import { Input } from "../Input"
+import { AddressModal } from "../AddressModal"
+
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { cellPhoneMask, cpfMask, phoneMask } from "../../helpers/mask"
 
 import { useAuth } from "../../hooks/useAuth"
-
 import { api } from "../../services/api.service"
-
-import { Checkbox } from "../Checkbox"
-import { Input } from "../Input"
-import { AddressModal } from "../AddressModal"
 
 import { Container, RowContainer } from "./styles"
 
@@ -25,7 +24,6 @@ type Address = {
   complement: string
   zipcode: string
   cityId: string
-  memberId: string
 }
 
 type City = {

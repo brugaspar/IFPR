@@ -173,7 +173,6 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <button
               className="list-button"
               title="Produtos"
-              // onClick={() => handleNavigateToPage("/products")}
               onClick={handleToggleHideClassProduct}
               disabled={!listProductsPermission}
             >

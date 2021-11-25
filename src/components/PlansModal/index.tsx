@@ -13,21 +13,6 @@ import { Input } from "../Input"
 
 import { Container, RowContainer } from "./styles"
 
-type Plan = {
-  id: string
-  name: string
-  description: string
-  value: number
-  renewValue: number
-  gunTargetDiscount: number
-  courseDiscount: number
-  shootingDrillsPerYear: number
-  gunExemption: boolean
-  targetExemption: boolean
-  disabled: boolean
-  createdAt: string
-}
-
 type PlansModalProps = {
   isOpen: boolean
   onRequestClose: () => void
