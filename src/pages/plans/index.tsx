@@ -236,7 +236,7 @@ export default function Plans() {
               <th>Isenção de armas</th>
               <th>Isenção de alvos</th>
               <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
-                Data de cadastro <FaChevronUp />
+                Cadastrado em <FaChevronUp />
                 </th>
               <th className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("updated_at")}>
                 Última edição <FaChevronUp />
