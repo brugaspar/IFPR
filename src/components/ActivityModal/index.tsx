@@ -32,6 +32,10 @@ type ActivityItems = {
   quantity: string
   price: string
   subtotal: string
+  product: {
+    name?: string
+    quantity?: string
+  }
   name?: string
 }
 
@@ -54,16 +58,17 @@ type Seller = {
 type ActivityModalProps = {
   isOpen: boolean
   onRequestClose: () => void
+  activityId: string
 }
 
 Modal.setAppElement("#root")
 
-export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
+export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityModalProps) {
   const { user } = useAuth()
 
   const userPermissions = user?.permissions || []
 
-  const [idActivity, setIdActivity] = useState("")
+  const [id, setId] = useState("")
   const [status, setStatus] = useState("open")
   const [total, setTotal] = useState("")
   const [totalQuantity, setTotalQuantity] = useState("")
@@ -73,34 +78,66 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   const [sellerId, setSellerId] = useState("")
   const [memberId, setMemberId] = useState("")
 
-  const [activityId, setActivityId] = useState("")
+  // const [activityId, setActivityId] = useState("")
   const [productId, setProductId] = useState("")
   const [quantity, setQuantity] = useState("")
   const [price, setPrice] = useState("")
   const [subtotal, setSubTotal] = useState("")
 
   const [selectedItem, setSelectedItem] = useState<ActivityItems | null>(null)
+  const [confirmedItems, setConfirmedItems] = useState<ActivityItems[]>([])
 
   const [items, setItems] = useState<ActivityItems[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [sellers, setSellers] = useState<Seller[]>([])
 
+  const [reload, setReload] = useState(false)
+
+  function calculate() {
+    const activityTotal = items.reduce((accumulator, item) => (accumulator += Number(item.price) * Number(item.quantity)), 0)
+    const activityTotalQuantity = items.reduce((accumulator, item) => (accumulator += Number(item.quantity)), 0)
+    const activityTotalItems = items.length
+
+    setTotalQuantity(String(activityTotalQuantity))
+    setTotalItems(String(activityTotalItems))
+    setTotal(String(activityTotal))
+  }
+
   function handleSelectItem(item: ActivityItems) {
-    setProductId(item.productId)
+    console.log("item", item)
+    setProductId(item.id)
     setPrice(item.price)
-    setSelectedItem(item)
+    setSelectedItem({
+      ...item,
+      productId: item.id,
+      product: {
+        name: item.name,
+        quantity: item.quantity,
+      },
+    })
   }
 
   function handleAddItem() {
+    if (!selectedItem) {
+      return toast.error("Selecione algum produto")
+    }
+
+    if (!quantity) {
+      return toast.error("Informe alguma quantidade")
+    }
+
     const item = {
-      id: idActivity || String(Math.random() * 100),
+      id: id || String(Math.random() * 100),
       activityId: activityId || "",
-      productId: selectedItem?.id || "",
+      productId: selectedItem?.productId || "",
       quantity,
       price,
       subtotal: String(Number(quantity) * Number(price)),
-      name: selectedItem?.name,
+      product: {
+        name: selectedItem?.product.name,
+        quantity: selectedItem?.product.quantity,
+      },
     }
 
     const itemExists = items.some((currentItem) => currentItem.productId === item.productId)
@@ -111,7 +148,11 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
     } else {
       setItems([...items, item])
     }
-    resetFields()
+
+    setProductId("")
+    setQuantity("")
+    setPrice("")
+    setReload(!reload)
   }
 
   function handleRemoveItem(item: ActivityItems) {
@@ -173,20 +214,84 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
-    onRequestClose()
+    const parsedItems = items.map((item) => {
+      return {
+        productId: item.productId,
+        quantity: Number(item.quantity),
+        price: Number(item.price),
+      }
+    })
+
+    try {
+      if (activityId) {
+        await api.put(`activities/${activityId}`, {
+          status,
+          observation: observation || "",
+          cancelledReason: cancelledReason || "",
+          sellerId,
+          memberId,
+          items: parsedItems,
+        })
+      } else {
+        await api.post("activities", {
+          status,
+          observation: observation || "",
+          cancelledReason: cancelledReason || "",
+          sellerId,
+          memberId,
+          items: parsedItems,
+        })
+      }
+
+      toast.dismiss("error")
+
+      if (activityId) {
+        toast.success("Atividade alterado com sucesso")
+      } else {
+        toast.success("Atividade incluído com sucesso")
+      }
+
+      onRequestClose()
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        if (Array.isArray(error.response.data.message)) {
+          for (const message of error.response.data.message) {
+            toast.error(message, { toastId: "error" })
+          }
+        } else {
+          toast.error(error.response.data.message, { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos", { toastId: "error" })
+      }
+    }
+  }
+
+  async function loadActivityById() {
+    const response = await api.get(`activities/${activityId}`)
+
+    setStatus(response.data.status)
+    setObservation(response.data.observation)
+    setCancelledReason(response.data.cancelledReason)
+    setSellerId(response.data.sellerId)
+    setMemberId(response.data.memberId)
+    setItems(response.data.items)
+    setConfirmedItems(response.data.items)
   }
 
   async function handleModalClose() {
+    setItems([])
     resetFields()
   }
 
   function resetFields() {
-    setActivityId("")
     setProductId("")
     setQuantity("")
     setPrice("")
     setSubTotal("")
     setMemberId("")
+    setSellerId("")
+    setObservation("")
     setSelectedItem(null)
   }
 
@@ -197,15 +302,18 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
       loadSellers()
     }
 
-    if (isOpen) {
-      //loadProductGroupById()
+    if (isOpen && activityId) {
+      loadActivityById()
     }
   }, [isOpen])
 
   useEffect(() => {
-    if (isOpen) {
-    }
-  }, [isOpen])
+    calculate()
+  }, [reload])
+
+  // useEffect(() => {
+  //   setItems(confirmedItems)
+  // }, [confirmedItems])
 
   return (
     <Modal
@@ -336,7 +444,7 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                   />
                 </RowContainer>
                 <RowContainer>
-                  <label htmlFor="quantity">Quantidade ({selectedItem?.quantity || 0})</label>
+                  <label htmlFor="quantity">Quantidade ({selectedItem?.product.quantity || 0})</label>
                   <Input
                     id="quantity"
                     type="number"
@@ -379,10 +487,12 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                         <FaTrashAlt color="var(--red)" size={18} />
                       </button>
                     </td>
-                    <td>{item.name}</td>
+                    <td>{item.product.name}</td>
                     <td>{item.quantity}</td>
-                    <td>{item.price}</td>
-                    <td>{item.subtotal}</td>
+                    <td>{item.price ? Number(item.price).toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
+                    <td>
+                      {item.subtotal ? Number(item.subtotal).toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -392,7 +502,7 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
           <div className="row footer">
             <div>Quantidade de Itens: {totalItems || 0}</div>
             <div>Quantidade total: {totalQuantity || 0}</div>
-            <div>Total: {total || 0}</div>
+            <div>Total: {Number(total).toLocaleString("pt-br", { style: "currency", currency: "BRL" }) || 0}</div>
           </div>
 
           <div className="close">
