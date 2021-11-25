@@ -62,12 +62,12 @@ export default function Products() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(3)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(products.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
-  const currentItens = products.slice(startIndex, endIndex) 
+  const pages = Math.ceil(products.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItens = products.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
     switch (field) {
@@ -186,8 +186,22 @@ export default function Products() {
 
       toast.dismiss("error")
       setProducts(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar produtos", { toastId: "error" })
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar produtos", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar produtos", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar produtos", { toastId: "error" })
+      }
     }
   }
 
@@ -228,10 +242,10 @@ export default function Products() {
   useEffect(() => {
     loadProducts()
   }, [onlyEnabled, isProductModalOpen, reload, sort])
-  
+
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -339,8 +353,8 @@ export default function Products() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
 
       <ProductsModal isOpen={isProductModalOpen} onRequestClose={handleCloseProductModal} productId={selectedProduct || ""} />

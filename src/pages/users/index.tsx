@@ -6,7 +6,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
-import { UserModal } from "../../components/UserModal"
+import { UsersModal } from "../../components/UsersModal"
 import { FilterContainer } from "../../components/FilterContainer"
 import { PaginationBar } from "../../components/PaginationBar"
 import { PaginationSelector } from "../../components/PaginationSelector"
@@ -52,11 +52,11 @@ export default function Users() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(3)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(users.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
+  const pages = Math.ceil(users.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
   const currentItens = users.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
@@ -185,7 +185,7 @@ export default function Users() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -270,10 +270,10 @@ export default function Users() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
-      <UserModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
+      <UsersModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
     </Container>
   )
 }

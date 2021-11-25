@@ -25,6 +25,7 @@ type AuthContextProps = {
   authenticated: boolean
   signIn: (props: SignInProps) => Promise<void>
   signOut: () => void
+  updateUserPermissions: (permissions: string[]) => void
 }
 
 type AuthProviderProps = {
@@ -86,6 +87,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setLoading(false)
   }
 
+  async function updateUserPermissions(updatedPermissions: string[]) {
+    if (user) {
+      setUser({ ...user, permissions: updatedPermissions })
+    }
+  }
+
   useEffect(() => {
     loadData()
   }, [])
@@ -101,6 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         authenticated,
         signIn,
         signOut,
+        updateUserPermissions,
       }}
     >
       {children}

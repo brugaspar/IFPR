@@ -58,7 +58,8 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   const [cityId, setCityId] = useState("")
   const [memberId, setMemberId] = useState("")
 
-  const [disableProductGroupPermission, setDisableProductGroupPermission] = useState(false)
+  const [removeAddressesPermission, setRemoveAddressesPermission] = useState(false)
+  const [alterAddressesPermission, setAlterAddressesPermission] = useState(false)
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
@@ -89,18 +90,23 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
     resetFields()
   }
 
-  // async function loadProductGroupById() {
-  //   const response = await api.get(`groups/${groupId}`)
-
-  //   setName(response.data.name)
-  //   setDisabled(response.data.disabled)
-  // }
-
-  // function handleToggleDisabled() {
-  //   setDisabled(!disabled)
-  // }
-
   function handleAddAddress() {
+    if (!street) {
+      return toast.error("Endereço é obrigatório")
+    }
+    if (!neighbourhood) {
+      return toast.error("Bairro é obrigatório")
+    }
+    if (!number) {
+      return toast.error("Número é obrigatório")
+    }
+    if (!zipcode) {
+      return toast.error("CEP é obrigatório")
+    }
+    if (!cityId) {
+      return toast.error("Cidade é obrigatória")
+    }
+
     const address = {
       id: id || String(Math.random() * 100),
       street,
@@ -123,9 +129,11 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   }
 
   function handleRemoveAddress(address: Address) {
-    if (addressesToShow.length >= 1) {
+    if (addressesToShow.length > 1) {
       const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
       setAddressesToShow(newArr)
+    } else {
+      toast.info("Pelo menos 1 endereço é obrigatório")
     }
   }
 
@@ -150,18 +158,16 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   }
 
   async function verifyPermissions() {
-    const userHasDisableProductGroupPermission = await verifyUserPermissions("disable_groups", userPermissions)
-    setDisableProductGroupPermission(userHasDisableProductGroupPermission)
+    const userHasRemoveAddressesPermission = await verifyUserPermissions("remove_addresses", userPermissions)
+    setRemoveAddressesPermission(userHasRemoveAddressesPermission)
+    const userHasAlterAddressesPermission = await verifyUserPermissions("edit_addresses", userPermissions)
+    setAlterAddressesPermission(userHasAlterAddressesPermission)
   }
 
   useEffect(() => {
     if (isOpen) {
-      // verifyPermissions()
+      verifyPermissions()
       loadCities()
-    }
-
-    if (isOpen) {
-      //loadProductGroupById()
     }
   }, [isOpen])
 
@@ -297,10 +303,20 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
                   <tr key={address.id}>
                     <td className="row">
                       {/* <FaEdit color="var(--blue)" /> */}
-                      <button type="button" className="edit" onClick={() => handleEditAddress(address)}>
+                      <button
+                        type="button"
+                        className="edit"
+                        onClick={() => handleEditAddress(address)}
+                        disabled={!alterAddressesPermission}
+                      >
                         <FaEdit color="var(--blue)" size={18} />
                       </button>
-                      <button type="button" className="edit" onClick={() => handleRemoveAddress(address)}>
+                      <button
+                        type="button"
+                        className="edit"
+                        onClick={() => handleRemoveAddress(address)}
+                        disabled={!removeAddressesPermission}
+                      >
                         <FaTrashAlt color="var(--red)" size={18} />
                       </button>
                     </td>

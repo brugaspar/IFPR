@@ -28,32 +28,6 @@ type Address = {
   memberId: string
 }
 
-type Member = {
-  id: string
-  name: string
-  rg: string
-  issuingAuthority: string
-  issuedAt: string
-  cpf: string
-  naturalityCityId: string
-  motherName: string
-  fatherName: string
-  profession: string
-  email: string
-  phone: string
-  cellPhone: string
-  crNumber: string
-  crValidity: string
-  birthDate: string
-  healthIssues: string
-  gender: string
-  maritalStatus: string
-  bloodTyping: string
-  disabled: boolean
-  createdAt: string
-  planId: string
-}
-
 type City = {
   id: string
   name: string
@@ -104,7 +78,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
   const [disabled, setDisabled] = useState(false)
 
-  const [disableUsersPermission, setDisableUsersPermission] = useState(false)
+  const [disableMembersPermission, setDisableMembersPermission] = useState(false)
+  const [listAddressesPermission, setListAddressesPermission] = useState(false)
 
   const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
 
@@ -294,8 +269,11 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   }
 
   async function verifyPermissions() {
-    const userHasDisableMembersPermission = await verifyUserPermissions("disable_members", userPermissions)
-    setDisableUsersPermission(userHasDisableMembersPermission)
+    const userHasDisableMembersPermission = await verifyUserPermissions("disable_addresses", userPermissions)
+    setDisableMembersPermission(userHasDisableMembersPermission)
+
+    const userHasListAddressesPermission = await verifyUserPermissions("create_addresses", userPermissions)
+    setListAddressesPermission(userHasListAddressesPermission)
   }
 
   function onChangeAddresses(addresses: Address[]) {
@@ -313,10 +291,6 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
       loadMemberById()
     }
   }, [isOpen])
-
-  useEffect(() => {
-    // loadCities();
-  }, [])
 
   return (
     <Modal
@@ -671,11 +645,16 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
                 title="Desativado"
                 active={disabled}
                 handleToggleActive={handleToggleDisabled}
-                disabled={!disableUsersPermission}
+                disabled={!disableMembersPermission}
               />
             </RowContainer>
             <RowContainer>
-              <button type="button" onClick={handleOpenAdressModal} className="addresses-button">
+              <button
+                type="button"
+                onClick={handleOpenAdressModal}
+                className="addresses-button"
+                disabled={!listAddressesPermission}
+              >
                 Endereços
               </button>
             </RowContainer>

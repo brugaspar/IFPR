@@ -107,7 +107,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
   useEffect(() => {
     verifyPermissions()
-  }, [])
+  }, [user?.permissions])
 
   useEffect(() => {
     if (!isOpen) {

@@ -58,12 +58,12 @@ export default function Plans() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(3)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(plans.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
-  const currentItens = plans.slice(startIndex, endIndex) 
+  const pages = Math.ceil(plans.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItens = plans.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
     switch (field) {
@@ -138,16 +138,30 @@ export default function Plans() {
     try {
       const response = await api.get("/plans", {
         params: {
-         onlyEnabled,
+          onlyEnabled,
           search,
           sort,
-      },
-    })
+        },
+      })
 
-    toast.dismiss("error")
-    setPlans(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar planos", { toastId: "error" })
+      toast.dismiss("error")
+      setPlans(response.data)
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar planos", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar planos", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar planos", { toastId: "error" })
+      }
     }
   }
 
@@ -191,7 +205,7 @@ export default function Plans() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -222,25 +236,37 @@ export default function Plans() {
               <th>#</th>
               <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
                 Nome <FaChevronUp />
-                </th>
+              </th>
               <th>Descrição</th>
               <th className={sort.name === "value" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("value")}>
                 Valor <FaChevronUp />
-                </th>
-              <th className={sort.name === "renew_value" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("renew_value")}>
+              </th>
+              <th
+                className={sort.name === "renew_value" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("renew_value")}
+              >
                 Valor de Renovação <FaChevronUp />
-                </th>
-              <th className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("disabled")}>
+              </th>
+              <th
+                className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("disabled")}
+              >
                 Status <FaChevronUp />
-                </th>
+              </th>
               <th>Isenção de armas</th>
               <th>Isenção de alvos</th>
-              <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
                 Data de cadastro <FaChevronUp />
-                </th>
-              <th className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("updated_at")}>
+              </th>
+              <th
+                className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("updated_at")}
+              >
                 Última edição <FaChevronUp />
-                </th>
+              </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -271,8 +297,8 @@ export default function Plans() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
 
       <PlansModal isOpen={isPlanModalOpen} onRequestClose={handleClosePlanModal} planId={selectedPlan || ""} />

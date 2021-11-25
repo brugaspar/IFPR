@@ -23,7 +23,7 @@ type User = {
   createdAt: string
 }
 
-type UserModalProps = {
+type UsersModalProps = {
   isOpen: boolean
   onRequestClose: () => void
   userId: string
@@ -31,8 +31,8 @@ type UserModalProps = {
 
 Modal.setAppElement("#root")
 
-export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
-  const { user } = useAuth()
+export function UsersModal({ isOpen, onRequestClose, userId }: UsersModalProps) {
+  const { user, updateUserPermissions } = useAuth()
 
   const userPermissions = user?.permissions || []
 
@@ -99,6 +99,9 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
       } else {
         toast.success("Usuário incluído com sucesso")
       }
+
+      const response = await api.get("/users/permissions")
+      updateUserPermissions(response.data.permissions)
 
       onRequestClose()
     } catch (error: any) {
@@ -188,13 +191,6 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
               />
-              {/* <input
-                id="name"
-                type="text"
-                placeholder="Informe o nome"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              /> */}
             </RowContainer>
 
             <RowContainer>
@@ -207,13 +203,6 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
-              {/* <input
-                id="email"
-                type="text"
-                placeholder="Informe o e-mail"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              /> */}
             </RowContainer>
           </div>
 
@@ -228,13 +217,6 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
-              {/* <input
-                id="username"
-                type="text"
-                placeholder="Informe o usuário"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-              /> */}
             </RowContainer>
 
             <RowContainer width={35}>
@@ -269,13 +251,6 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
-              {/* <input
-                id="password"
-                type="password"
-                placeholder="Informe a senha"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              /> */}
             </RowContainer>
             <RowContainer>
               <label htmlFor="confirmPassword">{userId ? "Nova senha" : "Confirme a senha"}</label>
@@ -287,13 +262,6 @@ export function UserModal({ isOpen, onRequestClose, userId }: UserModalProps) {
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
               />
-              {/* <input
-                id="confirmPassword"
-                type="password"
-                placeholder={userId ? "Informe a nova senha" : "Informe a confirmação"}
-                value={confirmPassword}
-                onChange={(event) => setConfirmPassword(event.target.value)}
-              /> */}
             </RowContainer>
           </div>
 
