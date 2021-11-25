@@ -18,6 +18,9 @@ import { api } from "../../services/api.service"
 import { Container } from "../../styles/products.styles"
 import { FilterContainer } from "../../components/FilterContainer"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type Product = {
   id: string
   name: string
@@ -58,6 +61,13 @@ export default function Products() {
   const [reload, setReload] = useState(false)
 
   const timeoutRef = useRef<any>(0)
+
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(products.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = products.slice(startIndex, endIndex) 
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -128,6 +138,10 @@ export default function Products() {
   useEffect(() => {
     loadProducts()
   }, [onlyEnabled, isProductModalOpen, reload])
+  
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
 
   return (
     <Container>
@@ -136,7 +150,7 @@ export default function Products() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Produtos</h1>
+        <h1 className="title">Produtos</h1>
 
         <button onClick={handleAddProduct} type="button" disabled={!createProductPermission}>
           <FaPlus />
@@ -187,7 +201,7 @@ export default function Products() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+            {currentItens.map((product) => (
               <tr key={product.name}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
@@ -210,6 +224,10 @@ export default function Products() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
       </div>
 
       <ProductsModal isOpen={isProductModalOpen} onRequestClose={handleCloseProductModal} productId={selectedProduct || ""} />

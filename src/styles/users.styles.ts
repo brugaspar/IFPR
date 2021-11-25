@@ -106,10 +106,8 @@ export const Container = styled.div`
   .scroll-div {
     overflow-x: auto;
     overflow-y: auto;
-    /* height: calc(100vh - 15rem); */
-    height: calc(100vh - 20rem);
+    height: calc(100vh - 23rem);
     margin-top: 2rem;
-
     &::-webkit-scrollbar {
       width: 0.2rem;
     }
@@ -124,6 +122,7 @@ export const Container = styled.div`
       background: var(--text-dark);
       border: 3px solid ${darken(0.16, "#323232")};
     }
+
   }
 
   .styled-table {
@@ -186,4 +185,11 @@ export const Container = styled.div`
       }
     }
   }
+
+  .paginationDiv{
+      padding-left:2rem;  
+      margin-top:0.5rem;   
+      width:90%;
+      height:2rem;
+    }
 `

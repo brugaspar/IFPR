@@ -18,6 +18,9 @@ import { api } from "../../services/api.service"
 import { Container } from "../../styles/activities.styles"
 import { FilterContainer } from "../../components/FilterContainer"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type Activity = {
   id: string
   status: string
@@ -79,6 +82,13 @@ export default function Activities() {
   }
 
   const timeoutRef = useRef<any>(0)
+
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(activities.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = activities.slice(startIndex, endIndex) 
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -155,6 +165,10 @@ export default function Activities() {
     loadActivities()
   }, [isActivityModalOpen, reload, onlyEnabled])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
   return (
     <Container>
       <Head>
@@ -162,7 +176,7 @@ export default function Activities() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Atividades</h1>
+        <h1 className="title">Atividades</h1>
 
         <button onClick={handleAddActivity} type="button" disabled={!createActivityPermission}>
           <FaPlus />
@@ -210,7 +224,7 @@ export default function Activities() {
             </tr>
           </thead>
           <tbody>
-            {activities.map((activity) => (
+            {currentItens.map((activity) => (
               <tr key={activity.id}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
@@ -231,6 +245,10 @@ export default function Activities() {
           </tbody>
         </table>
       </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+      </div>      
 
       {/* <UserModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} userId={selectedActivity || ""} /> */}
     </Container>

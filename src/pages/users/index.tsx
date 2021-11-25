@@ -17,6 +17,8 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
 import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 type User = {
   id: string
@@ -49,6 +51,13 @@ export default function Users() {
   const [reload, setReload] = useState(false)
 
   const timeoutRef = useRef<any>(0)
+
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(users.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = users.slice(startIndex, endIndex) 
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -106,17 +115,6 @@ export default function Users() {
     setEditUserPermission(userHasEditUsersPermission)
   }
 
-  // TODO: bolar atualização de dados, para evitar muitas chamadas
-  // useEffect(() => {
-  //   loadUsers()
-
-  //   const unsubscribe = window.addEventListener("focus", () => {
-  //     setReload(!reload)
-  //   })
-
-  //   return unsubscribe
-  // }, [reload, onlyEnabled])
-
   useEffect(() => {
     verifyPermissions()
   }, [])
@@ -125,6 +123,11 @@ export default function Users() {
     loadUsers()
   }, [onlyEnabled, isUserModalOpen, reload])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
+
   return (
     <Container>
       <Head>
@@ -132,7 +135,7 @@ export default function Users() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Usuários</h1>
+        <h1 className="title">Usuários</h1>
 
         <button onClick={handleAddUser} type="button" disabled={!createUserPermission}>
           <FaPlus />
@@ -179,7 +182,7 @@ export default function Users() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {currentItens.map((user) => (
               <tr key={user.id}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
@@ -198,9 +201,12 @@ export default function Users() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>        
       </div>
-
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+      </div>        
       <UserModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
     </Container>
   )
