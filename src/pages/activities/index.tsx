@@ -78,7 +78,87 @@ export default function Activities() {
     cancelled: "Cancelado",
   }
 
+  const [sort, setSort] = useState({ name: "", sort: "asc" })
+
   const timeoutRef = useRef<any>(0)
+
+  function sortTable(field: string) {
+    switch (field) {
+      case "status": {
+        if (sort.sort === "asc") {
+          setSort({ name: "status", sort: "desc" })
+        } else {
+          setSort({ name: "status", sort: "asc" })
+        }
+
+        break
+      }
+      case "member": {
+        if (sort.sort === "asc") {
+          setSort({ name: "member", sort: "desc" })
+        } else {
+          setSort({ name: "member", sort: "asc" })
+        }
+
+        break
+      }
+
+      case "seller": {
+        if (sort.sort === "asc") {
+          setSort({ name: "seller", sort: "desc" })
+        } else {
+          setSort({ name: "seller", sort: "asc" })
+        }
+
+        break
+      }
+      case "total": {
+        if (sort.sort === "asc") {
+          setSort({ name: "total", sort: "desc" })
+        } else {
+          setSort({ name: "total", sort: "asc" })
+        }
+
+        break
+      }
+      case "total_items": {
+        if (sort.sort === "asc") {
+          setSort({ name: "total_items", sort: "desc" })
+        } else {
+          setSort({ name: "total_items", sort: "asc" })
+        }
+
+        break
+      }
+      case "total_quantity": {
+        if (sort.sort === "asc") {
+          setSort({ name: "total_quantity", sort: "desc" })
+        } else {
+          setSort({ name: "total_quantity", sort: "asc" })
+        }
+
+        break
+      }
+      case "created_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "created_at", sort: "desc" })
+        } else {
+          setSort({ name: "created_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "finished_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "finished_at", sort: "desc" })
+        } else {
+          setSort({ name: "finished_at", sort: "asc" })
+        }
+
+        break
+      }
+    }
+  }
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -96,6 +176,7 @@ export default function Activities() {
         params: {
           search,
           onlyEnabled,
+          sort,
         },
       })
 
@@ -136,16 +217,6 @@ export default function Activities() {
     setEditActivityPermission(userHasEditActivitiesPermission)
   }
 
-  // TODO: bolar atualização de dados, para evitar muitas chamadas
-  // useEffect(() => {
-  //   loadUsers()
-
-  //   const unsubscribe = window.addEventListener("focus", () => {
-  //     setReload(!reload)
-  //   })
-
-  //   return unsubscribe
-  // }, [reload, onlyEnabled])
 
   useEffect(() => {
     verifyPermissions()
@@ -153,7 +224,7 @@ export default function Activities() {
 
   useEffect(() => {
     loadActivities()
-  }, [isActivityModalOpen, reload, onlyEnabled])
+  }, [isActivityModalOpen, reload, onlyEnabled, sort])
 
   return (
     <Container>
@@ -170,23 +241,6 @@ export default function Activities() {
         </button>
       </div>
 
-      {/* <div className="filterSection">
-        <div className="headerOptions">
-          <div className="ho cbActive">
-            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-          </div>
-          <div className="ho searchBar">
-            <SearchBar placeholder="Nome do membro" onChange={(event) => handleSearchFilter(event.target.value)} />
-          </div>
-          <div className="ho bttnFilters">
-            <button className="filterBttn" type="button">
-              Filtrar
-              <FaChevronUp className="faChevronDownIcon" />
-            </button>
-          </div>
-        </div>
-      </div> */}
-
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
@@ -199,14 +253,30 @@ export default function Activities() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Status</th>
-              <th>Membro</th>
-              <th>Vendedor</th>
-              <th>Total</th>
-              <th>Qtde. Itens</th>
-              <th>Qtde. Total</th>
-              <th>Cadastrado em</th>
-              <th>Encerrado em</th>
+              <th className={sort.name === "status" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("status")}>
+                Status <FaChevronUp />
+                </th>
+              <th className={sort.name === "member" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("member")}>
+                Membro <FaChevronUp />
+                </th>
+              <th className={sort.name === "seller" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("seller")}>
+                Vendedor <FaChevronUp />
+                </th>
+              <th className={sort.name === "total" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total")}>
+                Total <FaChevronUp />
+                </th>
+              <th className={sort.name === "total_items" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total_items")}>
+                Qtde. Itens <FaChevronUp />
+                </th>
+              <th className={sort.name === "total_quantity" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total_quantity")}>
+                Qtde. Total <FaChevronUp />
+                </th>
+              <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
+                Cadastrado em <FaChevronUp />
+                </th>
+              <th className={sort.name === "finished_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("finished_at")}>
+                Encerrado em <FaChevronUp />
+                </th>
               <th>Cancelado por</th>
               <th>Motivo do cancelamento</th>
             </tr>

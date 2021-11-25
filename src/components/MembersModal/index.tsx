@@ -108,9 +108,6 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
   const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
 
-  console.log("\nAddresses")
-  console.log(addresses)
-
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)

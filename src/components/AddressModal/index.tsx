@@ -60,9 +60,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
 
   const [disableProductGroupPermission, setDisableProductGroupPermission] = useState(false)
 
-  console.log("\nAddressesToShow")
-  console.log(addressesToShow)
-
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)

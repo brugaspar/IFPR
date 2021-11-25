@@ -61,8 +61,21 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   table{
-    th{
+    th {
       white-space: nowrap;
+      user-select: none;
+
+      svg {
+        margin-left: 0.5rem;
+        margin-bottom: -0.1rem;
+        font-size: 0.8rem;
+      }
+
+      &.desc {
+        svg {
+          transform: rotate(180deg)
+        }
+      }
     }
   }
 
