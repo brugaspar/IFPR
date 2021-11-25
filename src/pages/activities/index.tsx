@@ -6,6 +6,10 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
+import { ActivityModal } from "../../components/ActivityModal"
+import { Checkbox } from "../../components/Checkbox"
+import { SearchBar } from "../../components/SearchBar"
+
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
@@ -240,7 +244,7 @@ export default function Activities() {
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
-        placeholder="Nome do membro"
+        placeholder="Nome do membro, usuário ou total"
         handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
       />
 
@@ -273,6 +277,8 @@ export default function Activities() {
               <th className={sort.name === "finished_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("finished_at")}>
                 Encerrado em <FaChevronUp />
                 </th>
+              <th>Cancelado por</th>
+              <th>Motivo do cancelamento</th>
             </tr>
           </thead>
           <tbody>
@@ -292,13 +298,15 @@ export default function Activities() {
                 <td>{activity.totalQuantity}</td>
                 <td>{new Date(activity.createdAt).toLocaleDateString()}</td>
                 <td>{activity.finishedAt && new Date(activity.finishedAt).toLocaleDateString()}</td>
+                <td>{activity.canceledByUser}</td>
+                <td>{activity.cancelledReason}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* <UserModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} userId={selectedActivity || ""} /> */}
+      <ActivityModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} activityId={selectedActivity || ""} />
     </Container>
   )
 }
