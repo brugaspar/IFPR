@@ -16,7 +16,6 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
 
-import { FilterContainer } from "../../components/FilterContainer"
 import { PaginationBar } from "../../components/PaginationBar"
 import { PaginationSelector } from "../../components/PaginationSelector"
 
@@ -54,7 +53,7 @@ export default function Users() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itensPerPage, setItensPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(users.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
@@ -197,7 +196,7 @@ export default function Users() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Usuários</h1>
+        <h1 className="title">Cadastro de Usuários</h1>
 
         <button onClick={handleAddUser} type="button" disabled={!createUserPermission}>
           <FaPlus />

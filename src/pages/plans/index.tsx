@@ -58,7 +58,7 @@ export default function Plans() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itensPerPage, setItensPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(plans.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
@@ -200,7 +200,7 @@ export default function Plans() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Planos</h1>
+        <h1 className="title">Cadastro de Planos</h1>
 
         <button onClick={handleAddPlan} type="button" disabled={!createPlanPermission}>
           <FaPlus />

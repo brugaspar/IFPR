@@ -85,7 +85,7 @@ export default function Activities() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itensPerPage, setItensPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(activities.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
@@ -248,7 +248,7 @@ export default function Activities() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Atividades</h1>
+        <h1 className="title">Cadastro de Atividades</h1>
 
         <button onClick={handleAddActivity} type="button" disabled={!createActivityPermission}>
           <FaPlus />

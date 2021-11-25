@@ -62,7 +62,7 @@ export default function Products() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(3)
+  const [itensPerPage, setItensPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(products.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
@@ -240,7 +240,7 @@ export default function Products() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Produtos</h1>
+        <h1 className="title">Cadastro de Produtos</h1>
 
         <button onClick={handleAddProduct} type="button" disabled={!createProductPermission}>
           <FaPlus />
