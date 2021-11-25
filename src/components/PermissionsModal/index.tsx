@@ -168,11 +168,15 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
           <button
             type="button"
             onClick={() => {
-              const options = ["users", "members", "plans", "products", "brands", "groups", "activities"]
+              const options = ["users", "members", "plans", "products", "brands", "groups", "activities", "addresses"]
               const basicPermissions: string[] = []
 
               options.map((option) => {
-                basicPermissions.push(`list_${option}`, `create_${option}`, `edit_${option}`)
+                if (option === "addresses") {
+                  basicPermissions.push(`create_${option}`, `edit_${option}`)
+                } else {
+                  basicPermissions.push(`list_${option}`, `create_${option}`, `edit_${option}`)
+                }
               })
 
               setPermissionsToShow(basicPermissions)
@@ -183,11 +187,17 @@ export function PermissionsModal({ isOpen, onRequestClose, permissions, onChange
           <button
             type="button"
             onClick={() => {
-              const options = ["users", "members", "plans", "products", "brands", "groups", "activities"]
+              const options = ["users", "members", "plans", "products", "brands", "groups", "activities", "addresses"]
               const advancedPermissions: string[] = []
 
               options.map((option) => {
-                advancedPermissions.push(`list_${option}`, `create_${option}`, `edit_${option}`, `disable_${option}`)
+                if (option === "activities") {
+                  advancedPermissions.push(`list_${option}`, `create_${option}`, `edit_${option}`, `cancel_${option}`)
+                } else if (option === "addresses") {
+                  advancedPermissions.push(`create_${option}`, `edit_${option}`, `remove_${option}`)
+                } else {
+                  advancedPermissions.push(`list_${option}`, `create_${option}`, `edit_${option}`, `disable_${option}`)
+                }
               })
 
               setPermissionsToShow(advancedPermissions)

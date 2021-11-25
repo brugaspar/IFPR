@@ -61,12 +61,12 @@ export default function Logs() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(logs.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
-  const currentItens = logs.slice(startIndex, endIndex) 
+  const pages = Math.ceil(logs.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItens = logs.slice(startIndex, endIndex)
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -88,8 +88,22 @@ export default function Logs() {
 
       toast.dismiss("error")
       setLogs(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar logs", { toastId: "error" })
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar logs", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar logs", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar logs", { toastId: "error" })
+      }
     }
   }
 
@@ -99,7 +113,7 @@ export default function Logs() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -138,9 +152,9 @@ export default function Logs() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
-      </div>    
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
+      </div>
     </Container>
   )
 }
@@ -157,7 +171,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_logs", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {

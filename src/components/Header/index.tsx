@@ -16,7 +16,7 @@ export function Header({ toggleSidebar, isOpen }: HeaderProps) {
       </button>
 
       <div className="company-info">
-        <h1>CTT - Clube de Tiro de Foz do Iguaçu</h1>
+        <h1>Mark One - Gestão de Clubes de Tiro</h1>
         <FaBuilding />
       </div>
     </Container>

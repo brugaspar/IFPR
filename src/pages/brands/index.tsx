@@ -50,12 +50,12 @@ export default function ProductBrands() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(brands.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
-  const currentItens = brands.slice(startIndex, endIndex) 
+  const pages = Math.ceil(brands.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItens = brands.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
     switch (field) {
@@ -120,8 +120,22 @@ export default function ProductBrands() {
 
       toast.dismiss("error")
       setBrands(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar marcas", { toastId: "error" })
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar marcas", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar marcas", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar marcas", { toastId: "error" })
+      }
     }
   }
 
@@ -165,7 +179,7 @@ export default function ProductBrands() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -239,8 +253,8 @@ export default function ProductBrands() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
 
       <ProductBrandsModal

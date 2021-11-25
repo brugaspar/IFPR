@@ -85,12 +85,12 @@ export default function Activities() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itensPerPage, setItensPerPage] = useState(10)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(activities.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
-  const currentItens = activities.slice(startIndex, endIndex) 
+  const pages = Math.ceil(activities.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentItens = activities.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
     switch (field) {
@@ -170,7 +170,6 @@ export default function Activities() {
     }
   }
 
-
   function handleSearchFilter(text: string) {
     setSearch(text)
 
@@ -193,8 +192,22 @@ export default function Activities() {
 
       toast.dismiss("error")
       setActivities(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar atividades", { toastId: "error" })
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar atividades", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar atividades", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar atividades", { toastId: "error" })
+      }
     }
   }
 
@@ -228,7 +241,6 @@ export default function Activities() {
     setEditActivityPermission(userHasEditActivitiesPermission)
   }
 
-
   useEffect(() => {
     verifyPermissions()
   }, [])
@@ -239,7 +251,7 @@ export default function Activities() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -270,28 +282,40 @@ export default function Activities() {
               <th>#</th>
               <th className={sort.name === "status" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("status")}>
                 Status <FaChevronUp />
-                </th>
+              </th>
               <th className={sort.name === "member" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("member")}>
                 Membro <FaChevronUp />
-                </th>
+              </th>
               <th className={sort.name === "seller" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("seller")}>
                 Vendedor <FaChevronUp />
-                </th>
+              </th>
               <th className={sort.name === "total" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total")}>
                 Total <FaChevronUp />
-                </th>
-              <th className={sort.name === "total_items" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total_items")}>
+              </th>
+              <th
+                className={sort.name === "total_items" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("total_items")}
+              >
                 Qtde. Itens <FaChevronUp />
-                </th>
-              <th className={sort.name === "total_quantity" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("total_quantity")}>
+              </th>
+              <th
+                className={sort.name === "total_quantity" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("total_quantity")}
+              >
                 Qtde. Total <FaChevronUp />
-                </th>
-              <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
+              </th>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
                 Cadastrado em <FaChevronUp />
-                </th>
-              <th className={sort.name === "finished_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("finished_at")}>
+              </th>
+              <th
+                className={sort.name === "finished_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("finished_at")}
+              >
                 Encerrado em <FaChevronUp />
-                </th>
+              </th>
               <th>Cancelado por</th>
               <th>Motivo do cancelamento</th>
             </tr>
@@ -321,9 +345,9 @@ export default function Activities() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
-      </div>      
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
+      </div>
 
       <ActivityModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} activityId={selectedActivity || ""} />
     </Container>

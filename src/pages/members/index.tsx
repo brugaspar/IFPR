@@ -69,12 +69,12 @@ export default function Members() {
   const [sort, setSort] = useState({ name: "", sort: "asc" })
 
   const timeoutRef = useRef<any>(0)
-  
-  const [itensPerPage, setItensPerPage] = useState(10)
+
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
-  const pages = Math.ceil(members.length / itensPerPage)
-  const startIndex = currentPage * itensPerPage
-  const endIndex = startIndex + itensPerPage
+  const pages = Math.ceil(members.length / itemsPerPage)
+  const startIndex = currentPage * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
   const currentItens = members.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
@@ -177,8 +177,22 @@ export default function Members() {
 
       toast.dismiss("error")
       setMembers(response.data)
-    } catch (error) {
-      toast.error("Problemas internos ao carregar membros", { toastId: "error" })
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error("Sem permissão para visualizar membros", {
+            toastId: "error",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+            draggable: false,
+          })
+        } else {
+          toast.error("Problemas internos ao carregar membros", { toastId: "error" })
+        }
+      } else {
+        toast.error("Problemas internos ao carregar membros", { toastId: "error" })
+      }
     }
   }
 
@@ -222,7 +236,7 @@ export default function Members() {
 
   useEffect(() => {
     setCurrentPage(0)
-  }, [itensPerPage])
+  }, [itemsPerPage])
 
   return (
     <Container>
@@ -327,7 +341,7 @@ export default function Members() {
         </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />
+        <PaginationSelector itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} />
         <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
 
