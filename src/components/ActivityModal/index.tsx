@@ -9,6 +9,8 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { api } from "../../services/api.service"
 import { Input } from "../Input"
+import { CancelModal } from "../CancelModal"
+
 
 import { Container, RowContainer } from "./styles"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
@@ -86,12 +88,22 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [sellers, setSellers] = useState<Seller[]>([])
 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
+
 
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
     }
+  }
+
+  function handleOpenCancelModal() {
+    setIsCancelModalOpen(true)
+  }
+
+  function handleCloseCancelModal() {
+    setIsCancelModalOpen(false)
   }
   
   async function loadMembers() {
@@ -134,8 +146,9 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
 
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
-
-    onRequestClose()
+    if(status === "cancelled"){
+      handleOpenCancelModal()
+    }
   }
 
   async function handleModalClose() {
@@ -143,6 +156,7 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   }
 
   function handleAddAddress() {
+     
   //   const address = {
   //     id: id || String(Math.random() * 100),
   //     street,
@@ -174,6 +188,10 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
     setPrice("")
     setSubTotal("")
     setMemberId("")
+  }
+
+  function onChangeCancel(cancelledReason: string) {
+    setCancelledReason(cancelledReason)
   }
 
 
@@ -379,6 +397,11 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
+        <CancelModal
+          isOpen={isCancelModalOpen}
+          onRequestClose={handleCloseCancelModal}
+          onChangeCancel={onChangeCancel}
+        />
       </Container>
     </Modal>
   )
