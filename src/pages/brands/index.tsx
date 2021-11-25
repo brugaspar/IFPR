@@ -50,7 +50,7 @@ export default function ProductBrands() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itemsPerPage, setItemsPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(brands.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage
@@ -188,7 +188,7 @@ export default function ProductBrands() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Marcas</h1>
+        <h1 className="title">Cadastro de Marcas</h1>
 
         <button onClick={handleAddProductBrand} type="button" disabled={!createProductBrandPermission}>
           <FaPlus />

@@ -61,7 +61,7 @@ export default function Logs() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itemsPerPage, setItemsPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(logs.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage

@@ -18,6 +18,7 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
 
+
 type User = {
   id: string
   name: string
@@ -52,7 +53,7 @@ export default function Users() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itemsPerPage, setItemsPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(users.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage
@@ -194,7 +195,7 @@ export default function Users() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Usuários</h1>
+        <h1 className="title">Cadastro de Usuários</h1>
 
         <button onClick={handleAddUser} type="button" disabled={!createUserPermission}>
           <FaPlus />

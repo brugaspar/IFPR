@@ -50,7 +50,7 @@ export default function ProductGroups() {
 
   const timeoutRef = useRef<any>(0)
 
-  const [itemsPerPage, setItemsPerPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(0)
   const pages = Math.ceil(groups.length / itemsPerPage)
   const startIndex = currentPage * itemsPerPage
@@ -184,7 +184,7 @@ export default function ProductGroups() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Grupos</h1>
+        <h1 className="title">Cadastro de Grupos</h1>
 
         <button onClick={handleAddProductGroup} type="button" disabled={!createProductGroupPermission}>
           <FaPlus />

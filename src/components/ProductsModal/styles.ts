@@ -1,23 +1,15 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: auto;
+  /* height: auto;
   overflow-y: scroll;
   padding-right: 1rem;
-  padding-left: 1rem;
-
-  &::-webkit-scrollbar {
-    width: 0.2rem;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: var(--background);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 2rem;
-    border: 3px solid var(--text-body);
-  }
+  padding-left: 1rem; */
+  height:25rem;
+  margin-top:1%;
+  overflow-y:scroll-behavior;
+  overflow-x:hidden;
+  padding-right:0.4rem;
 
   h1 {
     font-size: 1.5rem;
@@ -142,6 +134,19 @@ export const Container = styled.div`
         }
       }
     }
+  }
+
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2rem;
+    border: 3px solid var(--text-body);
   }
 `;
 
