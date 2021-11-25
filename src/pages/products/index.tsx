@@ -1,14 +1,12 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
-import { FaChevronDown, FaChevronUp, FaEdit, FaFilter, FaPlus } from "react-icons/fa"
+import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
 import { ProductsModal } from "../../components/ProductsModal"
-import { Checkbox } from "../../components/Checkbox"
-import { SearchBar } from "../../components/SearchBar"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -60,6 +58,8 @@ export default function Products() {
   const [search, setSearch] = useState("")
   const [reload, setReload] = useState(false)
 
+  const [sort, setSort] = useState({ name: "", sort: "asc" })
+
   const timeoutRef = useRef<any>(0)
 
   const [itensPerPage, setItensPerPage] = useState(3)
@@ -68,6 +68,101 @@ export default function Products() {
   const startIndex = currentPage * itensPerPage
   const endIndex = startIndex + itensPerPage
   const currentItens = products.slice(startIndex, endIndex) 
+
+  function sortTable(field: string) {
+    switch (field) {
+      case "name": {
+        if (sort.sort === "asc") {
+          setSort({ name: "name", sort: "desc" })
+        } else {
+          setSort({ name: "name", sort: "asc" })
+        }
+
+        break
+      }
+      case "brand": {
+        if (sort.sort === "asc") {
+          setSort({ name: "brand", sort: "desc" })
+        } else {
+          setSort({ name: "brand", sort: "asc" })
+        }
+
+        break
+      }
+      case "group": {
+        if (sort.sort === "asc") {
+          setSort({ name: "group", sort: "desc" })
+        } else {
+          setSort({ name: "group", sort: "asc" })
+        }
+
+        break
+      }
+      case "is_service": {
+        if (sort.sort === "asc") {
+          setSort({ name: "is_service", sort: "desc" })
+        } else {
+          setSort({ name: "is_service", sort: "asc" })
+        }
+
+        break
+      }
+      case "quantity": {
+        if (sort.sort === "asc") {
+          setSort({ name: "quantity", sort: "desc" })
+        } else {
+          setSort({ name: "quantity", sort: "asc" })
+        }
+
+        break
+      }
+      case "minimum_quantity": {
+        if (sort.sort === "asc") {
+          setSort({ name: "minimum_quantity", sort: "desc" })
+        } else {
+          setSort({ name: "minimum_quantity", sort: "asc" })
+        }
+
+        break
+      }
+      case "price": {
+        if (sort.sort === "asc") {
+          setSort({ name: "price", sort: "desc" })
+        } else {
+          setSort({ name: "price", sort: "asc" })
+        }
+
+        break
+      }
+      case "created_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "created_at", sort: "desc" })
+        } else {
+          setSort({ name: "created_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "updated_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "updated_at", sort: "desc" })
+        } else {
+          setSort({ name: "updated_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "disabled": {
+        if (sort.sort === "asc") {
+          setSort({ name: "disabled", sort: "desc" })
+        } else {
+          setSort({ name: "disabled", sort: "asc" })
+        }
+
+        break
+      }
+    }
+  }
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -80,14 +175,20 @@ export default function Products() {
   }
 
   async function loadProducts() {
-    const response = await api.get("/products", {
-      params: {
-        onlyEnabled,
-        search,
-      },
-    })
+    try {
+      const response = await api.get("/products", {
+        params: {
+          onlyEnabled,
+          search,
+          sort,
+        },
+      })
 
-    setProducts(response.data)
+      toast.dismiss("error")
+      setProducts(response.data)
+    } catch (error) {
+      toast.error("Problemas internos ao carregar produtos", { toastId: "error" })
+    }
   }
 
   function handleOpenProductModal() {
@@ -120,24 +221,13 @@ export default function Products() {
     setEditProductPermission(userHasEditProductPermission)
   }
 
-  // TODO: bolar atualização de dados, para evitar muitas chamadas
-  // useEffect(() => {
-  //   loadUsers()
-
-  //   const unsubscribe = window.addEventListener("focus", () => {
-  //     setReload(!reload)
-  //   })
-
-  //   return unsubscribe
-  // }, [reload, onlyEnabled])
-
   useEffect(() => {
     verifyPermissions()
   }, [])
 
   useEffect(() => {
     loadProducts()
-  }, [onlyEnabled, isProductModalOpen, reload])
+  }, [onlyEnabled, isProductModalOpen, reload, sort])
   
   useEffect(() => {
     setCurrentPage(0)
@@ -158,23 +248,6 @@ export default function Products() {
         </button>
       </div>
 
-      {/* <div className="filterSection">
-        <div className="headerOptions">
-          <div className="ho cbActive">
-            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-          </div>
-          <div className="ho searchBar">
-            <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
-          </div>
-          <div className="ho bttnFilters">
-            <button className="filterBttn" type="button">
-                  Filtrar
-                  <FaChevronUp className="faChevronDownIcon"/>
-              </button>
-          </div>
-        </div>
-      </div> */}
-
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
@@ -187,15 +260,54 @@ export default function Products() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>
-              <th>Marca</th>
-              <th>Grupo</th>
-              <th>Tipo</th>
-              <th>Estoque atual</th>
-              <th>Estoque mínimo</th>
-              <th>Preço</th>
-              <th>Cadastrado em</th>
-              <th>Última edição</th>
+              <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
+                Nome <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("disabled")}
+              >
+                Status <FaChevronUp />
+              </th>
+              <th className={sort.name === "brand" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("brand")}>
+                Marca <FaChevronUp />
+              </th>
+              <th className={sort.name === "group" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("group")}>
+                Grupo <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "is_service" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("is_service")}
+              >
+                Tipo <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "quantity" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("quantity")}
+              >
+                Estoque atual <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "minimum_quantity" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("minimum_quantity")}
+              >
+                Estoque mínimo <FaChevronUp />
+              </th>
+              <th className={sort.name === "price" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("price")}>
+                Preço <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
+                Cadastrado em <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("updated_at")}
+              >
+                Última edição <FaChevronUp />
+              </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -210,6 +322,7 @@ export default function Products() {
                   </button>
                 </td>
                 <td>{product.name}</td>
+                <td>{product.disabled ? "Inativo" : "Ativo"}</td>
                 <td>{product.brand.name}</td>
                 <td>{product.group.name}</td>
                 <td>{product.isService ? "Serviço" : "Produto"}</td>
@@ -247,7 +360,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_members", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {

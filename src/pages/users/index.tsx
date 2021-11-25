@@ -1,5 +1,5 @@
-import { GetServerSideProps } from "next"
 import Head from "next/head"
+import { GetServerSideProps } from "next"
 import { useEffect, useRef, useState } from "react"
 import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
@@ -7,8 +7,7 @@ import { toast } from "react-toastify"
 import { useAuth } from "../../hooks/useAuth"
 
 import { UserModal } from "../../components/UserModal"
-import { Checkbox } from "../../components/Checkbox"
-import { SearchBar } from "../../components/SearchBar"
+import { FilterContainer } from "../../components/FilterContainer"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -16,6 +15,7 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
+
 import { FilterContainer } from "../../components/FilterContainer"
 import { PaginationBar } from "../../components/PaginationBar"
 import { PaginationSelector } from "../../components/PaginationSelector"
@@ -50,6 +50,8 @@ export default function Users() {
   const [search, setSearch] = useState("")
   const [reload, setReload] = useState(false)
 
+  const [sort, setSort] = useState({ name: "", sort: "asc" })
+
   const timeoutRef = useRef<any>(0)
 
   const [itensPerPage, setItensPerPage] = useState(3)
@@ -58,6 +60,65 @@ export default function Users() {
   const startIndex = currentPage * itensPerPage
   const endIndex = startIndex + itensPerPage
   const currentItens = users.slice(startIndex, endIndex) 
+  
+  function sortTable(field: string) {
+    switch (field) {
+      case "name": {
+        if (sort.sort === "asc") {
+          setSort({ name: "name", sort: "desc" })
+        } else {
+          setSort({ name: "name", sort: "asc" })
+        }
+
+        break
+      }
+      case "username": {
+        if (sort.sort === "asc") {
+          setSort({ name: "username", sort: "desc" })
+        } else {
+          setSort({ name: "username", sort: "asc" })
+        }
+
+        break
+      }
+      case "email": {
+        if (sort.sort === "asc") {
+          setSort({ name: "email", sort: "desc" })
+        } else {
+          setSort({ name: "email", sort: "asc" })
+        }
+
+        break
+      }
+      case "created_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "created_at", sort: "desc" })
+        } else {
+          setSort({ name: "created_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "updated_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "updated_at", sort: "desc" })
+        } else {
+          setSort({ name: "updated_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "disabled": {
+        if (sort.sort === "asc") {
+          setSort({ name: "disabled", sort: "desc" })
+        } else {
+          setSort({ name: "disabled", sort: "asc" })
+        }
+
+        break
+      }
+    }
+  }
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -75,6 +136,7 @@ export default function Users() {
         params: {
           onlyEnabled,
           search,
+          sort,
         },
       })
 
@@ -121,7 +183,7 @@ export default function Users() {
 
   useEffect(() => {
     loadUsers()
-  }, [onlyEnabled, isUserModalOpen, reload])
+  }, [onlyEnabled, isUserModalOpen, reload, sort])
 
   useEffect(() => {
     setCurrentPage(0)
@@ -143,22 +205,6 @@ export default function Users() {
         </button>
       </div>
 
-      {/* <div className="filterSection">
-        <div className="headerOptions">
-          <div className="ho cbActive">
-            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-          </div>
-          <div className="ho searchBar">
-            <SearchBar placeholder="Nome, usuário ou e-mail" onChange={(event) => handleSearchFilter(event.target.value)} />
-          </div>
-          <div className="ho bttnFilters">
-            <button className="filterBttn" type="button">
-              Filtrar
-              <FaChevronUp className="faChevronDownIcon" />
-            </button>
-          </div>
-        </div>
-      </div> */}
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
@@ -167,16 +213,40 @@ export default function Users() {
       />
 
       <div className="scroll-div">
-        <table className="styled-table">
+        <table id="data-table" className="styled-table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>
-              <th>Usuário</th>
-              <th>E-mail</th>
-              <th>Status</th>
-              <th>Cadastrado em</th>
-              <th>Última edição</th>
+              <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
+                Nome <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "username" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("username")}
+              >
+                Usuário <FaChevronUp />
+              </th>
+              <th className={sort.name === "email" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("email")}>
+                E-mail <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("disabled")}
+              >
+                Status <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
+                Cadastrado em <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("updated_at")}
+              >
+                Última edição <FaChevronUp />
+              </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -185,7 +255,6 @@ export default function Users() {
             {currentItens.map((user) => (
               <tr key={user.id}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditUser(user)} disabled={!editUserPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
@@ -224,7 +293,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_users", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {
