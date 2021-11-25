@@ -48,6 +48,10 @@ type UpdatePlanProps = {
 type FilterPlan = {
   onlyEnabled: boolean
   search: string
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -79,7 +83,7 @@ class PlansRepository {
     return id
   }
 
-  async findAll({ onlyEnabled = true, search = "" }: FilterPlan) {
+  async findAll({ onlyEnabled = true, search = "", sort }: FilterPlan) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -104,6 +108,20 @@ class PlansRepository {
 
     const pg = await pgPool.connect()
 
+    let orderClause = ""
+
+    if (sort.name) {
+      orderClause = `
+        order by
+          p.${sort.name} ${sort.sort}
+      `
+    } else {
+      orderClause = `
+        order by
+          p.created_at
+      `
+    }
+
     const query = `
       select
         p.id,
@@ -127,8 +145,7 @@ class PlansRepository {
       from
         members_plans p
       ${whereClause}
-      order by
-        p.created_at
+      ${orderClause}
     `
 
     const plans = await pg.query<Plan>(query)

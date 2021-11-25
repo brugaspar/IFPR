@@ -134,19 +134,24 @@ class MemberController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true, search = "" } = request.query as any
+    const { onlyEnabled = true, search = "", sort = { name: "", sort: "asc" } } = request.query as any
 
-    const schema = {
-      onlyEnabled: yup.boolean(),
+    const parsedOnlyEnabled = onlyEnabled ? JSON.parse(onlyEnabled) : true
+
+    let parsedSort = { name: "", sort: "asc" }
+
+    try {
+      parsedSort = JSON.parse(sort)
+    } catch (error) {
+      // ignore
     }
-
-    await checkBodySchema(schema, request.body)
 
     await checkRequestUser(request.userId)
 
     const members = await membersRepository.findAll({
-      onlyEnabled: JSON.parse(onlyEnabled),
+      onlyEnabled: parsedOnlyEnabled,
       search,
+      sort: parsedSort,
     })
 
     return response.status(200).json(members)
@@ -256,22 +261,6 @@ class MemberController {
     }
 
     return response.status(200).json({ id: updatedMember })
-  }
-
-  async findDocuments(request: Request, response: Response) {
-    const { memberId }: { memberId: string } = request.body
-
-    const schema = {
-      memberId: yup.string().required(),
-    }
-
-    await checkBodySchema(schema, request.body)
-
-    await checkRequestUser(request.userId)
-
-    const memberDocuments = await membersRepository.findAllDocuments(memberId)
-
-    return response.status(200).json(memberDocuments)
   }
 }
 

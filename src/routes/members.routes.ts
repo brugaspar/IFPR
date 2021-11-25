@@ -16,8 +16,6 @@ membersRouter.post(
 
 membersRouter.get("/members", authenticationMiddleware, permissionsMiddleware(["list_members"]), membersController.index)
 
-membersRouter.get("/members/documents", authenticationMiddleware, membersController.findDocuments)
-
 membersRouter.get(
   "/members/:id",
   authenticationMiddleware,

@@ -74,6 +74,10 @@ type UpdateMemberProps = {
 type FilterMember = {
   onlyEnabled: boolean
   search: string
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -105,7 +109,7 @@ class MembersRepository {
     return id
   }
 
-  async findAll({ onlyEnabled = true, search = "" }: FilterMember) {
+  async findAll({ onlyEnabled = true, search = "", sort }: FilterMember) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -131,6 +135,20 @@ class MembersRepository {
     `
 
     const pg = await pgPool.connect()
+
+    let orderClause = ""
+
+    if (sort.name) {
+      orderClause = `
+        order by
+          m.${sort.name} ${sort.sort}
+      `
+    } else {
+      orderClause = `
+        order by
+          m.created_at
+      `
+    }
 
     const query = `
       select
@@ -165,8 +183,7 @@ class MembersRepository {
       from
         members m
       ${whereClause}
-      order by
-        m.created_at
+      ${orderClause}
     `
 
     const members = await pg.query<Member>(query)
@@ -303,19 +320,6 @@ class MembersRepository {
     }
 
     return id
-  }
-
-  async findAllDocuments(memberId: string) {
-    const memberDocuments = await prisma.members.findUnique({
-      where: {
-        id: memberId,
-      },
-      select: {
-        memberDocuments: true,
-      },
-    })
-
-    return memberDocuments
   }
 }
 

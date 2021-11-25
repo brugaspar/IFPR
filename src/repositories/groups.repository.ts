@@ -32,6 +32,10 @@ type UpdateProductGroupProps = {
 type FilterProductGroup = {
   onlyEnabled: boolean
   search: string
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -76,7 +80,7 @@ class ProductsGroupsRepository {
     return productGroup
   }
 
-  async findAll({ onlyEnabled = true, search = "" }: FilterProductGroup) {
+  async findAll({ onlyEnabled = true, search = "", sort }: FilterProductGroup) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -101,6 +105,20 @@ class ProductsGroupsRepository {
 
     const pg = await pgPool.connect()
 
+    let orderClause = ""
+
+    if (sort.name) {
+      orderClause = `
+        order by
+          pg.${sort.name} ${sort.sort}
+      `
+    } else {
+      orderClause = `
+        order by
+          pg.created_at
+      `
+    }
+
     const query = `
       select
         pg.id,
@@ -116,8 +134,7 @@ class ProductsGroupsRepository {
       from
         products_groups pg
       ${whereClause}
-      order by
-        pg.created_at
+      ${orderClause}
     `
 
     const productsGroups = await pg.query<ProductGroup>(query)

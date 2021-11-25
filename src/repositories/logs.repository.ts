@@ -27,6 +27,10 @@ type Log = {
 
 type FilterLog = {
   search: string
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -47,7 +51,7 @@ class LogsRepository {
     })
   }
 
-  async findAll({ search = "" }: FilterLog) {
+  async findAll({ search = "", sort }: FilterLog) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -75,6 +79,32 @@ class LogsRepository {
 
     const pg = await pgPool.connect()
 
+    let orderClause = ""
+
+    if (sort.name) {
+      if (sort.name === "user") {
+        orderClause = `
+          order by
+            u.name ${sort.sort}
+        `
+      } else if (sort.name === "table") {
+        orderClause = `
+          order by
+            gt.name ${sort.sort}
+        `
+      } else {
+        orderClause = `
+          order by
+            gl.${sort.name} ${sort.sort}
+        `
+      }
+    } else {
+      orderClause = `
+        order by
+          gl.created_at desc
+      `
+    }
+
     const query = `
       select
         gl.id,
@@ -92,8 +122,7 @@ class LogsRepository {
       left join
         general_tables gt on gt.id = gl.table_id
       ${whereClause}
-      order by
-        gl.created_at desc
+      ${orderClause}
     `
 
     const logs = await pg.query<Log>(query)

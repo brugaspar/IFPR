@@ -7,6 +7,7 @@ import { checkBodySchema } from "../handlers/schema.handler"
 import { checkRequestUser } from "../helpers/request.helper"
 
 import activitiesRepository from "../repositories/activities.repository"
+import productsRepository from "../repositories/products.repository"
 
 type ActivityStatus = "open" | "closed" | "cancelled"
 
@@ -35,17 +36,17 @@ class ActivitiesController {
     const activity: RequestActivity = request.body
 
     const schema = {
-      status: yup.string().required(),
+      status: yup.string().required("Status é obrigatório"),
       observation: yup.string(),
       cancelledReason: yup.string(),
-      sellerId: yup.string().required(),
-      memberId: yup.string().required(),
+      sellerId: yup.string().required("Vendedor é obrigatório"),
+      memberId: yup.string().required("Membro é obrigatório"),
       finishedAt: yup.string(),
       items: yup.array(
         yup.object().shape({
-          productId: yup.string().required(),
-          quantity: yup.number().required(),
-          price: yup.number().required(),
+          productId: yup.string().required("Produto é obrigatório"),
+          quantity: yup.number().required("Quantidade é obrigatória"),
+          price: yup.number().required("Preço é obrigatório"),
         })
       ),
     }
@@ -91,13 +92,24 @@ class ActivitiesController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true, search = "" } = request.query as any
+    const { onlyEnabled = true, search = "", sort = { name: "", sort: "asc" } } = request.query as any
+
+    const parsedOnlyEnabled = onlyEnabled ? JSON.parse(onlyEnabled) : true
+
+    let parsedSort = { name: "", sort: "asc" }
+
+    try {
+      parsedSort = JSON.parse(sort)
+    } catch (error) {
+      // ignore
+    }
 
     await checkRequestUser(request.userId)
 
     const activities = await activitiesRepository.findAll({
       search,
-      onlyEnabled: JSON.parse(onlyEnabled),
+      onlyEnabled: parsedOnlyEnabled,
+      sort: parsedSort,
     })
 
     return response.status(200).json(activities)
@@ -180,6 +192,32 @@ class ActivitiesController {
           activityId: id,
           subtotal: item.price * item.quantity,
         })
+      }
+    }
+
+    if (activity.status === "cancelled") {
+      for (const item of activity.items) {
+        const product = await productsRepository.findById(item.productId)
+
+        if (!product) {
+          throw new AppError("Produto não encontrado")
+        }
+
+        const quantity = product.quantity + item.quantity
+
+        await productsRepository.updateQuantity(item.productId, quantity)
+      }
+    } else {
+      for (const item of activity.items) {
+        const product = await productsRepository.findById(item.productId)
+
+        if (!product) {
+          throw new AppError("Produto não encontrado")
+        }
+
+        const quantity = product.quantity - item.quantity
+
+        await productsRepository.updateQuantity(item.productId, quantity)
       }
     }
 

@@ -63,6 +63,10 @@ type UpdateActivityProps = {
 type FilterActivity = {
   search: string
   onlyEnabled: boolean
+  sort: {
+    name: string
+    sort: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -145,14 +149,18 @@ class ActivitiesRepository {
         id,
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     })
 
     return activities
   }
 
-  async findAll({ onlyEnabled, search = "" }: FilterActivity) {
+  async findAll({ onlyEnabled, search = "", sort }: FilterActivity) {
     const splittedSearch = search.split(" ")
 
     let searchText = ""
@@ -161,6 +169,10 @@ class ActivitiesRepository {
       searchText += `
         (
           upper(unaccent(m.name)) like upper(unaccent('%${word}%'))
+          or
+          upper(unaccent(u.name)) like upper(unaccent('%${word}%'))
+          or
+          a.total::text like '%${word}%'
         )
       `
 
@@ -177,6 +189,32 @@ class ActivitiesRepository {
 
     const pg = await pgPool.connect()
 
+    let orderClause = ""
+
+    if (sort.name) {
+      if (sort.name === "member") {
+        orderClause = `
+          order by
+            m.name ${sort.sort}
+        `
+      } else if (sort.name === "seller") {
+        orderClause = `
+          order by
+            u.name ${sort.sort}
+        `
+      } else {
+        orderClause = `
+          order by
+            a.${sort.name} ${sort.sort}
+        `
+      }
+    } else {
+      orderClause = `
+        order by
+          a.created_at
+      `
+    }
+
     const query = `
       select
         a.id,
@@ -187,7 +225,7 @@ class ActivitiesRepository {
         a.observation,
         a.cancelled_reason,
         a.seller_id,
-        u2.name seller_name,
+        u.name seller_name,
         a.member_id,
         m.name member_name,
         a.created_at,
@@ -202,10 +240,9 @@ class ActivitiesRepository {
       left join
         members m on m.id = a.member_id
       left join
-        users u2 on u2.id = a.seller_id
+        users u on u.id = a.seller_id
       ${whereClause}
-      order by
-        a.created_at
+      ${orderClause}
     `
 
     const activities = await pg.query<Activity>(query)
@@ -224,9 +261,12 @@ class ActivitiesRepository {
           ai.quantity,
           ai.price,
           ai.subtotal,
-          ai.activity_id
+          ai.activity_id,
+          p.name
         from
           activities_items ai
+        left join
+          products p on p.id = ai.product_id
         where
           ai.activity_id = '${activity.id}'
       `
@@ -256,6 +296,7 @@ class ActivitiesRepository {
               quantity: i.quantity,
               price: i.price,
               subtotal: i.subtotal,
+              name: i.name,
             })
           }
         }

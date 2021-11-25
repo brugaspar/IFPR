@@ -32,13 +32,24 @@ class ProductsBrandsController {
   }
 
   async index(request: Request, response: Response) {
-    const { onlyEnabled = true, search = "" } = request.query as any
+    const { onlyEnabled = true, search = "", sort = { name: "", sort: "asc" } } = request.query as any
+
+    const parsedOnlyEnabled = onlyEnabled ? JSON.parse(onlyEnabled) : true
+
+    let parsedSort = { name: "", sort: "asc" }
+
+    try {
+      parsedSort = JSON.parse(sort)
+    } catch (error) {
+      // ignore
+    }
 
     await checkRequestUser(request.userId)
 
     const productsBrands = await brandsRepository.findAll({
-      onlyEnabled: JSON.parse(onlyEnabled),
+      onlyEnabled: parsedOnlyEnabled,
       search,
+      sort: parsedSort,
     })
 
     return response.status(200).json(productsBrands)
