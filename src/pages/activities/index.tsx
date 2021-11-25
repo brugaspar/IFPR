@@ -232,7 +232,7 @@ export default function Activities() {
         </table>
       </div>
 
-      <ActivityModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} /> 
+      <ActivityModal isOpen={isActivityModalOpen} onRequestClose={handleCloseActivityModal} activityId={selectedActivity || ""} />
     </Container>
   )
 }

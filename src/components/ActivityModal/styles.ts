@@ -25,6 +25,10 @@ export const Container = styled.div`
       + .row {
         margin-top: 1rem;
       }
+
+      &.footer {
+        padding: 0 2rem;
+      }
     }
 
     .custom-select {
@@ -94,7 +98,7 @@ export const Container = styled.div`
       background: var(--blue);
       border: 0;
       border-radius: 0.25rem;
-      margin-top: 2rem;
+      margin-top: 0.5rem;
       font-size: 1rem;
 
       transition: filter 0.2s;
