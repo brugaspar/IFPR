@@ -105,8 +105,7 @@ export const Container = styled.div`
 
   .scroll-div {
     overflow-x: auto;
-    /* height: calc(100vh - 15rem); */
-    height: calc(100vh - 22rem);
+    height: calc(100vh - 24rem);
     margin-top: 2rem;
 
     &::-webkit-scrollbar {
@@ -185,4 +184,11 @@ export const Container = styled.div`
       }
     }
   }
+
+  .paginationDiv{
+      padding-left:2rem;  
+      margin-top:0.5rem;   
+      width:90%;
+      height:2rem;
+    }
 `

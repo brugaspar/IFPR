@@ -16,6 +16,9 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/brands.styles"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type ProductBrand = {
   id: string
   name: string
@@ -46,6 +49,13 @@ export default function ProductBrands() {
   const [sort, setSort] = useState({ name: "", sort: "asc" })
 
   const timeoutRef = useRef<any>(0)
+
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(brands.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = brands.slice(startIndex, endIndex) 
 
   function sortTable(field: string) {
     switch (field) {
@@ -153,6 +163,10 @@ export default function ProductBrands() {
     loadProductBrands()
   }, [onlyEnabled, isProductBrandModalOpen, reload, sort])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
   return (
     <Container>
       <Head>
@@ -160,7 +174,7 @@ export default function ProductBrands() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Marcas</h1>
+        <h1 className="title">Marcas</h1>
 
         <button onClick={handleAddProductBrand} type="button" disabled={!createProductBrandPermission}>
           <FaPlus />
@@ -206,7 +220,7 @@ export default function ProductBrands() {
             </tr>
           </thead>
           <tbody>
-            {brands.map((brand) => (
+            {currentItens.map((brand) => (
               <tr key={brand.name}>
                 <td>
                   <button className="edit" onClick={() => handleEditProductBrand(brand)} disabled={!editProductBrandPermission}>
@@ -223,6 +237,10 @@ export default function ProductBrands() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
       </div>
 
       <ProductBrandsModal

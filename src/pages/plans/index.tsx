@@ -16,6 +16,9 @@ import { api } from "../../services/api.service"
 import { Container } from "../../styles/plans.styles"
 import { FilterContainer } from "../../components/FilterContainer"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type Plan = {
   id: string
   name: string
@@ -55,6 +58,12 @@ export default function Plans() {
 
   const timeoutRef = useRef<any>(0)
 
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(plans.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = plans.slice(startIndex, endIndex) 
 
   function sortTable(field: string) {
     switch (field) {
@@ -180,6 +189,10 @@ export default function Plans() {
     loadPlans()
   }, [onlyEnabled, isPlanModalOpen, search, sort])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
   return (
     <Container>
       <Head>
@@ -187,7 +200,7 @@ export default function Plans() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Planos</h1>
+        <h1 className="title">Planos</h1>
 
         <button onClick={handleAddPlan} type="button" disabled={!createPlanPermission}>
           <FaPlus />
@@ -233,7 +246,7 @@ export default function Plans() {
             </tr>
           </thead>
           <tbody>
-            {plans.map((plan) => (
+            {currentItens.map((plan) => (
               <tr key={plan.name}>
                 <td>
                   {/* <FaEdit color="var(--blue)" /> */}
@@ -257,6 +270,10 @@ export default function Plans() {
           </tbody>
         </table>
       </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+      </div>
 
       <PlansModal isOpen={isPlanModalOpen} onRequestClose={handleClosePlanModal} planId={selectedPlan || ""} />
     </Container>
@@ -275,7 +292,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_members", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {

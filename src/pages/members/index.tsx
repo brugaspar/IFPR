@@ -18,6 +18,9 @@ import { Container } from "../../styles/members.styles"
 import { FilterContainer } from "../../components/FilterContainer"
 import { cpfMask } from "../../helpers/mask"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type Member = {
   id: string
   name: string
@@ -67,6 +70,14 @@ export default function Members() {
   const [sort, setSort] = useState({ name: "", sort: "asc" })
 
   const timeoutRef = useRef<any>(0)
+  
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(members.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = members.slice(startIndex, endIndex) 
+
 
   function sortTable(field: string) {
     switch (field) {
@@ -212,6 +223,10 @@ export default function Members() {
     loadMembers()
   }, [onlyEnabled, isMemberModalOpen, reload, sort])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
   return (
     <Container>
       <Head>
@@ -219,7 +234,7 @@ export default function Members() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Membros</h1>
+        <h1 className="title">Membros</h1>
 
         <button onClick={handleAddMember} type="button" disabled={!createMemberPermission}>
           <FaPlus />
@@ -272,7 +287,7 @@ export default function Members() {
             </tr>
           </thead>
           <tbody>
-            {members.map((member) => (
+            {currentItens.map((member) => (
               <tr key={member.name}>
                 <td>
                   <button className="edit" onClick={() => handleEditMember(member)} disabled={!editMemberPermission}>
@@ -296,7 +311,11 @@ export default function Members() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>        
+      </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
       </div>
 
       <MembersModal isOpen={isMemberModalOpen} onRequestClose={handleCloseMemberModal} memberId={selectedMember || ""} />

@@ -10,6 +10,9 @@ import { useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
 import { api } from "../../services/api.service"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type Log = {
   id: string
   description: string
@@ -58,6 +61,13 @@ export default function Logs() {
 
   const timeoutRef = useRef<any>(0)
 
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(logs.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = logs.slice(startIndex, endIndex) 
+
   function handleSearchFilter(text: string) {
     setSearch(text)
 
@@ -87,6 +97,10 @@ export default function Logs() {
     loadLogs()
   }, [reload])
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [itensPerPage])
+
   return (
     <Container>
       <Head>
@@ -111,7 +125,7 @@ export default function Logs() {
             </tr>
           </thead>
           <tbody>
-            {logs.map((log) => (
+            {currentItens.map((log) => (
               <tr key={log.id}>
                 <td>{log.description}</td>
                 <td>{logAction[log.action]}</td>
@@ -123,6 +137,10 @@ export default function Logs() {
           </tbody>
         </table>
       </div>
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+      </div>    
     </Container>
   )
 }

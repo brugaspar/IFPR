@@ -16,6 +16,9 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/groups.styles"
 
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
+
 type ProductGroup = {
   id: string
   name: string
@@ -46,6 +49,13 @@ export default function ProductGroups() {
   const [sort, setSort] = useState({ name: "", sort: "asc" })
 
   const timeoutRef = useRef<any>(0)
+
+  const [itensPerPage, setItensPerPage] = useState(3)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pages = Math.ceil(groups.length / itensPerPage)
+  const startIndex = currentPage * itensPerPage
+  const endIndex = startIndex + itensPerPage
+  const currentItens = groups.slice(startIndex, endIndex) 
 
   function sortTable(field: string) {
     switch (field) {
@@ -160,7 +170,7 @@ export default function ProductGroups() {
       </Head>
 
       <div className="header">
-        <h1 className="title">Cadastro de Grupos</h1>
+        <h1 className="title">Grupos</h1>
 
         <button onClick={handleAddProductGroup} type="button" disabled={!createProductGroupPermission}>
           <FaPlus />
@@ -206,7 +216,7 @@ export default function ProductGroups() {
             </tr>
           </thead>
           <tbody>
-            {groups.map((group) => (
+            {currentItens.map((group) => (
               <tr key={group.name}>
                 <td>
                   <button className="edit" onClick={() => handleEditProductGroup(group)} disabled={!editProductGroupPermission}>
@@ -224,7 +234,10 @@ export default function ProductGroups() {
           </tbody>
         </table>
       </div>
-
+      <div className="paginationDiv">
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+      </div>
       <ProductGroupsModal
         isOpen={isProductGroupModalOpen}
         onRequestClose={handleCloseProductGroupModal}

@@ -109,6 +109,7 @@ export const Container = styled.div`
     height: calc(100vh - 22rem);
     margin-top: 2rem;
 
+
     &::-webkit-scrollbar {
       width: 0.2rem;
     }
@@ -185,4 +186,11 @@ export const Container = styled.div`
       }
     }
   }
+
+  .paginationDiv{
+      padding-left:2rem;  
+      margin-top:0.5rem;   
+      width:90%;
+      height:2rem;
+    }
 `
