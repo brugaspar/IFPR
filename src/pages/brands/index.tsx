@@ -1,14 +1,13 @@
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { useEffect, useRef, useState } from "react"
-import { FaChevronDown, FaChevronUp, FaEdit, FaFilter, FaPlus } from "react-icons/fa"
+import { FaChevronUp, FaEdit, FaPlus } from "react-icons/fa"
 import { toast } from "react-toastify"
 
 import { useAuth } from "../../hooks/useAuth"
 
 import { ProductBrandsModal } from "../../components/ProductBrandsModal"
-import { Checkbox } from "../../components/Checkbox"
-import { SearchBar } from "../../components/SearchBar"
+import { FilterContainer } from "../../components/FilterContainer"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -16,7 +15,6 @@ import { verifyUserPermissions } from "../../helpers/permissions.helper"
 import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/brands.styles"
-import { FilterContainer } from "../../components/FilterContainer"
 
 type ProductBrand = {
   id: string
@@ -45,7 +43,50 @@ export default function ProductBrands() {
   const [search, setSearch] = useState("")
   const [reload, setReload] = useState(false)
 
+  const [sort, setSort] = useState({ name: "", sort: "asc" })
+
   const timeoutRef = useRef<any>(0)
+
+  function sortTable(field: string) {
+    switch (field) {
+      case "name": {
+        if (sort.sort === "asc") {
+          setSort({ name: "name", sort: "desc" })
+        } else {
+          setSort({ name: "name", sort: "asc" })
+        }
+
+        break
+      }
+      case "created_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "created_at", sort: "desc" })
+        } else {
+          setSort({ name: "created_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "updated_at": {
+        if (sort.sort === "asc") {
+          setSort({ name: "updated_at", sort: "desc" })
+        } else {
+          setSort({ name: "updated_at", sort: "asc" })
+        }
+
+        break
+      }
+      case "disabled": {
+        if (sort.sort === "asc") {
+          setSort({ name: "disabled", sort: "desc" })
+        } else {
+          setSort({ name: "disabled", sort: "asc" })
+        }
+
+        break
+      }
+    }
+  }
 
   function handleSearchFilter(text: string) {
     setSearch(text)
@@ -58,14 +99,19 @@ export default function ProductBrands() {
   }
 
   async function loadProductBrands() {
-    const response = await api.get("/brands", {
-      params: {
-        onlyEnabled,
-        search,
-      },
-    })
+    try {
+      const response = await api.get("/brands", {
+        params: {
+          onlyEnabled,
+          search,
+        },
+      })
 
-    setBrands(response.data)
+      toast.dismiss("error")
+      setBrands(response.data)
+    } catch (error) {
+      toast.error("Problemas internos ao carregar marcas", { toastId: "error" })
+    }
   }
 
   function handleOpenProductBrandModal() {
@@ -98,24 +144,13 @@ export default function ProductBrands() {
     setEditProductBrandPermission(userHasEditProductBrandPermission)
   }
 
-  // TODO: bolar atualização de dados, para evitar muitas chamadas
-  // useEffect(() => {
-  //   loadUsers()
-
-  //   const unsubscribe = window.addEventListener("focus", () => {
-  //     setReload(!reload)
-  //   })
-
-  //   return unsubscribe
-  // }, [reload, onlyEnabled])
-
   useEffect(() => {
     verifyPermissions()
   }, [])
 
   useEffect(() => {
     loadProductBrands()
-  }, [onlyEnabled, isProductBrandModalOpen, reload])
+  }, [onlyEnabled, isProductBrandModalOpen, reload, sort])
 
   return (
     <Container>
@@ -132,23 +167,6 @@ export default function ProductBrands() {
         </button>
       </div>
 
-      {/* <div className="filterSection">
-        <div className="headerOptions">
-          <div className="ho cbActive">
-            <Checkbox title="Somente ativos" active={onlyEnabled} handleToggleActive={handleToggleOnlyEnabled} />
-          </div>
-          <div className="ho searchBar">
-            <SearchBar placeholder="Nome" onChange={(event) => handleSearchFilter(event.target.value)} />
-          </div>
-          <div className="ho bttnFilters">
-            <button className="filterBttn" type="button">
-                  Filtrar
-                  <FaChevronUp className="faChevronDownIcon"/>
-              </button>
-          </div>
-        </div>
-      </div> */}
-
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
@@ -161,9 +179,27 @@ export default function ProductBrands() {
           <thead>
             <tr>
               <th>#</th>
-              <th>Nome</th>
-              <th>Cadastrado em</th>
-              <th>Última edição</th>
+              <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
+                Nome <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("disabled")}
+              >
+                Status <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
+                Cadastrado em <FaChevronUp />
+              </th>
+              <th
+                className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("updated_at")}
+              >
+                Última edição <FaChevronUp />
+              </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -172,12 +208,12 @@ export default function ProductBrands() {
             {brands.map((brand) => (
               <tr key={brand.name}>
                 <td>
-                  {/* <FaEdit color="var(--blue)" /> */}
                   <button className="edit" onClick={() => handleEditProductBrand(brand)} disabled={!editProductBrandPermission}>
                     <FaEdit color="var(--blue)" size={18} />
                   </button>
                 </td>
                 <td>{brand.name}</td>
+                <td>{brand.disabled ? "Inativo" : "Ativo"}</td>
                 <td>{new Date(brand.createdAt).toLocaleDateString()}</td>
                 <td>{new Date(brand.updatedAt).toLocaleString()}</td>
                 <td>{brand.disabledAt && new Date(brand.disabledAt).toLocaleDateString()}</td>
@@ -209,7 +245,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
   }
 
-  // const userHasPermission = await verifyUserPermissions("list_members", [], ctx)
   const userHasPermission = true
 
   if (!userHasPermission) {
