@@ -13,6 +13,8 @@ import { GlobalStyle } from "../styles/globals"
 import { Header } from "../components/Header"
 import { Sidebar } from "../components/Sidebar"
 
+import { MobileScreen } from "../components/MobileScreen"
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
@@ -52,7 +54,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   if (isMobile) {
-    // return <MobileScreen />
+    return <MobileScreen />
   }
 
   return (
