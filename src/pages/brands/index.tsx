@@ -104,6 +104,7 @@ export default function ProductBrands() {
         params: {
           onlyEnabled,
           search,
+          sort,
         },
       })
 
