@@ -190,7 +190,7 @@ export default function Activities() {
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
-        placeholder="Nome do membro"
+        placeholder="Nome do membro, usuário ou total"
         handleSearchFilter={(event) => handleSearchFilter(event.target.value)}
       />
 
@@ -207,6 +207,8 @@ export default function Activities() {
               <th>Qtde. Total</th>
               <th>Cadastrado em</th>
               <th>Encerrado em</th>
+              <th>Cancelado por</th>
+              <th>Motivo do cancelamento</th>
             </tr>
           </thead>
           <tbody>
@@ -226,6 +228,8 @@ export default function Activities() {
                 <td>{activity.totalQuantity}</td>
                 <td>{new Date(activity.createdAt).toLocaleDateString()}</td>
                 <td>{activity.finishedAt && new Date(activity.finishedAt).toLocaleDateString()}</td>
+                <td>{activity.canceledByUser}</td>
+                <td>{activity.cancelledReason}</td>
               </tr>
             ))}
           </tbody>

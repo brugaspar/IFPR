@@ -25,11 +25,8 @@ type CancelModalProps = {
 
 Modal.setAppElement("#root")
 
-export function CancelModal({ isOpen, onRequestClose }: CancelModalProps) {
-  const { user } = useAuth()
-
+export function CancelModal({ isOpen, onRequestClose, onChangeCancel }: CancelModalProps) {
   const [cancelledReason, setCancelledReason] = useState("")
-
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
@@ -37,25 +34,14 @@ export function CancelModal({ isOpen, onRequestClose }: CancelModalProps) {
     }
   }
 
-   async function handleConfirm(event: FormEvent) {
-     setCancelledReason(cancelledReason)
-   }
-
-
+  async function handleConfirm(event: FormEvent) {
+    onChangeCancel(cancelledReason)
+    onRequestClose()
+  }
 
   function resetFields() {
     setCancelledReason("")
   }
-
-
-  useEffect(() => {
-    if (isOpen) {
-    }
-
-    if (isOpen) {
-  
-    }
-  }, [isOpen])
 
   return (
     <Modal
@@ -72,15 +58,15 @@ export function CancelModal({ isOpen, onRequestClose }: CancelModalProps) {
 
         <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
           <div className="row">
-              <Input
-                id="cancelledReason"
-                type="textArea"
-                autoFocus
-                inputType="default"
-                placeholder="Informe o motivo"
-                value={cancelledReason}
-                onChange={(event) => setCancelledReason(event.target.value)}
-              />
+            <Input
+              id="cancelledReason"
+              type="textArea"
+              autoFocus
+              inputType="default"
+              placeholder="Informe o motivo"
+              value={cancelledReason}
+              onChange={(event) => setCancelledReason(event.target.value)}
+            />
           </div>
 
           <div className="close">

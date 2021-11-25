@@ -11,7 +11,6 @@ import { api } from "../../services/api.service"
 import { Input } from "../Input"
 import { CancelModal } from "../CancelModal"
 
-
 import { Container, RowContainer } from "./styles"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
@@ -95,7 +94,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   const [sellers, setSellers] = useState<Seller[]>([])
 
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false)
-        
+
   const [reload, setReload] = useState(false)
 
   function calculate() {
@@ -109,7 +108,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   }
 
   function handleSelectItem(item: ActivityItems) {
-    console.log("item", item)
     setProductId(item.id)
     setPrice(item.price)
     setSelectedItem({
@@ -226,9 +224,13 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   async function handleConfirm(event: FormEvent) {
     event.preventDefault()
 
-    if(status === "cancelled"){
+    if (status === "cancelled" && !cancelledReason) {
       return handleOpenCancelModal()
     }
+
+    // if (status === "cancelled" && !cancelledReason) {
+    //   return
+    // }
 
     const parsedItems = items.map((item) => {
       return {
@@ -284,27 +286,25 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
   }
 
   function handleAddAddress() {
-     
-  //   const address = {
-  //     id: id || String(Math.random() * 100),
-  //     street,
-  //     neighbourhood,
-  //     number,
-  //     complement,
-  //     zipcode: zipcode.replace(/\D/g, ""),
-  //     cityId,
-  //     memberId,
-  //   }
-
-  //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
-  //   if (addressExists) {
-  //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
-  //     setAddressesToShow([...newArr, address])
-  //   } else {
-  //     setAddressesToShow([...addressesToShow, address])
-  //   }
-  //   resetFields()
-   }
+    //   const address = {
+    //     id: id || String(Math.random() * 100),
+    //     street,
+    //     neighbourhood,
+    //     number,
+    //     complement,
+    //     zipcode: zipcode.replace(/\D/g, ""),
+    //     cityId,
+    //     memberId,
+    //   }
+    //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
+    //   if (addressExists) {
+    //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
+    //     setAddressesToShow([...newArr, address])
+    //   } else {
+    //     setAddressesToShow([...addressesToShow, address])
+    //   }
+    //   resetFields()
+  }
 
   async function loadActivityById() {
     const response = await api.get(`activities/${activityId}`)
@@ -316,6 +316,9 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     setMemberId(response.data.memberId)
     setItems(response.data.items)
     setConfirmedItems(response.data.items)
+    setTotal(response.data.total)
+    setTotalItems(response.data.totalItems)
+    setTotalQuantity(response.data.totalQuantity)
   }
 
   async function handleModalClose() {
@@ -555,11 +558,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
             <button type="submit">Salvar (CTRL + Enter)</button>
           </div>
         </form>
-        <CancelModal
-          isOpen={isCancelModalOpen}
-          onRequestClose={handleCloseCancelModal}
-          onChangeCancel={onChangeCancel}
-        />
+        <CancelModal isOpen={isCancelModalOpen} onRequestClose={handleCloseCancelModal} onChangeCancel={onChangeCancel} />
       </Container>
     </Modal>
   )
