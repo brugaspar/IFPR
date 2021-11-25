@@ -29,9 +29,10 @@ type ActivityItems = {
   id: string
   activityId: string
   productId: string
-  quantity: number
-  price: number
-  subtotal: number
+  quantity: string
+  price: string
+  subtotal: string
+  name?: string
 }
 
 type Member = {
@@ -63,10 +64,10 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   const userPermissions = user?.permissions || []
 
   const [idActivity, setIdActivity] = useState("")
-  const [status, setStatus] = useState("")
-  const [total, setTotal] = useState(0)
-  const [totalQuantity, setTotalQuantity] = useState(0)
-  const [totalItems, setTotalItems] = useState(0)
+  const [status, setStatus] = useState("open")
+  const [total, setTotal] = useState("")
+  const [totalQuantity, setTotalQuantity] = useState("")
+  const [totalItems, setTotalItems] = useState("")
   const [observation, setObservation] = useState("")
   const [cancelledReason, setCancelledReason] = useState("")
   const [sellerId, setSellerId] = useState("")
@@ -74,9 +75,9 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
 
   const [activityId, setActivityId] = useState("")
   const [productId, setProductId] = useState("")
-  const [quantity, setQuantity] = useState(0)
-  const [price, setPrice] = useState(0)
-  const [subtotal, setSubTotal] = useState(0)
+  const [quantity, setQuantity] = useState("")
+  const [price, setPrice] = useState("")
+  const [subtotal, setSubTotal] = useState("")
 
   const [selectedItem, setSelectedItem] = useState<ActivityItems | null>(null)
 
@@ -85,7 +86,47 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [sellers, setSellers] = useState<Seller[]>([])
 
-  function handleSelectItem(item: ActivityItems) {}
+  function handleSelectItem(item: ActivityItems) {
+    setProductId(item.productId)
+    setPrice(item.price)
+    setSelectedItem(item)
+  }
+
+  function handleAddItem() {
+    const item = {
+      id: idActivity || String(Math.random() * 100),
+      activityId: activityId || "",
+      productId: selectedItem?.id || "",
+      quantity,
+      price,
+      subtotal: String(Number(quantity) * Number(price)),
+      name: selectedItem?.name,
+    }
+
+    const itemExists = items.some((currentItem) => currentItem.productId === item.productId)
+
+    if (itemExists) {
+      const newArr = items.filter((currentItem) => currentItem.productId !== item.productId)
+      setItems([...newArr, item])
+    } else {
+      setItems([...items, item])
+    }
+    resetFields()
+  }
+
+  function handleRemoveItem(item: ActivityItems) {
+    if (items.length >= 1) {
+      const newArr = items.filter((currentItem) => currentItem.id !== item.id)
+      setItems(newArr)
+    }
+  }
+
+  function handleEditItem(item: ActivityItems) {
+    setProductId(item.productId)
+    setPrice(item.price)
+    setQuantity(item.quantity)
+    setSelectedItem(item)
+  }
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
@@ -139,34 +180,14 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
     resetFields()
   }
 
-  function handleAddAddress() {
-    //   const address = {
-    //     id: id || String(Math.random() * 100),
-    //     street,
-    //     neighbourhood,
-    //     number,
-    //     complement,
-    //     zipcode: zipcode.replace(/\D/g, ""),
-    //     cityId,
-    //     memberId,
-    //   }
-    //   const addressExists = addressesToShow.some((currentAddress) => currentAddress.id === address.id)
-    //   if (addressExists) {
-    //     const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
-    //     setAddressesToShow([...newArr, address])
-    //   } else {
-    //     setAddressesToShow([...addressesToShow, address])
-    //   }
-    //   resetFields()
-  }
-
   function resetFields() {
     setActivityId("")
     setProductId("")
-    setQuantity(0)
-    setPrice(0)
-    setSubTotal(0)
+    setQuantity("")
+    setPrice("")
+    setSubTotal("")
     setMemberId("")
+    setSelectedItem(null)
   }
 
   useEffect(() => {
@@ -208,7 +229,7 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 id="status"
                 data={[
                   { id: "open", name: "Aberto" },
-                  { id: "closed", name: "Fechado" },
+                  { id: "closed", name: "Encerrado" },
                   { id: "cancelled", name: "Cancelado" },
                 ]}
                 dataKey="id"
@@ -301,22 +322,38 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
               />
             </RowContainer>
             <RowContainer>
-              <label htmlFor="quantity">Quantidade</label>
-              <Input
-                id="quantity"
-                type="number"
-                autoFocus
-                inputType="default"
-                placeholder="Informe a quantidade"
-                value={quantity}
-                onChange={(event) => setQuantity(Number(event.target.value))}
-              />
+              <div className="row">
+                <RowContainer>
+                  <label htmlFor="price">Preço</label>
+                  <Input
+                    id="price"
+                    type="number"
+                    autoFocus
+                    inputType="default"
+                    placeholder="Informe o preço"
+                    value={price}
+                    onChange={(event) => setPrice(event.target.value)}
+                  />
+                </RowContainer>
+                <RowContainer>
+                  <label htmlFor="quantity">Quantidade ({selectedItem?.quantity || 0})</label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    autoFocus
+                    inputType="default"
+                    placeholder="Informe a quantidade"
+                    value={quantity}
+                    onChange={(event) => setQuantity(event.target.value)}
+                  />
+                </RowContainer>
+              </div>
             </RowContainer>
           </div>
 
           <div className="row"></div>
 
-          <button type="button" className="add-button" onClick={handleAddAddress}>
+          <button type="button" className="add-button" onClick={handleAddItem}>
             Adicionar
           </button>
 
@@ -332,29 +369,30 @@ export function ActivityModal({ isOpen, onRequestClose }: ActivityModalProps) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="row">
-                    {/* <FaEdit color="var(--blue)" /> */}
-                    <button type="button" className="edit">
-                      <FaEdit color="var(--blue)" size={18} />
-                    </button>
-                    <button type="button" className="edit">
-                      <FaTrashAlt color="var(--red)" size={18} />
-                    </button>
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td className="row">
+                      <button type="button" className="edit" onClick={() => handleEditItem(item)}>
+                        <FaEdit color="var(--blue)" size={18} />
+                      </button>
+                      <button type="button" className="edit" onClick={() => handleRemoveItem(item)}>
+                        <FaTrashAlt color="var(--red)" size={18} />
+                      </button>
+                    </td>
+                    <td>{item.name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.price}</td>
+                    <td>{item.subtotal}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
 
           <div className="row footer">
-            <div>Quantidade de Itens: {totalItems}</div>
-            <div>Quantidade total: {totalQuantity}</div>
-            <div>Total: {total}</div>
+            <div>Quantidade de Itens: {totalItems || 0}</div>
+            <div>Quantidade total: {totalQuantity || 0}</div>
+            <div>Total: {total || 0}</div>
           </div>
 
           <div className="close">
