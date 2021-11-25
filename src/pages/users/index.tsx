@@ -8,6 +8,8 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { UserModal } from "../../components/UserModal"
 import { FilterContainer } from "../../components/FilterContainer"
+import { PaginationBar } from "../../components/PaginationBar"
+import { PaginationSelector } from "../../components/PaginationSelector"
 
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
@@ -16,8 +18,6 @@ import { api } from "../../services/api.service"
 
 import { Container } from "../../styles/users.styles"
 
-import { PaginationBar } from "../../components/PaginationBar"
-import { PaginationSelector } from "../../components/PaginationSelector"
 
 type User = {
   id: string
@@ -58,8 +58,8 @@ export default function Users() {
   const pages = Math.ceil(users.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
   const endIndex = startIndex + itensPerPage
-  const currentItens = users.slice(startIndex, endIndex) 
-  
+  const currentItens = users.slice(startIndex, endIndex)
+
   function sortTable(field: string) {
     switch (field) {
       case "name": {
@@ -188,7 +188,6 @@ export default function Users() {
     setCurrentPage(0)
   }, [itensPerPage])
 
-
   return (
     <Container>
       <Head>
@@ -269,12 +268,12 @@ export default function Users() {
               </tr>
             ))}
           </tbody>
-        </table>        
+        </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
-      </div>        
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
+      </div>
       <UserModal isOpen={isUserModalOpen} onRequestClose={handleCloseUserModal} userId={selectedUser || ""} />
     </Container>
   )

@@ -8,7 +8,6 @@ import { useAuth } from "../../hooks/useAuth"
 
 import { MembersModal } from "../../components/MembersModal"
 
-
 import { getAccessToken } from "../../helpers/token.helper"
 import { verifyUserPermissions } from "../../helpers/permissions.helper"
 
@@ -76,8 +75,7 @@ export default function Members() {
   const pages = Math.ceil(members.length / itensPerPage)
   const startIndex = currentPage * itensPerPage
   const endIndex = startIndex + itensPerPage
-  const currentItens = members.slice(startIndex, endIndex) 
-
+  const currentItens = members.slice(startIndex, endIndex)
 
   function sortTable(field: string) {
     switch (field) {
@@ -170,16 +168,15 @@ export default function Members() {
   async function loadMembers() {
     try {
       const response = await api.get("/members", {
-      
         params: {
           onlyEnabled,
-         search,
+          search,
           sort,
-       },
-     })
+        },
+      })
 
-    toast.dismiss("error")
-    setMembers(response.data)
+      toast.dismiss("error")
+      setMembers(response.data)
     } catch (error) {
       toast.error("Problemas internos ao carregar membros", { toastId: "error" })
     }
@@ -242,7 +239,6 @@ export default function Members() {
         </button>
       </div>
 
-
       <FilterContainer
         onlyEnabled={onlyEnabled}
         handleToggleOnlyEnabled={handleToggleOnlyEnabled}
@@ -257,31 +253,49 @@ export default function Members() {
               <th>#</th>
               <th className={sort.name === "name" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("name")}>
                 Nome <FaChevronUp />
-                </th>
+              </th>
               <th className={sort.name === "email" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("email")}>
                 E-mail <FaChevronUp />
-                </th>
+              </th>
               <th>RG</th>
               <th>CPF</th>
-              <th className={sort.name === "profession" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("profession")}>
+              <th
+                className={sort.name === "profession" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("profession")}
+              >
                 Profissão <FaChevronUp />
-                </th>
+              </th>
               <th>N° CR</th>
-              <th className={sort.name === "cr_validity" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("cr_validity")}>
+              <th
+                className={sort.name === "cr_validity" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("cr_validity")}
+              >
                 Validade CR <FaChevronUp />
-                </th>
-              <th className={sort.name === "birth_date" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("birth_date")}>
+              </th>
+              <th
+                className={sort.name === "birth_date" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("birth_date")}
+              >
                 Nascimento <FaChevronUp />
-                </th>
-              <th className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("disabled")}>
+              </th>
+              <th
+                className={sort.name === "disabled" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("disabled")}
+              >
                 Status <FaChevronUp />
-                </th>
-                <th className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("created_at")}>
+              </th>
+              <th
+                className={sort.name === "created_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("created_at")}
+              >
                 Cadastro <FaChevronUp />
-                </th>
-                <th className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"} onClick={() => sortTable("updated_at")}>
+              </th>
+              <th
+                className={sort.name === "updated_at" && sort.sort === "asc" ? "asc" : "desc"}
+                onClick={() => sortTable("updated_at")}
+              >
                 Última edição <FaChevronUp />
-                </th>
+              </th>
               <th>Desativado em</th>
               <th>Desativado por</th>
             </tr>
@@ -303,7 +317,6 @@ export default function Members() {
                 <td>{new Date(member.crValidity).toLocaleDateString()}</td>
                 <td>{new Date(member.birthDate).toLocaleDateString()}</td>
                 <td>{member.disabled ? "Desativo" : "Ativo"}</td>
-                <td>{new Date(member.crValidity).toLocaleDateString()}</td>
                 <td>{new Date(member.createdAt).toLocaleDateString()}</td>
                 <td>{new Date(member.updatedAt).toLocaleDateString()}</td>
                 <td>{member.disabledAt && new Date(member.disabledAt).toLocaleDateString()}</td>
@@ -311,11 +324,11 @@ export default function Members() {
               </tr>
             ))}
           </tbody>
-        </table>        
+        </table>
       </div>
       <div className="paginationDiv">
-        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage}/>
-        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />         
+        <PaginationSelector itensPerPage={itensPerPage} setItensPerPage={setItensPerPage} />
+        <PaginationBar pages={pages} setCurrentPage={setCurrentPage} />
       </div>
 
       <MembersModal isOpen={isMemberModalOpen} onRequestClose={handleCloseMemberModal} memberId={selectedMember || ""} />
