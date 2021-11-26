@@ -333,8 +333,8 @@ export default function Activities() {
                 <td>{activity.total ? activity.total.toLocaleString("pt-br", { style: "currency", currency: "BRL" }) : 0}</td>
                 <td>{activity.totalItems}</td>
                 <td>{activity.totalQuantity}</td>
-                <td>{new Date(activity.createdAt).toLocaleDateString()}</td>
-                <td>{activity.finishedAt && new Date(activity.finishedAt).toLocaleDateString()}</td>
+                <td>{new Date(activity.createdAt).toLocaleString()}</td>
+                <td>{activity.finishedAt && new Date(activity.finishedAt).toLocaleString()}</td>
                 <td>{activity.canceledByUser}</td>
                 <td>{activity.cancelledReason}</td>
               </tr>
