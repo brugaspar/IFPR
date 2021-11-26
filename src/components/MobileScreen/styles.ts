@@ -1,78 +1,81 @@
 import styled from "styled-components"
-import { createGlobalStyle } from "styled-components"
-import { darken, transparentize } from "polished"
 
 export const Container = styled.div`
-    position:absolute;   
-    overflow:hidden;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: #121214;
-    z-index:-2;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
 
-    > img {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        height: 100%;
-        width:100%;
-        z-index: -1;  
-        filter: brightness(70%); 
-    }  
-  
-`
-export const Content = styled.div`
+  width: 100%;
+  height: 100%;
+
+  background: var(--background);
+
+  > img {
+    position: fixed;
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 7rem;
-    padding: 8%;
+    z-index: 1;
+  }
+`
+export const Content = styled.div`
+  width: 100%;
+  height: 100%;
 
-    #divLogo{
-        position:fixed;
-        width:19rem;
-        height:8rem;
-        margin-top:15%;
-        z-index:999;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-content: center; */
 
-        > img {       
-            height: 100%;
-            width:100%;
-        }  
-    }   
+  #logo {
+    position: absolute;
+    top: 2.5rem;
+    right: 0;
 
-    #divText{
-        position:relative;
-        width:19rem;
-        height:20%;
-        margin-top:70%;
-        color:white;
-        z-index:999;
-        font-family: "Mukta";
-        text-align:center;
+    padding: 0 10%;
 
-        p{
-           font-size:1.5rem; 
-        }        
+    z-index: 999;
+
+    > img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
     }
-    
-    #divImgs{
-        position:fixed;
-        width:14rem;
-        height:auto;
-        margin-top:22rem;
-        margin-left:2.5rem;
-        color:white;
-        z-index:999;
+  }
 
-        .downloadImage{
-            width:100%;
-            height:100%;
-            filter: grayscale(100%);
-        }
+  #center-image {
+    z-index: 999;
+    position: absolute;
+    top: calc(100% / 3);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > img {
+      width: 60%;
+      object-fit: contain;
     }
-  
+  }
+
+  #text {
+    position: absolute;
+    z-index: 999;
+
+    font-family: "Epilogue";
+    font-size: 1.2rem;
+    color: var(--background);
+    line-height: 1.5rem;
+
+    max-width: 60%;
+
+    bottom: 8rem;
+    left: 2rem;
+
+    span {
+      display: inline-block;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+  }
 `

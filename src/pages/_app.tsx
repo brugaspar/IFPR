@@ -54,7 +54,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
   if (isMobile) {
-    return <MobileScreen />
+    return (
+      <>
+        <MobileScreen />
+        <GlobalStyle />
+      </>
+    )
   }
 
   return (
