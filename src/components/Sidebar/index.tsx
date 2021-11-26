@@ -242,7 +242,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               </div>
             </button>
 
-            <button
+            {/* <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Suporte"
               onClick={() => handleNavigateToPage("/support")}
@@ -251,9 +251,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 <FaEnvelope />
               </span>
               <span className="label">Suporte</span>
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="perguntasFrequentes"
               onClick={() => handleNavigateToPage("/frequently-asked-questions")}
@@ -262,9 +262,9 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 <FaComments />
               </span>
               <span className="label">Perguntas Frequentes</span>
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="politicasDePrivacidade"
               onClick={() => handleNavigateToPage("/privacy-policies")}
@@ -273,7 +273,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 <FaGavel />
               </span>
               <span className="label">Políticas de privacidade</span>
-            </button>
+            </button> */}
 
             <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
@@ -287,7 +287,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               <span className="label">Logs do Sistema</span>
             </button>
 
-            <button
+            {/* <button
               className={hideClass ? "list-button subitem hide" : "list-button subitem"}
               title="Sobre"
               onClick={() => handleNavigateToPage("/about")}
@@ -296,7 +296,7 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 <FaQuestion />
               </span>
               <span className="label">Sobre</span>
-            </button>
+            </button> */}
           </ul>
         </div>
 
