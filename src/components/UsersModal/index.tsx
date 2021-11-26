@@ -161,7 +161,7 @@ export function UsersModal({ isOpen, onRequestClose, userId }: UsersModalProps) 
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       overlayClassName="react-modal-overlay"
-      className="react-modal-content"
+      className="react-modal-permissions-content"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc
       onAfterClose={resetFields}

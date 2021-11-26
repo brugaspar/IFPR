@@ -161,132 +161,131 @@ export function PlansModal({ isOpen, onRequestClose, planId }: PlansModalProps) 
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       overlayClassName="react-modal-overlay"
-      className="react-modal-content"
+      className="react-modal-permissions-content"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc
       onAfterClose={resetFields}
     >
       <Container>
-        <h1>{planId ? "Editar plano" : "Novo plano"}</h1>
+          <h1>{planId ? "Editar plano" : "Novo plano"}</h1>
+          <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
+            <div className="row">
+              <RowContainer>
+                <label htmlFor="name">Nome do Plano</label>
+                <Input
+                  id="name"
+                  type="text"
+                  autoFocus
+                  inputType="default"
+                  placeholder="Informe o nome do plano"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </RowContainer>
 
-        <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
-          <div className="row">
-            <RowContainer>
-              <label htmlFor="name">Nome do Plano</label>
-              <Input
-                id="name"
-                type="text"
-                autoFocus
-                inputType="default"
-                placeholder="Informe o nome do plano"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </RowContainer>
+              <RowContainer>
+                <label htmlFor="description">Descrição</label>
+                <Input
+                  inputType="default"
+                  id="description"
+                  type="text"
+                  placeholder="Descrição do plano"
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                />
+              </RowContainer>
+            </div>
 
-            <RowContainer>
-              <label htmlFor="description">Descrição</label>
-              <Input
-                inputType="default"
-                id="description"
-                type="text"
-                placeholder="Descrição do plano"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-              />
-            </RowContainer>
-          </div>
+            <div className="row">
+              <RowContainer>
+                <label htmlFor="value">Valor</label>
+                <Input
+                  inputType="default"
+                  id="value"
+                  type="number"
+                  placeholder="Informe o valor"
+                  value={value}
+                  onChange={(event) => setValue(event.target.value)}
+                />
+              </RowContainer>
 
-          <div className="row">
-            <RowContainer>
-              <label htmlFor="value">Valor</label>
-              <Input
-                inputType="default"
-                id="value"
-                type="number"
-                placeholder="Informe o valor"
-                value={value}
-                onChange={(event) => setValue(event.target.value)}
-              />
-            </RowContainer>
+              <RowContainer>
+                <label htmlFor="renewValue">Valor de renovação</label>
+                <Input
+                  inputType="default"
+                  id="renewValue"
+                  type="number"
+                  placeholder="Informe o valor"
+                  value={renewValue}
+                  onChange={(event) => setRenewValue(event.target.value)}
+                />
+              </RowContainer>
+            </div>
 
-            <RowContainer>
-              <label htmlFor="renewValue">Valor de renovação</label>
-              <Input
-                inputType="default"
-                id="renewValue"
-                type="number"
-                placeholder="Informe o valor"
-                value={renewValue}
-                onChange={(event) => setRenewValue(event.target.value)}
-              />
-            </RowContainer>
-          </div>
+            <div className="row">
+              <RowContainer>
+                <label htmlFor="gunTargetDiscount">Desconto em Alvos</label>
+                <Input
+                  inputType="default"
+                  id="gunTargetDiscount"
+                  type="number"
+                  placeholder="Informe a '%' "
+                  value={gunTargetDiscount}
+                  onChange={(event) => setGunTargetDiscount(event.target.value)}
+                />
+              </RowContainer>
 
-          <div className="row">
-            <RowContainer>
-              <label htmlFor="gunTargetDiscount">Desconto em Alvos</label>
-              <Input
-                inputType="default"
-                id="gunTargetDiscount"
-                type="number"
-                placeholder="Informe a '%' "
-                value={gunTargetDiscount}
-                onChange={(event) => setGunTargetDiscount(event.target.value)}
-              />
-            </RowContainer>
+              <RowContainer>
+                <label htmlFor="courseDiscount">Desconto em Cursos</label>
+                <Input
+                  inputType="default"
+                  id="courseDiscount"
+                  type="number"
+                  placeholder="Informe a '%' "
+                  value={courseDiscount}
+                  onChange={(event) => setCourseDiscount(event.target.value)}
+                />
+              </RowContainer>
+            </div>
 
-            <RowContainer>
-              <label htmlFor="courseDiscount">Desconto em Cursos</label>
-              <Input
-                inputType="default"
-                id="courseDiscount"
-                type="number"
-                placeholder="Informe a '%' "
-                value={courseDiscount}
-                onChange={(event) => setCourseDiscount(event.target.value)}
-              />
-            </RowContainer>
-          </div>
+            <div className="row">
+              <RowContainer>
+                <label htmlFor="shootingDrillsPerYear">Treinos por ano</label>
+                <Input
+                  inputType="default"
+                  id="shootingDrillsPerYear"
+                  type="number"
+                  placeholder="Informe a quantidade"
+                  value={shootingDrillsPerYear}
+                  onChange={(event) => setShootingDrillsPerYear(event.target.value)}
+                />
+              </RowContainer>
+            </div>
 
-          <div className="row">
-            <RowContainer>
-              <label htmlFor="shootingDrillsPerYear">Tiros por ano</label>
-              <Input
-                inputType="default"
-                id="shootingDrillsPerYear"
-                type="number"
-                placeholder="Informe a quantidade"
-                value={shootingDrillsPerYear}
-                onChange={(event) => setShootingDrillsPerYear(event.target.value)}
-              />
-            </RowContainer>
-          </div>
+            <div className="row">
+              <RowContainer width={25} align="center" className="margin-top">
+                <Checkbox
+                  title="Desativado"
+                  active={disabled}
+                  handleToggleActive={handleToggleDisabled}
+                  disabled={!disablePlansPermission}
+                />
+              </RowContainer>
+              <RowContainer width={25} align="center" className="margin-top">
+                <Checkbox title="Isenção Armas" active={gunExemption} handleToggleActive={handleToggleGunExemption} />
+              </RowContainer>
+              <RowContainer width={25} align="center" className="margin-top">
+                <Checkbox title="Isenção Alvos" active={targetExemption} handleToggleActive={handleToggleTargetExemption} />
+              </RowContainer>
+            </div>
 
-          <div className="row">
-            <RowContainer width={25} align="center" className="margin-top">
-              <Checkbox
-                title="Desativado"
-                active={disabled}
-                handleToggleActive={handleToggleDisabled}
-                disabled={!disablePlansPermission}
-              />
-            </RowContainer>
-            <RowContainer width={25} align="center" className="margin-top">
-              <Checkbox title="Isenção Armas" active={gunExemption} handleToggleActive={handleToggleGunExemption} />
-            </RowContainer>
-            <RowContainer width={25} align="center" className="margin-top">
-              <Checkbox title="Isenção Alvos" active={targetExemption} handleToggleActive={handleToggleTargetExemption} />
-            </RowContainer>
-          </div>
-
-          <div className="close">
-            <button type="button" onClick={onRequestClose}>
-              Cancelar (ESC)
-            </button>
-            <button type="submit">Salvar (CTRL + Enter)</button>
-          </div>
-        </form>
+            <div className="close">
+              <button type="button" onClick={onRequestClose}>
+                Cancelar (ESC)
+              </button>
+              <button type="submit">Salvar (CTRL + Enter)</button>
+            </div>
+          </form>
       </Container>
     </Modal>
   )
