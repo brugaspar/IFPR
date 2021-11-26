@@ -2,11 +2,16 @@ import { darken, transparentize } from "polished"
 import styled from "styled-components"
 
 export const Container = styled.div`
-  height: 100%;
+  /* height: 100%;
   margin-top: 1%;
   overflow-y: scroll-behavior;
+  
+  padding-right: 0.4rem; */
+  height: 25rem;
+  overflow-y: scroll;
   overflow-x: hidden;
-  padding-right: 0.4rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
 
   h1 {
     font-size: 1.5rem;
@@ -103,7 +108,6 @@ export const Container = styled.div`
 
   .scroll-div {
     overflow-x: auto;
-    height: calc(100vh - 48rem);
     margin-top: 2rem;
 
     &::-webkit-scrollbar {

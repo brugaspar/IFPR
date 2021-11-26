@@ -3,7 +3,7 @@ import styled from "styled-components"
 export const Container = styled.div`
   height: 100%;
   margin-top: 1%;
-  overflow-y: scroll-behavior;
+  overflow-y: scroll;
   overflow-x: hidden;
   padding-right: 0.4rem;
 

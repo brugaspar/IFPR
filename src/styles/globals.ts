@@ -184,7 +184,7 @@ export const GlobalStyle = createGlobalStyle`
 
     margin-top: 7rem;
 
-    max-height: calc(100% - 7rem);
+    height: calc(100vh - 8rem);
 
     background: var(--background);
 

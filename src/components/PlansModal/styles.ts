@@ -2,10 +2,22 @@ import styled from "styled-components"
 
 export const Container = styled.div`
   height: 100%;
-  margin-top: 1%;
-  overflow-y: scroll-behavior;
-  overflow-x: hidden;
-  padding-right: 0.4rem;
+  overflow-y: scroll;
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  &::-webkit-scrollbar {
+    width: 0.2rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 2rem;
+    border: 3px solid var(--text-body);
+  }
 
   h1 {
     font-size: 1.5rem;
@@ -32,7 +44,8 @@ export const Container = styled.div`
       }
     }
 
-    input {
+    input,
+    select {
       width: 100%;
       height: 3rem;
       background: var(--shape-dark);
@@ -79,20 +92,6 @@ export const Container = styled.div`
       }
     }
   }
-
-  &::-webkit-scrollbar {
-    width: 0.2rem;
-    margin-right: 0.2rem;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: var(--background);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border-radius: 2rem;
-    border: 3px solid var(--text-body);
-  }
 `
 
 export const RowContainer = styled.div<{ width?: number; align?: string }>`
@@ -102,7 +101,7 @@ export const RowContainer = styled.div<{ width?: number; align?: string }>`
   flex-direction: column;
   align-items: ${(props) => (props.align ? props.align : "auto")};
 
-  .permissions-button {
+  .addresses-button {
     height: 3rem;
     width: 100%;
     border: 0;

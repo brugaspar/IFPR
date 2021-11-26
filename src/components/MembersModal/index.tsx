@@ -307,7 +307,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       overlayClassName="react-modal-overlay"
-      className="react-modal-permissions-content"
+      className="react-modal-content-address"
       shouldCloseOnOverlayClick={false}
       shouldCloseOnEsc
       onAfterClose={resetFields}
