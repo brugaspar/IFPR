@@ -35,6 +35,8 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    height:9rem;
+    overflow:hidden;
 
     + .card-container {
       margin-top: 5rem;
@@ -54,6 +56,8 @@ export const Card = styled.div`
 
   cursor: pointer;
   transition: filter 0.2s;
+
+  height:100%;
 
   svg {
     font-size: 3.5rem;
