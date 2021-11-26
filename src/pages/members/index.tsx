@@ -185,6 +185,8 @@ export default function Members() {
             closeOnClick: false,
             closeButton: false,
             draggable: false,
+            position: "bottom-center",
+            className: "toastify-custom",
           })
         } else {
           toast.error("Problemas internos ao carregar membros", { toastId: "error" })

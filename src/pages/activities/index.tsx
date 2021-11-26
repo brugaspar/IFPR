@@ -198,6 +198,8 @@ export default function Activities() {
             closeOnClick: false,
             closeButton: false,
             draggable: false,
+            position: "bottom-center",
+            className: "toastify-custom",
           })
         } else {
           toast.error("Problemas internos ao carregar atividades", { toastId: "error" })

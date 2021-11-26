@@ -194,6 +194,8 @@ export default function Products() {
             closeOnClick: false,
             closeButton: false,
             draggable: false,
+            position: "bottom-center",
+            className: "toastify-custom",
           })
         } else {
           toast.error("Problemas internos ao carregar produtos", { toastId: "error" })

@@ -101,7 +101,19 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
       toast.dismiss("error")
 
-      setCities(response.data)
+      const parsedCities = response.data.map((c: any) => {
+        return {
+          id: c.id,
+          name: `${c.name} / ${c.state.initials}`,
+          state: {
+            id: c.state.id,
+            name: c.state.name,
+            initials: c.state.initials,
+          },
+        }
+      })
+
+      setCities(parsedCities)
     } catch (error) {
       toast.error("Problemas internos ao carregar cidades", { toastId: "error" })
     }

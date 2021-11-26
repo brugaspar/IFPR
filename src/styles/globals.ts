@@ -248,4 +248,9 @@ export const GlobalStyle = createGlobalStyle`
       align-items: center;
       justify-content: space-between;
     }
+
+    .toastify-custom {
+      width: 25rem;
+      margin-bottom: 2rem;
+    }
 `
