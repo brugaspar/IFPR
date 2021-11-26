@@ -11,7 +11,6 @@ const prisma = new PrismaClient()
 async function deleteFromAllTables() {
   await prisma.users.deleteMany()
   await prisma.membersAddresses.deleteMany()
-  await prisma.membersDocuments.deleteMany()
   await prisma.members.deleteMany()
   await prisma.cities.deleteMany()
   await prisma.states.deleteMany()
