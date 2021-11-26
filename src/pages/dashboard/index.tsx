@@ -64,7 +64,9 @@ export default function Dashboard() {
         <Card onClick={() => handleNavigateToPage("/activities")}>
           <FaMoneyBill color="var(--green)" />
           <div className="content">
-            <h2>Valor total das atividades "encerradas"</h2>
+            <h2>
+              Valor total das atividades <span>&quot;encerradas&quot;</span>
+            </h2>
             <h2 className="highlight">
               {(totals?.activitiesTotal || 0).toLocaleString("pt-br", { style: "currency", currency: "BRL" })}
             </h2>
