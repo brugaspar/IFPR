@@ -2,12 +2,7 @@ import { darken, transparentize } from "polished"
 import styled from "styled-components"
 
 export const Container = styled.div`
-  /* height: 100%;
-  margin-top: 1%;
-  overflow-y: scroll-behavior;
-  
-  padding-right: 0.4rem; */
-  height: 25rem;
+  height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   padding-right: 1rem;

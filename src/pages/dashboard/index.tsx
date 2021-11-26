@@ -66,7 +66,7 @@ export default function Dashboard() {
           <div className="content">
             <h2>Valor total das atividades "encerradas"</h2>
             <h2 className="highlight">
-              {totals?.activitiesTotal?.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}
+              {(totals?.activitiesTotal || 0).toLocaleString("pt-br", { style: "currency", currency: "BRL" })}
             </h2>
           </div>
         </Card>
