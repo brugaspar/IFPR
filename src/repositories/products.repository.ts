@@ -265,6 +265,11 @@ class ProductsRepository {
       },
     })
   }
+
+  async findCount() {
+    const count = await prisma.products.count()
+    return count
+  }
 }
 
 export default new ProductsRepository()

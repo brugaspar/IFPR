@@ -232,6 +232,11 @@ class PlansRepository {
 
     return id
   }
+
+  async findCount() {
+    const count = await prisma.plans.count()
+    return count
+  }
 }
 
 export default new PlansRepository()

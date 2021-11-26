@@ -9,6 +9,10 @@ import logsRouter from "./logs.routes"
 import productsRouter from "./products.routes"
 import activitiesRouter from "./activities.routes"
 
+import { authenticationMiddleware } from "../middlewares/authentication.middleware"
+
+import totalsController from "../controllers/totals.controller"
+
 const router = Router()
 
 router.use(usersRouter)
@@ -19,5 +23,7 @@ router.use(membersRouter)
 router.use(logsRouter)
 router.use(productsRouter)
 router.use(activitiesRouter)
+
+router.get("/totals", authenticationMiddleware, totalsController.index)
 
 export { router }

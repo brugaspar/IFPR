@@ -55,8 +55,6 @@ model Users {
   createdMembers         Members[]          @relation("MemberToCreated")
   updatedAddresses       MembersAddresses[] @relation("AddressToUpdated")
   createdAddresses       MembersAddresses[] @relation("AddressToCreated")
-  updatedDocuments       MembersDocuments[] @relation("DocumentToUpdated")
-  createdDocuments       MembersDocuments[] @relation("DocumentToCreated")
   updatedActivities      Activities[]       @relation("ActivityToUpdated")
   createdActivities      Activities[]       @relation("ActivityToCreated")
   cancelledActivities    Activities[]       @relation("ActivitiesToCancelled")
@@ -204,7 +202,6 @@ model Members {
   planId           String             @map("plan_id")
   plan             Plans              @relation(fields: [planId], references: [id])
   memberAddresses  MembersAddresses[]
-  memberDocuments  MembersDocuments[]
   memberActivities Activities[]
 
   @@map("members")
@@ -229,23 +226,6 @@ model MembersAddresses {
   createdByUser Users?   @relation("AddressToCreated", fields: [createdBy], references: [id])
 
   @@map("members_addresses")
-}
-
-model MembersDocuments {
-  id            String    @id @default(uuid())
-  name          String
-  path          String
-  validity      DateTime?
-  memberId      String    @map("member_id")
-  member        Members   @relation(fields: [memberId], references: [id])
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  lastUpdatedBy String?   @map("last_updated_by")
-  updatedByUser Users?    @relation("DocumentToUpdated", fields: [lastUpdatedBy], references: [id])
-  createdBy     String?   @map("created_by")
-  createdByUser Users?    @relation("DocumentToCreated", fields: [createdBy], references: [id])
-
-  @@map("members_documents")
 }
 
 model ProductsBrands {

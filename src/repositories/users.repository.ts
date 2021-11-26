@@ -239,6 +239,11 @@ class UsersRepository {
 
     return id
   }
+
+  async findCount() {
+    const count = await prisma.users.count()
+    return count
+  }
 }
 
 export default new UsersRepository()

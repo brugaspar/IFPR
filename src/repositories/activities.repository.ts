@@ -387,6 +387,24 @@ class ActivitiesRepository {
 
     return id
   }
+
+  async findCount() {
+    const count = await prisma.activities.count()
+    return count
+  }
+
+  async findTotal() {
+    const { _sum } = await prisma.activities.aggregate({
+      _sum: {
+        total: true,
+      },
+      where: {
+        status: "closed",
+      },
+    })
+
+    return _sum.total
+  }
 }
 
 export default new ActivitiesRepository()

@@ -321,6 +321,11 @@ class MembersRepository {
 
     return id
   }
+
+  async findCount() {
+    const count = await prisma.members.count()
+    return count
+  }
 }
 
 export default new MembersRepository()
