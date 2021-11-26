@@ -1,16 +1,12 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import {
+  FaArchive,
   FaChartPie,
   FaCog,
-  FaComments,
-  FaEnvelope,
   FaFolderOpen,
-  FaGavel,
+  FaGripHorizontal,
   FaHome,
-  FaObjectGroup,
-  FaQuestion,
-  FaRegListAlt,
   FaServer,
   FaSignOutAlt,
   FaTag,
@@ -41,6 +37,8 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
   const [listUsersPermission, setListUsersPermission] = useState(false)
   const [listLogsPermission, setListLogssPermission] = useState(false)
   const [listProductsPermission, setListProductsPermission] = useState(false)
+  const [listBrandsPermission, setListBrandsPermission] = useState(false)
+  const [listGroupsPermission, setListGroupsPermission] = useState(false)
 
   const [hideClass, setHideClass] = useState(true)
   const [hideClassProduct, setHideClassProduct] = useState(true)
@@ -103,6 +101,12 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
     const userHasListProductsPermission = await verifyUserPermissions("list_products", userPermissions)
     setListProductsPermission(userHasListProductsPermission)
+
+    const userHasListBrandsPermission = await verifyUserPermissions("list_brands", userPermissions)
+    setListBrandsPermission(userHasListBrandsPermission)
+
+    const userHasListGroupsPermission = await verifyUserPermissions("list_groups", userPermissions)
+    setListGroupsPermission(userHasListGroupsPermission)
   }
 
   useEffect(() => {
@@ -170,18 +174,13 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
               <span className="label">Planos</span>
             </button>
-            <button
-              className="list-button"
-              title="Produtos"
-              onClick={handleToggleHideClassProduct}
-              disabled={!listProductsPermission}
-            >
+            <button className="list-button" title="Inventário" onClick={handleToggleHideClassProduct}>
               <span className="icon">
                 <FaTag />
               </span>
 
               <div className={hideClassProduct ? "has-submenu" : "has-submenu open"}>
-                <span className="label">Produtos</span>
+                <span className="label">Inventário</span>
 
                 <span className="label-icon">▼</span>
               </div>
@@ -189,18 +188,20 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
             <button
               className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
-              title="Cadastro"
+              title="Produtos"
               onClick={() => handleNavigateToPage("/products")}
+              disabled={!listProductsPermission}
             >
               <span className="icon submenu">
-                <FaRegListAlt />
+                <FaArchive />
               </span>
-              <span className="label">Cadastro</span>
+              <span className="label">Produtos</span>
             </button>
             <button
               className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
               title="Marcas"
               onClick={() => handleNavigateToPage("/brands")}
+              disabled={!listBrandsPermission}
             >
               <span className="icon submenu">
                 <FaToolbox />
@@ -211,9 +212,10 @@ export function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               className={hideClassProduct ? "list-button subitem hide" : "list-button subitem"}
               title="Grupos"
               onClick={() => handleNavigateToPage("/groups")}
+              disabled={!listGroupsPermission}
             >
               <span className="icon submenu">
-                <FaObjectGroup />
+                <FaGripHorizontal />
               </span>
               <span className="label">Grupos</span>
             </button>
