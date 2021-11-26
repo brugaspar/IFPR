@@ -92,7 +92,7 @@ export default function Dashboard() {
         <Card onClick={() => handleNavigateToPage("/plans")}>
           <FaFolder color="var(--cyan)" />
           <div className="content">
-            <h2>Quantidade de planos registrados"</h2>
+            <h2>Quantidade de planos registrados</h2>
             <h2 className="highlight">{totals?.plansCount}</h2>
           </div>
         </Card>

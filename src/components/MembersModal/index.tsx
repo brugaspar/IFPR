@@ -687,7 +687,9 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             <button type="button" onClick={onRequestClose}>
               Cancelar (ESC)
             </button>
-            <button type="submit">Salvar (CTRL + Enter)</button>
+            <button type="submit" onClick={handleConfirm}>
+              Salvar (CTRL + Enter)
+            </button>
           </div>
         </form>
 

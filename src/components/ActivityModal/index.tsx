@@ -510,7 +510,9 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
             <button type="button" onClick={onRequestClose}>
               Cancelar (ESC)
             </button>
-            <button type="submit">Salvar (CTRL + Enter)</button>
+            <button type="submit" onClick={handleConfirm}>
+              Salvar (CTRL + Enter)
+            </button>
           </div>
         </form>
         <CancelModal isOpen={isCancelModalOpen} onRequestClose={handleCloseCancelModal} onChangeCancel={onChangeCancel} />

@@ -354,7 +354,9 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
             <button type="button" onClick={onRequestClose}>
               Cancelar (ESC)
             </button>
-            <button type="submit">Salvar (CTRL + Enter)</button>
+            <button type="submit" onClick={handleConfirm}>
+              Salvar (CTRL + Enter)
+            </button>
           </div>
         </form>
       </Container>
