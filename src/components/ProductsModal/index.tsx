@@ -214,7 +214,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
               <Input
                 id="price"
                 type="number"
-                autoFocus
                 inputType="default"
                 placeholder="Informe o preço do produto"
                 value={price}
@@ -229,7 +228,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
               <Input
                 id="quantity"
                 type="number"
-                autoFocus
                 inputType="default"
                 placeholder="Informe a quantidade"
                 value={quantity}
@@ -241,7 +239,6 @@ export function ProductsModal({ isOpen, onRequestClose, productId }: ProductModa
               <Input
                 id="minimumQuantity"
                 type="number"
-                autoFocus
                 inputType="default"
                 placeholder="Informe a quantidade mínima"
                 value={minimumQuantity}

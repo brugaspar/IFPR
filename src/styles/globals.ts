@@ -14,7 +14,7 @@ export const GlobalStyle = createGlobalStyle`
     --shape: #ffffff;
     --shape-dark: #232323;
     --green: #26B886;
-    --yellow: #eba417;
+    --yellow: #997326;
     --cyan: #61dafb;
     --blue: #478ad1;
   }
@@ -227,6 +227,10 @@ export const GlobalStyle = createGlobalStyle`
           color: var(--text-title);
 
           &:hover {
+            background: var(--background);
+          }
+
+          &.rw-state-focus {
             background: var(--background);
           }
         }

@@ -61,6 +61,10 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
     }
+
+    if (event.code === "Enter") {
+      handleAddAddress()
+    }
   }
 
   async function loadCities() {
@@ -142,7 +146,11 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
       const newArr = addressesToShow.filter((currentAddress) => currentAddress.id !== address.id)
       setAddressesToShow(newArr)
     } else {
-      toast.info("Pelo menos 1 endereço é obrigatório")
+      toast.warning("Pelo menos 1 endereço é obrigatório", {
+        style: {
+          background: "var(--yellow)",
+        },
+      })
     }
   }
 
@@ -174,6 +182,13 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
   }
 
   useEffect(() => {
+    setTimeout(() => {
+      const input = document.getElementById("cityId_input")
+      input?.setAttribute("autocomplete", "autofill")
+    }, 500)
+  }, [isOpen])
+
+  useEffect(() => {
     if (isOpen) {
       verifyPermissions()
       loadCities()
@@ -199,14 +214,14 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
       <Container>
         <h1>{"Endereços"}</h1>
 
-        <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
+        <form onKeyDown={handleKeyDown} onSubmit={(e) => e.preventDefault()}>
           <div className="row">
             <RowContainer>
               <label htmlFor="street">Endereço</label>
               <Input
                 id="street"
-                type="text"
                 autoFocus
+                type="text"
                 inputType="default"
                 placeholder="Informe o endereço"
                 value={street}
@@ -219,7 +234,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
               <Input
                 id="neighbourhood"
                 type="text"
-                autoFocus
                 inputType="default"
                 placeholder="Informe o bairro"
                 value={neighbourhood}
@@ -234,7 +248,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
               <Input
                 id="number"
                 type="text"
-                autoFocus
                 inputType="default"
                 placeholder="Informe o número"
                 value={number}
@@ -247,7 +260,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
               <Input
                 id="complement"
                 type="text"
-                autoFocus
                 inputType="default"
                 placeholder="Informe o complemento"
                 value={complement}
@@ -262,7 +274,6 @@ export function AddressModal({ isOpen, onRequestClose, addresses, onChangeAddres
               <Input
                 id="zipcode"
                 type="text"
-                autoFocus
                 inputType="default"
                 placeholder="Informe o CEP"
                 value={zipcode}

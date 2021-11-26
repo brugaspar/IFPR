@@ -32,7 +32,7 @@ export function Input({ inputRef, inputType = "default", type, hasIcon = false, 
         </i>
       )}
 
-      <input ref={inputRef} type={inputType === "password" ? passwordType : type} {...rest} />
+      <input autoComplete="autofill" ref={inputRef} type={inputType === "password" ? passwordType : type} {...rest} />
 
       {inputType === "password" && (
         <button tabIndex={-1} type="button" onClick={handleToggleSecureTextEntry}>

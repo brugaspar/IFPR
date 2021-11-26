@@ -91,8 +91,12 @@ export function UsersModal({ isOpen, onRequestClose, userId }: UsersModalProps) 
         toast.success("Usuário incluído com sucesso")
       }
 
-      const response = await api.get("/users/permissions")
-      updateUserPermissions(response.data.permissions)
+      try {
+        const response = await api.get("/users/permissions")
+        updateUserPermissions(response.data.permissions)
+      } catch (error) {
+        // ignore
+      }
 
       onRequestClose()
     } catch (error: any) {

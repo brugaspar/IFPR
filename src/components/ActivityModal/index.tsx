@@ -1,7 +1,7 @@
 import Modal from "react-modal"
-import { FormEvent, KeyboardEvent, useEffect, useState } from "react"
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 import { toast } from "react-toastify"
-import { Combobox } from "react-widgets"
+import { Combobox, WidgetHandle } from "react-widgets"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
 
 import { api } from "../../services/api.service"
@@ -74,6 +74,8 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
 
   const [reload, setReload] = useState(false)
 
+  const comboboxRef = useRef<WidgetHandle>(null)
+
   function calculate() {
     const activityTotal = items.reduce((accumulator, item) => (accumulator += Number(item.price) * Number(item.quantity)), 0)
     const activityTotalQuantity = items.reduce((accumulator, item) => (accumulator += Number(item.quantity)), 0)
@@ -128,6 +130,8 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
       setItems([...items, item])
     }
 
+    comboboxRef.current?.focus()
+
     setProductId("")
     setQuantity("")
     setPrice("")
@@ -146,11 +150,17 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     setPrice(item.price)
     setQuantity(item.quantity)
     setSelectedItem(item)
+
+    comboboxRef.current?.focus()
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
+    }
+
+    if (event.code === "Enter") {
+      // handleAddItem()
     }
   }
 
@@ -320,7 +330,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
       <Container>
         <h1>{"Atividade"}</h1>
 
-        <form onKeyDown={handleKeyDown} onSubmit={handleConfirm}>
+        <form onKeyDown={handleKeyDown} onSubmit={(e) => e.preventDefault()}>
           <div className="row">
             <RowContainer>
               <label htmlFor="status">Status</label>
@@ -356,6 +366,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
                 textField="name"
                 className="custom-select"
                 placeholder="Selecionar vendedor"
+                autoFocus
                 messages={{
                   emptyFilter: "usuário não encontrado",
                   emptyList: "Nenhum usuário cadastrado",
@@ -392,7 +403,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
               <Input
                 id="observation"
                 type="text"
-                autoFocus
                 inputType="default"
                 placeholder="Observação"
                 value={observation}
@@ -407,6 +417,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
 
               <Combobox
                 id="productId"
+                ref={comboboxRef}
                 data={products}
                 dataKey="id"
                 textField="name"
@@ -428,7 +439,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
                   <Input
                     id="price"
                     type="number"
-                    autoFocus
                     inputType="default"
                     placeholder="Informe o preço"
                     value={price}
@@ -440,7 +450,6 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
                   <Input
                     id="quantity"
                     type="number"
-                    autoFocus
                     inputType="default"
                     placeholder="Informe a quantidade"
                     value={quantity}

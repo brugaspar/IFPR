@@ -81,6 +81,8 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
 
   const [isAdressModalOpen, setIsAdressModalOpen] = useState(false)
 
+  const [reload, setReload] = useState(false)
+
   function handleKeyDown(event: KeyboardEvent<HTMLFormElement>) {
     if (event.ctrlKey && event.code === "Enter") {
       handleConfirm(event)
@@ -289,6 +291,17 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
   function onChangeAddresses(addresses: Address[]) {
     setAddresses(addresses)
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      const cityInput = document.getElementById("naturalityCityId_input")
+      cityInput?.setAttribute("autocomplete", "autofill")
+      const maritalStatusInput = document.getElementById("maritalStatus_input")
+      maritalStatusInput?.setAttribute("autocomplete", "autofill")
+      const bloodTypingInput = document.getElementById("bloodTyping_input")
+      bloodTypingInput?.setAttribute("autocomplete", "autofill")
+    }, 500)
+  }, [isOpen])
 
   useEffect(() => {
     if (isOpen) {
