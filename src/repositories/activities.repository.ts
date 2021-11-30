@@ -112,7 +112,9 @@ class ActivitiesRepository {
 
     const quantity = product.quantity - item.quantity
 
-    await productsRepository.updateQuantity(item.productId, quantity)
+    if(!product.isService) {
+      await productsRepository.updateQuantity(item.productId, quantity)
+    }
 
     return id
   }
@@ -133,7 +135,9 @@ class ActivitiesRepository {
 
       const quantity = product.quantity + item.quantity
 
-      await productsRepository.updateQuantity(item.productId, quantity)
+      if(!product.isService) {
+        await productsRepository.updateQuantity(item.productId, quantity)
+      }
     }
 
     await prisma.activitiesItems.deleteMany({

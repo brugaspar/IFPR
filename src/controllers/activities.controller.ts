@@ -205,7 +205,9 @@ class ActivitiesController {
 
         const quantity = product.quantity + item.quantity
 
-        await productsRepository.updateQuantity(item.productId, quantity)
+        if(!product.isService) {
+          await productsRepository.updateQuantity(item.productId, quantity)
+        }
       }
     } else {
       for (const item of activity.items) {
@@ -217,7 +219,9 @@ class ActivitiesController {
 
         const quantity = product.quantity - item.quantity
 
-        await productsRepository.updateQuantity(item.productId, quantity)
+        if(!product.isService) {
+          await productsRepository.updateQuantity(item.productId, quantity)
+        }
       }
     }
 
