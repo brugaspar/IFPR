@@ -373,7 +373,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
             </RowContainer>
 
             <RowContainer>
-              <label htmlFor="issuedAt">RG emidito em</label>
+              <label htmlFor="issuedAt">RG emitido em</label>
               <Input
                 inputType="default"
                 id="issuedAt"
