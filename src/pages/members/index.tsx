@@ -333,7 +333,7 @@ export default function Members() {
                 <td>{new Date(member.birthDate).toLocaleDateString()}</td>
                 <td>{member.disabled ? "Desativo" : "Ativo"}</td>
                 <td>{new Date(member.createdAt).toLocaleDateString()}</td>
-                <td>{new Date(member.updatedAt).toLocaleDateString()}</td>
+                <td>{new Date(member.updatedAt).toLocaleString()}</td>
                 <td>{member.disabledAt && new Date(member.disabledAt).toLocaleDateString()}</td>
                 <td>{member.disabledByUser}</td>
               </tr>
