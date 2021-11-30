@@ -232,7 +232,7 @@ export function MembersModal({ isOpen, onRequestClose, memberId }: MembersModalP
     setIssuingAuthority(response.data.issuingAuthority)
     setIssuedAt(response.data.issuedAt)
     setCpf(response.data.cpf)
-    setNaturalityCityId(response.data.naturalityCityId)
+    setNaturalityCityId(response.data.city.id)
     setMotherName(response.data.motherName)
     setFatherName(response.data.fatherName)
     setProfession(response.data.profession)
