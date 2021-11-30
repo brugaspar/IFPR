@@ -78,14 +78,16 @@ class MemberController {
         .required("Tipo sanguíneo é obrigatório"),
       disabled: yup.string(),
       planId: yup.string().required("Plano é obrigatório"),
-      // address: yup.object().shape({
-      //   street: yup.string().required("Endereço é obrigatório"),
-      //   number: yup.string().required("Número é obrigatório"),
-      //   neighbourhood: yup.string().required("Bairro é obrigatório"),
-      //   complement: yup.string(),
-      //   zipcode: yup.string().required("CEP é obrigatório"),
-      //   cityId: yup.number().required("Cidade é obrigatória"),
-      // }),
+      addresses: yup.array(
+        yup.object().shape({
+          street: yup.string(),
+          number: yup.string(),
+          neighbourhood: yup.string(),
+          complement: yup.string(),
+          zipcode: yup.string(),
+          cityId: yup.number(),
+        })
+      ),
     }
 
     await checkBodySchema(schema, request.body)
