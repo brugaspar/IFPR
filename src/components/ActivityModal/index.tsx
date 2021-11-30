@@ -295,6 +295,7 @@ export function ActivityModal({ isOpen, onRequestClose, activityId }: ActivityMo
     setSellerId("")
     setObservation("")
     setSelectedItem(null)
+    setCancelledReason("")
   }
 
   function onChangeCancel(cancelledReason: string) {
