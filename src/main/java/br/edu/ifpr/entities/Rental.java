@@ -1,11 +1,12 @@
 package br.edu.ifpr.entities;
 
 import java.util.Date;
+import java.util.List;
 
 public class Rental {
 
   private User user;
-  private Movie movie;
+  private List<Movie> movies;
 
   private Date rentalDate;
   private Date returnDate;
@@ -43,12 +44,12 @@ public class Rental {
     this.amount = amount;
   }
 
-  public Movie getMovie() {
-    return movie;
+  public List<Movie> getMovies() {
+    return movies;
   }
 
-  public void setMovie(Movie movie) {
-    this.movie = movie;
+  public void setMovies(List<Movie> movies) {
+    this.movies = movies;
   }
 
 }

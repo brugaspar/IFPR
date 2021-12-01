@@ -6,32 +6,66 @@ import br.edu.ifpr.entities.User;
 import br.edu.ifpr.utils.DateUtil;
 
 import java.util.Date;
+import java.util.List;
 
 public class RentalService {
 
-  public Rental movieRental(User user, Movie movie) throws Exception {
+  public Rental movieRental(User user, List<Movie> movies) throws Exception {
     if(user == null) {
       throw new Exception("Usuário não pode ser nulo");
     }
 
-    if(movie == null) {
-      throw new Exception("Filme não pode ser nulo");
+    if(movies == null) {
+      throw new Exception("Pelo menos 1 filme obrigatório");
     }
 
-    if(movie.getStock() == 0) {
-      throw new Exception("Não é possível alugar filme sem estoque");
+    if(!(movies.size() > 0)) {
+      throw new Exception("Pelo menos 1 filme obrigatório");
     }
 
+    Double amount = 0.0;
+
+    for(int i = 0; i < movies.size(); i++) {
+      if(movies.get(i) == null) {
+        throw new Exception("Filme não pode ser nulo");
+      }
+
+      if(movies.get(i).getStock() == 0) {
+        throw new Exception("Não é possível alugar filme sem estoque");
+      }
+
+      int position = i + 1;
+
+      if(position <= 2) {
+        amount += movies.get(i).getPrice();
+      }
+      if(position == 3) {
+        amount += movies.get(i).getPrice() - (movies.get(i).getPrice() * 0.25);
+      }
+      if(position == 4) {
+        amount += movies.get(i).getPrice() - (movies.get(i).getPrice() * 0.5);
+      }
+      if(position == 5) {
+        amount += movies.get(i).getPrice() - (movies.get(i).getPrice() * 0.75);
+      }
+      if(position == 6) {
+        amount += movies.get(i).getPrice() - (movies.get(i).getPrice() * 1);
+      }
+    }
 
     Rental rental = new Rental();
 
-    rental.setMovie(movie);
+    rental.setMovies(movies);
     rental.setUser(user);
     rental.setRentalDate(new Date());
-    rental.setAmount(movie.getPrice());
+    rental.setAmount(amount);
 
     Date returnDate = new Date();
     returnDate = DateUtil.addDays(returnDate, 1);
+
+    if(DateUtil.verifyDayOfWeek(returnDate, 1)) {
+      returnDate = DateUtil.addDays(returnDate, 1);
+    }
 
     rental.setReturnDate(returnDate);
 
