@@ -16,8 +16,8 @@ CREATE TYPE "ActivitiesStatus" AS ENUM ('open', 'closed', 'cancelled');
 -- CreateTable
 CREATE TABLE "permissions" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
+    "slug" VARCHAR(60) NOT NULL,
     "table_id" TEXT NOT NULL,
     "description" TEXT,
 
@@ -27,10 +27,10 @@ CREATE TABLE "permissions" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
+    "email" VARCHAR(60) NOT NULL,
+    "password" VARCHAR(60) NOT NULL,
+    "username" VARCHAR(60) NOT NULL,
     "permissions" JSONB NOT NULL,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "disabled_at" TIMESTAMPTZ,
@@ -46,7 +46,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "general_tables" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
 
     CONSTRAINT "general_tables_pkey" PRIMARY KEY ("id")
 );
@@ -67,8 +67,8 @@ CREATE TABLE "general_logs" (
 -- CreateTable
 CREATE TABLE "states" (
     "id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "initials" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
+    "initials" VARCHAR(10) NOT NULL,
 
     CONSTRAINT "states_pkey" PRIMARY KEY ("id")
 );
@@ -76,7 +76,7 @@ CREATE TABLE "states" (
 -- CreateTable
 CREATE TABLE "cities" (
     "id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
     "state_id" INTEGER NOT NULL,
 
     CONSTRAINT "cities_pkey" PRIMARY KEY ("id")
@@ -85,7 +85,7 @@ CREATE TABLE "cities" (
 -- CreateTable
 CREATE TABLE "members_plans" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
     "description" TEXT,
     "value" DOUBLE PRECISION NOT NULL,
     "renew_value" DOUBLE PRECISION NOT NULL,
@@ -108,18 +108,18 @@ CREATE TABLE "members_plans" (
 -- CreateTable
 CREATE TABLE "members" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "rg" TEXT NOT NULL,
-    "issuing_authority" TEXT NOT NULL,
-    "cpf" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
+    "rg" VARCHAR(60) NOT NULL,
+    "issuing_authority" VARCHAR(60) NOT NULL,
+    "cpf" VARCHAR(60) NOT NULL,
     "naturality_city_id" INTEGER NOT NULL,
-    "mother_name" TEXT,
-    "father_name" TEXT,
-    "profession" TEXT NOT NULL,
-    "email" TEXT,
-    "phone" TEXT,
-    "cell_phone" TEXT NOT NULL,
-    "cr_number" TEXT NOT NULL,
+    "mother_name" VARCHAR(60),
+    "father_name" VARCHAR(60),
+    "profession" VARCHAR(60) NOT NULL,
+    "email" VARCHAR(60),
+    "phone" VARCHAR(60),
+    "cell_phone" VARCHAR(60) NOT NULL,
+    "cr_number" VARCHAR(60) NOT NULL,
     "issued_at" TIMESTAMPTZ NOT NULL,
     "birth_date" TIMESTAMP(3) NOT NULL,
     "cr_validity" TIMESTAMP(3) NOT NULL,
@@ -142,11 +142,11 @@ CREATE TABLE "members" (
 -- CreateTable
 CREATE TABLE "members_addresses" (
     "id" TEXT NOT NULL,
-    "street" TEXT NOT NULL,
-    "neighbourhood" TEXT NOT NULL,
-    "number" TEXT NOT NULL,
-    "complement" TEXT,
-    "zipcode" TEXT NOT NULL,
+    "street" VARCHAR(60) NOT NULL,
+    "neighbourhood" VARCHAR(60) NOT NULL,
+    "number" VARCHAR(60) NOT NULL,
+    "complement" VARCHAR(60),
+    "zipcode" VARCHAR(60) NOT NULL,
     "city_id" INTEGER NOT NULL,
     "member_id" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -160,7 +160,7 @@ CREATE TABLE "members_addresses" (
 -- CreateTable
 CREATE TABLE "products_brands" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "disabled_at" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -175,7 +175,7 @@ CREATE TABLE "products_brands" (
 -- CreateTable
 CREATE TABLE "products_groups" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "disabled_at" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -191,7 +191,7 @@ CREATE TABLE "products_groups" (
 CREATE TABLE "products" (
     "id" TEXT NOT NULL,
     "is_service" BOOLEAN NOT NULL DEFAULT false,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(120) NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
     "minimum_quantity" DOUBLE PRECISION NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
@@ -238,7 +238,6 @@ CREATE TABLE "activities_items" (
     "product_id" TEXT NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "subtotal" DOUBLE PRECISION NOT NULL,
 
     CONSTRAINT "activities_items_pkey" PRIMARY KEY ("id")
 );
