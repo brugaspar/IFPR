@@ -333,6 +333,7 @@ model ActivitiesItems {
   product    Products   @relation(fields: [productId], references: [id])
   quantity   Float
   price      Float
+  subtotal   Float
 
   @@map("activities_items")
 }
