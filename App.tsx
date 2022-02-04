@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import AppLoading from "expo-app-loading";
 
+import { AuthProvider } from "./src/contexts/AuthContext";
+
+import { Routes } from "./src/routes";
 import { useLoadFonts } from "./src/hooks/useLoadFonts";
-import { SignIn } from "./src/screens/SignIn";
 
 import { styles } from "./src/styles/global";
 
@@ -24,9 +26,9 @@ export default function App() {
   }
 
   return (
-    <>
-      <SignIn />
+    <AuthProvider>
+      <Routes />
       <StatusBar style="light" translucent={false} backgroundColor={styles.colors.background} />
-    </>
+    </AuthProvider>
   );
 }
