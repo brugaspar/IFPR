@@ -38,14 +38,6 @@ export const Highlight = styled.Text`
   color: ${styles.colors.green};
 `;
 
-export const Title = styled.Text`
-  color: ${styles.colors.text};
-`;
-
-export const Margin = styled.View`
-  margin-bottom: 48px;
-`;
-
 export const VersionContainer = styled.View`
   position: absolute;
   align-self: center;

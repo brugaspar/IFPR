@@ -46,8 +46,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    console.log(response.data);
-
     setUser(response.data.user);
 
     if (keepConnected) {

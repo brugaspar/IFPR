@@ -4,11 +4,11 @@ import { styles } from "../../styles/global";
 import { Container, Title } from "./styles";
 
 export function Dashboard() {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   return (
     <Container>
-      <Title>Dashboard Screen</Title>
+      <Title>Olá, {user?.name}</Title>
       <Button title="Sair" onPress={signOut} background={styles.colors.red} />
     </Container>
   );

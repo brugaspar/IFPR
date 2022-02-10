@@ -9,9 +9,10 @@ export const styles = {
   colors: {
     background: "#131313",
     text: "#F1F3F5",
-    red: "#a6402d",
+    red: "#bf5a47",
     input: "#232323",
     green: "#57B894",
     opaqueGreen: "rgba(87, 184, 148, 0.2)",
+    opaqueBackground: "rgba(19, 19, 19, 0.2)",
   },
 };
