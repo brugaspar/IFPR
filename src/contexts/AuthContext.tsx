@@ -73,7 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     if (storedToken) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(storedToken)}`;
+      api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
     }
 
     setLoading(false);
