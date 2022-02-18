@@ -10,6 +10,10 @@ type KeepConnectedButtonProps = {
   opacity: number;
 };
 
+export const InvisibleButton = styled.TouchableWithoutFeedback`
+  background: red;
+`;
+
 export const Container = styled.View`
   flex: 1;
   background: ${styles.colors.background};

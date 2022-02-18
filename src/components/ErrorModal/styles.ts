@@ -13,8 +13,20 @@ export const Wrapper = styled.View`
 
 export const Container = styled.View`
   background: ${styles.colors.input};
-  padding: 24px;
   border-radius: 4px;
+`;
+
+export const Content = styled.View`
+  padding: 0 24px 24px;
+`;
+
+export const Card = styled.View`
+  background: ${styles.colors.red};
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
 `;
 
 export const Title = styled.Text`
@@ -23,6 +35,7 @@ export const Title = styled.Text`
   color: ${styles.colors.text};
   line-height: 22px;
   text-align: center;
+  margin-top: 16px;
 `;
 
 export const ErrorMessage = styled.Text`
@@ -31,5 +44,5 @@ export const ErrorMessage = styled.Text`
   color: ${styles.colors.red};
   line-height: 18px;
   text-align: center;
-  margin: 24px 0;
+  margin: 28px 0;
 `;

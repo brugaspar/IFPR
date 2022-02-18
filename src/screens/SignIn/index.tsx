@@ -14,18 +14,20 @@ import {
   KeepConnectedContainer,
   MemberText,
   MemberContainer,
+  InvisibleButton,
 } from "./styles";
-
-import { useAuth } from "../../contexts/AuthContext";
 
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
+import { ErrorModal } from "../../components/ErrorModal";
+
+import { useAuth } from "../../contexts/AuthContext";
+import { handleKeyboardDismiss, handlePhoneVibration } from "../../helpers/device.helper";
 
 import { expo } from "../../../app.json";
 import { styles } from "../../styles/global";
 
 import logoImage from "../../assets/logo.png";
-import { ErrorModal } from "../../components/ErrorModal";
 
 export function SignIn() {
   const { signIn } = useAuth();
@@ -40,6 +42,7 @@ export function SignIn() {
   const [errorModal, setErrorModal] = useState("");
 
   function handleToggleCheckbox() {
+    handlePhoneVibration();
     setKeepConnected(!keepConnected);
   }
 
@@ -98,55 +101,62 @@ export function SignIn() {
 
   return (
     <>
-      <Container>
-        <LogoImage source={logoImage} />
+      <InvisibleButton onPress={handleKeyboardDismiss}>
+        <Container>
+          <LogoImage source={logoImage} />
 
-        <Message>
-          Informe seu <Highlight>usuário</Highlight> e sua <Highlight>senha</Highlight>
-          {"\n"}para acessar o aplicativo
-        </Message>
+          <Message>
+            Informe seu <Highlight>usuário</Highlight> e sua <Highlight>senha</Highlight>
+            {"\n"}para acessar o aplicativo
+          </Message>
 
-        <Input
-          label="Usuário"
-          placeholder="Informe seu usuário"
-          icon="person-outline"
-          value={username}
-          onChangeText={(text) => handleInputChangeText(text, "username")}
-          editable={!loading}
-          error={usernameError}
-        />
-        <Input
-          label="Senha"
-          placeholder="Informe sua senha"
-          icon="lock-closed-outline"
-          type="password"
-          value={password}
-          onChangeText={(text) => handleInputChangeText(text, "password")}
-          editable={!loading}
-          error={passwordError}
-        />
+          <Input
+            label="Usuário"
+            placeholder="Informe seu usuário"
+            icon="person-outline"
+            value={username}
+            onChangeText={(text) => handleInputChangeText(text, "username")}
+            editable={!loading}
+            error={usernameError}
+          />
+          <Input
+            label="Senha"
+            placeholder="Informe sua senha"
+            icon="lock-closed-outline"
+            type="password"
+            value={password}
+            onChangeText={(text) => handleInputChangeText(text, "password")}
+            editable={!loading}
+            error={passwordError}
+          />
 
-        <KeepConnectedContainer>
-          <KeepConnectedButton activeOpacity={0.8} onPress={handleToggleCheckbox} disabled={loading} opacity={loading ? 0.5 : 1}>
-            <KeepConnectedBox active={keepConnected}>
-              {keepConnected && <Ionicons name="checkmark-sharp" size={17} color={styles.colors.background} />}
-            </KeepConnectedBox>
-            <KeepConnectedText>Manter conectado</KeepConnectedText>
-          </KeepConnectedButton>
-        </KeepConnectedContainer>
+          <KeepConnectedContainer>
+            <KeepConnectedButton
+              activeOpacity={0.8}
+              onPress={handleToggleCheckbox}
+              disabled={loading}
+              opacity={loading ? 0.5 : 1}
+            >
+              <KeepConnectedBox active={keepConnected}>
+                {keepConnected && <Ionicons name="checkmark-sharp" size={17} color={styles.colors.background} />}
+              </KeepConnectedBox>
+              <KeepConnectedText>Manter conectado</KeepConnectedText>
+            </KeepConnectedButton>
+          </KeepConnectedContainer>
 
-        <Button title="Entrar" onPress={handleSignIn} loading={loading} />
+          <Button title="Entrar" onPress={handleSignIn} loading={loading} />
 
-        <MemberContainer>
-          <MemberText>
-            É membro? <Highlight onPress={() => console.log("Login do membro")}>Clique aqui</Highlight>
-          </MemberText>
-        </MemberContainer>
+          <MemberContainer>
+            <MemberText>
+              É membro? <Highlight onPress={() => console.log("Login do membro")}>Clique aqui</Highlight>
+            </MemberText>
+          </MemberContainer>
 
-        <VersionContainer>
-          <VersionText>{expo.version}</VersionText>
-        </VersionContainer>
-      </Container>
+          <VersionContainer>
+            <VersionText>{expo.version}</VersionText>
+          </VersionContainer>
+        </Container>
+      </InvisibleButton>
       <ErrorModal error={errorModal} setError={setErrorModal} />
     </>
   );
