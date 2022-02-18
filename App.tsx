@@ -25,6 +25,7 @@ export default function App() {
     return <AppLoading />;
   }
 
+  // TODO: Add SafeAreaView to all screens
   return (
     <AuthProvider>
       <Routes />
