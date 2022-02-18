@@ -37,7 +37,10 @@ type AuthContextProps = {
 const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>({
+    name: "Bruno Gaspar",
+  } as any); //! TODO: exclude
   const isAuthenticated = !!user;
 
   async function signIn({ username, password, keepConnected }: SignInPayload) {
