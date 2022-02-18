@@ -1,4 +1,7 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppLoading from "expo-app-loading";
+
 import { api } from "../services/api.service";
 
 type AuthProviderProps = {
@@ -37,10 +40,8 @@ type AuthContextProps = {
 const AuthContext = createContext({} as AuthContextProps);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // const [user, setUser] = useState<User | null>(null);
-  const [user, setUser] = useState<User | null>({
-    name: "Bruno Gaspar",
-  } as any); //! TODO: exclude
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
 
   async function signIn({ username, password, keepConnected }: SignInPayload) {
@@ -50,14 +51,40 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     setUser(response.data.user);
+    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
 
     if (keepConnected) {
-      // TODO: Save token in local storage
+      await AsyncStorage.setItem("@mark-one:user", JSON.stringify(response.data.user));
+      await AsyncStorage.setItem("@mark-one:token", response.data.token);
     }
   }
 
   async function signOut() {
+    await AsyncStorage.multiRemove(["@mark-one:user", "@mark-one:token"]);
     setUser(null);
+  }
+
+  async function loadStoredData() {
+    const storedUser = await AsyncStorage.getItem("@mark-one:user");
+    const storedToken = await AsyncStorage.getItem("@mark-one:token");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    if (storedToken) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${JSON.parse(storedToken)}`;
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadStoredData();
+  }, []);
+
+  if (loading) {
+    return <AppLoading />;
   }
 
   return (
