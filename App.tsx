@@ -8,6 +8,7 @@ import { Routes } from "./src/routes";
 import { useLoadFonts } from "./src/hooks/useLoadFonts";
 
 import { styles } from "./src/styles/global";
+import { SafeAreaView } from "react-native";
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -25,11 +26,12 @@ export default function App() {
     return <AppLoading />;
   }
 
-  // TODO: Add SafeAreaView to all screens
   return (
     <AuthProvider>
-      <Routes />
-      <StatusBar style="light" translucent={false} backgroundColor={styles.colors.background} />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Routes />
+        <StatusBar style="light" translucent={false} backgroundColor={styles.colors.background} />
+      </SafeAreaView>
     </AuthProvider>
   );
 }

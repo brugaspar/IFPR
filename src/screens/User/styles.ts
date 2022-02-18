@@ -7,12 +7,6 @@ export const Container = styled.View`
   padding: 16px;
 `;
 
-export const FilterContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin: 20px 0;
-`;
-
 // UserCard
 
 type UserCardStatusCircleProps = {
@@ -57,4 +51,12 @@ export const UserCardStatusCircle = styled.View<UserCardStatusCircleProps>`
   border-radius: 4px;
   background: ${(props) => (props.disabled ? styles.colors.red : styles.colors.green)};
   margin-right: 5px;
+`;
+
+export const UserCardIndex = styled.Text`
+  font-family: ${styles.fonts.epilogueMedium};
+  font-size: 10px;
+  color: ${styles.colors.green};
+  align-self: flex-end;
+  margin-top: 8px;
 `;
