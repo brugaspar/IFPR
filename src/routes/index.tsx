@@ -1,11 +1,12 @@
 import { useAuth } from "../contexts/AuthContext";
 
-// import { Dashboard } from "../screens/Dashboard";
 import { SignIn } from "../screens/SignIn";
-import { User } from "../screens/User";
+// import { Dashboard } from "../screens/Dashboard";
+// import { User } from "../screens/User";
+import { Member } from "../screens/Member";
 
 export function Routes() {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <User /> : <SignIn />;
+  return isAuthenticated ? <Member /> : <SignIn />;
 }
