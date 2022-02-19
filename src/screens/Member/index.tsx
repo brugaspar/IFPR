@@ -17,12 +17,12 @@ import {
   MemberCardTitle,
 } from "./styles";
 
-const member = [
+const members = [
   {
     id: "bruno-gaspar",
     name: "Bruno Gaspar",
     email: "bruninhoogaspar@gmail.com",
-    phone: "(45)9.9996. 2223",
+    phone: "(45) 9 9996-2223",
     disabled: false,
     createdAt: "2021-12-27",
   },
@@ -30,17 +30,17 @@ const member = [
     id: "guilherme-locks",
     name: "Guilherme Locks",
     email: "guilherme.outsystems@gmail.com",
-    phone: "(45)9.9818.3657",
+    phone: "(45) 9 9818-3657",
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
-    id: "bruno-gaspar",
-    name: "Bruno Gaspar",
-    email: "bruninhoogaspar@gmail.com",
-    phone: "(45)9.9996. 2223",
-    disabled: false,
-    createdAt: "2021-12-27",
+    id: "lucas-zorzan",
+    name: "Lucas Zorzan",
+    email: "lucaszorzan14@gmail.com",
+    phone: "(45) 9 9999-1234",
+    disabled: true,
+    createdAt: "2022-02-08",
   },
 ];
 
@@ -48,7 +48,7 @@ export function Member() {
   return (
     <Container>
       <Header />
-      <TotalCard title="Membros filtrados" value={member.length} />
+      <TotalCard title="Membros filtrados" value={members.length} />
 
       <FilterWrapper>
         <Filter title="Status" />
@@ -57,9 +57,9 @@ export function Member() {
       </FilterWrapper>
 
       <FlatList
-        data={member}
+        data={members}
         keyExtractor={(member) => member.id}
-        renderItem={({ item, index }) => <MemberCard member={item} index={index} total={member.length} />}
+        renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
         showsVerticalScrollIndicator={false}
         style={{
           marginBottom: -16,
