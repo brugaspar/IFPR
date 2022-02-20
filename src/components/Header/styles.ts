@@ -4,7 +4,6 @@ import { styles } from "../../styles/global";
 export const Container = styled.View`
   background: ${styles.colors.background};
   flex-direction: row;
-  align-items: center;
   justify-content: space-between;
   margin-bottom: 40px;
 `;
