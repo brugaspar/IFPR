@@ -1,4 +1,8 @@
+import "react-native-gesture-handler";
+
 import { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import AppLoading from "expo-app-loading";
 
@@ -8,7 +12,6 @@ import { Routes } from "./src/routes";
 import { useLoadFonts } from "./src/hooks/useLoadFonts";
 
 import { styles } from "./src/styles/global";
-import { SafeAreaView } from "react-native";
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -27,11 +30,13 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Routes />
-        <StatusBar style="light" translucent={false} backgroundColor={styles.colors.background} />
-      </SafeAreaView>
-    </AuthProvider>
+    <NavigationContainer>
+      <AuthProvider>
+        <SafeAreaView style={{ flex: 1 }}>
+          <Routes />
+          <StatusBar style="light" translucent={false} backgroundColor={styles.colors.background} />
+        </SafeAreaView>
+      </AuthProvider>
+    </NavigationContainer>
   );
 }
