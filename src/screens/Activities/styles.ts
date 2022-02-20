@@ -38,7 +38,7 @@ type ActivityCardStatusCircleProps = {
   status: string;
 };
 
-export const ActivityCardContainer = styled.View`
+export const ActivityCardContainer = styled.TouchableOpacity`
   background: ${styles.colors.input};
   border-radius: 4px;
   margin-bottom: 15px;

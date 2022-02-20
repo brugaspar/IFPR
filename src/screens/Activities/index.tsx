@@ -132,7 +132,7 @@ function ActivityCard({ activity, index, total }: ActivityCardProps) {
   };
 
   return (
-    <ActivityCardContainer>
+    <ActivityCardContainer activeOpacity={0.6}>
       <ActivityCardTitle>{activity.member}</ActivityCardTitle>
 
       <ActivityCardSeparator />
