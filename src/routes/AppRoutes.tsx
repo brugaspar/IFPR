@@ -1,5 +1,4 @@
 import { Dimensions } from "react-native";
-import { DrawerActions } from "@react-navigation/native";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,16 +27,16 @@ function DrawerRoutes() {
   return (
     <Drawer.Navigator
       initialRouteName="Dashboard"
-      screenListeners={({ navigation }) => ({
-        drawerItemPress: () => navigation.dispatch(DrawerActions.closeDrawer()),
-      })}
+      useLegacyImplementation
       screenOptions={{
         headerShown: false,
-        swipeEdgeWidth: Dimensions.get("window").width / 2,
+        swipeEdgeWidth: Dimensions.get("window").width,
+        drawerType: "back",
         drawerStyle: {
           backgroundColor: styles.colors.background,
           borderRightWidth: 1,
           borderColor: styles.colors.input,
+          width: Dimensions.get("window").width / 1.5,
         },
         drawerLabelStyle: {
           fontFamily: styles.fonts.epilogueRegular,
