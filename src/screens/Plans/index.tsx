@@ -6,10 +6,13 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { formatCurrency } from "../../helpers/strings.helper";
+
 import {
   Container,
   PlanCardContainer,
   PlanCardIndex,
+  PlanCardNumber,
   PlanCardRow,
   PlanCardSeparator,
   PlanCardStatusCircle,
@@ -21,31 +24,30 @@ const plans = [
   {
     id: "ouro",
     name: "Ouro",
-    quantity_members: "34",
-    value: "1299.99",
+    membersQuantity: 34,
+    value: 1299.99,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "prata",
     name: "Prata",
-    quantity_members: "123",
-    value: "989.99",
+    membersQuantity: 123,
+    value: 989.99,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "bronze",
     name: "Bronze",
-    quantity_members: "19",
-    value: "459.99",
+    membersQuantity: 19,
+    value: 459.99,
     disabled: false,
     createdAt: "2021-12-27",
   },
-  
 ];
 
-export function Plan() {
+export function Plans() {
   return (
     <Container>
       <Header />
@@ -74,8 +76,8 @@ export function Plan() {
 type PlanProps = {
   id: string;
   name: string;
-  quantity_members: string;
-  value: string;
+  membersQuantity: number;
+  value: number;
   disabled: boolean;
   createdAt: string;
 };
@@ -89,15 +91,19 @@ type PlanCardProps = {
 function PlanCard({ plan, index, total }: PlanCardProps) {
   const createdAt = moment(plan.createdAt).format("DD/MM/YYYY");
 
+  const value = formatCurrency(plan.value);
+
   return (
     <PlanCardContainer>
       <PlanCardTitle>{plan.name}</PlanCardTitle>
 
       <PlanCardSeparator />
 
-      <PlanCardText>{`Membros: ${plan.quantity_members}`}</PlanCardText>
-      <PlanCardText>{`R$ ${plan.value}`}</PlanCardText>
-      
+      <PlanCardText>Membros: {plan.membersQuantity}</PlanCardText>
+      <PlanCardText>
+        <PlanCardNumber>{value}</PlanCardNumber>
+      </PlanCardText>
+
       <PlanCardRow>
         <PlanCardRow>
           <PlanCardStatusCircle disabled={plan.disabled} />

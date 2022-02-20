@@ -7,45 +7,49 @@ export const Container = styled.View`
   padding: 16px;
 `;
 
-// PlanCard
+// ProductCard
 
-type PlanCardStatusCircleProps = {
+type ProductCardStatusCircleProps = {
   disabled: boolean;
 };
 
-export const PlanCardContainer = styled.View`
+export const ProductCardContainer = styled.View`
   background: ${styles.colors.input};
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 10px;
 `;
 
-export const PlanCardTitle = styled.Text`
+export const ProductCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.green};
 `;
 
-export const PlanCardSeparator = styled.View`
+export const ProductCardSeparator = styled.View`
   height: 1px;
   margin: 5px 0;
   background: ${styles.colors.line};
 `;
 
-export const PlanCardText = styled.Text`
+export const ProductCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.text};
-  line-height: 18px;
+  line-height: 20px;
 `;
 
-export const PlanCardRow = styled.View`
+export const ProductCardNumber = styled.Text`
+  font-family: ${styles.fonts.nunitoRegular};
+`;
+
+export const ProductCardRow = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-export const PlanCardStatusCircle = styled.View<PlanCardStatusCircleProps>`
+export const ProductCardStatusCircle = styled.View<ProductCardStatusCircleProps>`
   height: 4px;
   width: 4px;
   border-radius: 4px;
@@ -53,7 +57,7 @@ export const PlanCardStatusCircle = styled.View<PlanCardStatusCircleProps>`
   margin-right: 5px;
 `;
 
-export const PlanCardIndex = styled.Text`
+export const ProductCardIndex = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
   font-size: 10px;
   color: ${styles.colors.green};

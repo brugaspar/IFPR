@@ -18,7 +18,7 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
 
 export const Title = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 11px;
+  font-size: 12px;
   color: ${styles.colors.text};
   margin-right: 5px;
 `;

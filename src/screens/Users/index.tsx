@@ -66,10 +66,9 @@ const users = [
     disabled: true,
     createdAt: "2022-02-18",
   },
-  
 ];
 
-export function User() {
+export function Users() {
   return (
     <Container>
       <Header />

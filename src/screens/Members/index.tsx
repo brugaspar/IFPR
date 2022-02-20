@@ -44,7 +44,7 @@ const members = [
   },
 ];
 
-export function Member() {
+export function Members() {
   return (
     <Container>
       <Header />

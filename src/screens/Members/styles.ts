@@ -7,45 +7,45 @@ export const Container = styled.View`
   padding: 16px;
 `;
 
-// UserCard
+// MemberCard
 
-type UserCardStatusCircleProps = {
+type MemberCardStatusCircleProps = {
   disabled: boolean;
 };
 
-export const UserCardContainer = styled.View`
+export const MemberCardContainer = styled.View`
   background: ${styles.colors.input};
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 10px;
 `;
 
-export const UserCardTitle = styled.Text`
+export const MemberCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.green};
 `;
 
-export const UserCardSeparator = styled.View`
+export const MemberCardSeparator = styled.View`
   height: 1px;
   margin: 5px 0;
   background: ${styles.colors.line};
 `;
 
-export const UserCardText = styled.Text`
+export const MemberCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.text};
-  line-height: 18px;
+  line-height: 20px;
 `;
 
-export const UserCardRow = styled.View`
+export const MemberCardRow = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-export const UserCardStatusCircle = styled.View<UserCardStatusCircleProps>`
+export const MemberCardStatusCircle = styled.View<MemberCardStatusCircleProps>`
   height: 4px;
   width: 4px;
   border-radius: 4px;
@@ -53,7 +53,7 @@ export const UserCardStatusCircle = styled.View<UserCardStatusCircleProps>`
   margin-right: 5px;
 `;
 
-export const UserCardIndex = styled.Text`
+export const MemberCardIndex = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
   font-size: 10px;
   color: ${styles.colors.green};

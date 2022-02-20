@@ -7,6 +7,31 @@ export const Container = styled.View`
   padding: 16px;
 `;
 
+export const TotalCard = styled.View`
+  background: ${styles.colors.input};
+  padding: 16px;
+  border-radius: 4px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const TotalCardContainer = styled.View``;
+
+export const TotalCardTitle = styled.Text`
+  font-family: ${styles.fonts.epilogueMedium};
+  font-size: 16px;
+  color: ${styles.colors.text};
+`;
+
+export const TotalCardHighlight = styled.Text`
+  font-family: ${styles.fonts.nunitoBold};
+  font-size: 18px;
+  color: ${styles.colors.green};
+`;
+
+export const TotalCardButton = styled.TouchableOpacity``;
+
 // ActivityCard
 
 type ActivityCardStatusCircleProps = {
@@ -22,7 +47,7 @@ export const ActivityCardContainer = styled.View`
 
 export const ActivityCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.green};
 `;
 
@@ -34,9 +59,13 @@ export const ActivityCardSeparator = styled.View`
 
 export const ActivityCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.text};
-  line-height: 18px;
+  line-height: 20px;
+`;
+
+export const ActivityCardNumber = styled.Text`
+  font-family: ${styles.fonts.nunitoRegular};
 `;
 
 export const ActivityCardRow = styled.View`
@@ -50,9 +79,9 @@ export const ActivityCardStatusCircle = styled.View<ActivityCardStatusCircleProp
   width: 4px;
   border-radius: 4px;
   background: ${(props) => {
-    if(props.status === "Aberta") return styles.colors.green
-    if(props.status === "Cancelada") return styles.colors.red
-    return styles.colors.blue
+    if (props.status === "open") return styles.colors.green;
+    if (props.status === "cancelled") return styles.colors.red;
+    return styles.colors.blue;
   }};
   margin-right: 5px;
 `;

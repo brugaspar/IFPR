@@ -7,45 +7,45 @@ export const Container = styled.View`
   padding: 16px;
 `;
 
-// ProductCard
+// UserCard
 
-type ProductCardStatusCircleProps = {
+type UserCardStatusCircleProps = {
   disabled: boolean;
 };
 
-export const ProductCardContainer = styled.View`
+export const UserCardContainer = styled.View`
   background: ${styles.colors.input};
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 10px;
 `;
 
-export const ProductCardTitle = styled.Text`
+export const UserCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.green};
 `;
 
-export const ProductCardSeparator = styled.View`
+export const UserCardSeparator = styled.View`
   height: 1px;
   margin: 5px 0;
   background: ${styles.colors.line};
 `;
 
-export const ProductCardText = styled.Text`
+export const UserCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 11px;
+  font-size: 13px;
   color: ${styles.colors.text};
-  line-height: 18px;
+  line-height: 20px;
 `;
 
-export const ProductCardRow = styled.View`
+export const UserCardRow = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-export const ProductCardStatusCircle = styled.View<ProductCardStatusCircleProps>`
+export const UserCardStatusCircle = styled.View<UserCardStatusCircleProps>`
   height: 4px;
   width: 4px;
   border-radius: 4px;
@@ -53,7 +53,7 @@ export const ProductCardStatusCircle = styled.View<ProductCardStatusCircleProps>
   margin-right: 5px;
 `;
 
-export const ProductCardIndex = styled.Text`
+export const UserCardIndex = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
   font-size: 10px;
   color: ${styles.colors.green};

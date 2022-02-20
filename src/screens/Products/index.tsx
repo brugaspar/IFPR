@@ -6,10 +6,13 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { formatCurrency } from "../../helpers/strings.helper";
+
 import {
   Container,
   ProductCardContainer,
   ProductCardIndex,
+  ProductCardNumber,
   ProductCardRow,
   ProductCardSeparator,
   ProductCardStatusCircle,
@@ -21,61 +24,60 @@ const products = [
   {
     id: "1",
     name: "Munição 9mm",
-    quantity: "34",
+    quantity: 34,
     brand: "Taurus",
-    value: "7.45",
+    value: 7.45,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "2",
     name: "Munição .50",
-    quantity: "456",
+    quantity: 456,
     brand: "CBC",
-    value: "15.50",
+    value: 15.5,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "3",
-    name: "Aluguel pistola 9mm",
-    quantity: "1",
+    name: "Aluguel 9mm",
+    quantity: 1,
     brand: "Glock",
-    value: "225.00",
+    value: 225.0,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "4",
     name: "Munição .40",
-    quantity: "299",
+    quantity: 299,
     brand: "CBC",
-    value: "6.25",
+    value: 6.25,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "5",
     name: "Camiseta M",
-    quantity: "45",
+    quantity: 45,
     brand: "Estatex",
-    value: "59.00",
+    value: 59.0,
     disabled: false,
     createdAt: "2021-12-27",
   },
   {
     id: "6",
     name: "Camiseta GG",
-    quantity: "32",
+    quantity: 32,
     brand: "Estatex",
-    value: "79.00",
+    value: 79.0,
     disabled: false,
     createdAt: "2021-12-27",
   },
-  
 ];
 
-export function Product() {
+export function Products() {
   return (
     <Container>
       <Header />
@@ -106,9 +108,9 @@ export function Product() {
 type ProductProps = {
   id: string;
   name: string;
-  quantity: string;
+  quantity: number;
   brand: string;
-  value: string;
+  value: number;
   disabled: boolean;
   createdAt: string;
 };
@@ -122,6 +124,8 @@ type ProductCardProps = {
 function ProductCard({ product, index, total }: ProductCardProps) {
   const createdAt = moment(product.createdAt).format("DD/MM/YYYY");
 
+  const value = formatCurrency(product.value);
+
   return (
     <ProductCardContainer>
       <ProductCardTitle>{product.name}</ProductCardTitle>
@@ -129,12 +133,14 @@ function ProductCard({ product, index, total }: ProductCardProps) {
       <ProductCardSeparator />
 
       <ProductCardRow>
-        <ProductCardText>{`Estoque: ${product.quantity}`}</ProductCardText>
-        <ProductCardText>{`Marca: ${product.brand}`}</ProductCardText>
+        <ProductCardText>Estoque: {product.quantity}</ProductCardText>
+        <ProductCardText>Marca: {product.brand}</ProductCardText>
       </ProductCardRow>
 
-      <ProductCardText>{`R$ ${product.value}`}</ProductCardText>
-      
+      <ProductCardText>
+        <ProductCardNumber>{value}</ProductCardNumber>
+      </ProductCardText>
+
       <ProductCardRow>
         <ProductCardRow>
           <ProductCardStatusCircle disabled={product.disabled} />

@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import { DrawerActions } from "@react-navigation/native";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,8 +8,11 @@ import styled from "styled-components/native";
 import { Button } from "../components/Button";
 
 import { Dashboard } from "../screens/Dashboard";
-import { User } from "../screens/User";
-import { Member } from "../screens/Member";
+import { Users } from "../screens/Users";
+import { Members } from "../screens/Members";
+import { Plans } from "../screens/Plans";
+import { Products } from "../screens/Products";
+import { Activities } from "../screens/Activities";
 
 import { styles } from "../styles/global";
 import { expo } from "../../app.json";
@@ -23,6 +27,10 @@ function DrawerRoutes() {
 
   return (
     <Drawer.Navigator
+      initialRouteName="Dashboard"
+      screenListeners={({ navigation }) => ({
+        drawerItemPress: () => navigation.dispatch(DrawerActions.closeDrawer()),
+      })}
       screenOptions={{
         headerShown: false,
         swipeEdgeWidth: Dimensions.get("window").width / 2,
@@ -71,8 +79,18 @@ function DrawerRoutes() {
         }}
       />
       <Drawer.Screen
-        name="Member"
-        component={Member}
+        name="Activities"
+        component={Activities}
+        options={{
+          title: "Atividades",
+          drawerIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? "cart" : "cart-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Members"
+        component={Members}
         options={{
           title: "Membros",
           drawerIcon: ({ focused, color, size }) => (
@@ -81,8 +99,28 @@ function DrawerRoutes() {
         }}
       />
       <Drawer.Screen
-        name="User"
-        component={User}
+        name="Plans"
+        component={Plans}
+        options={{
+          title: "Planos",
+          drawerIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? "bookmarks" : "bookmarks-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Products"
+        component={Products}
+        options={{
+          title: "Produtos",
+          drawerIcon: ({ focused, color, size }) => (
+            <Ionicons name={focused ? "archive" : "archive-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Users"
+        component={Users}
         options={{
           title: "Usuários",
           drawerIcon: ({ focused, color, size }) => (
