@@ -15,5 +15,6 @@ export const styles = {
     opaqueGreen: "rgba(87, 184, 148, 0.2)",
     opaqueBackground: "rgba(19, 19, 19, 0.2)",
     line: "#515459",
+    blue: "#2B9CDB"
   },
 };
