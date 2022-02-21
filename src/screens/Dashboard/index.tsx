@@ -1,68 +1,74 @@
 import { Header } from "../../components/Header";
+import { formatCurrency } from "../../helpers/strings.helper";
 
-import { 
-  Container,
-  DashCard_fullRow,
-  DashCard_fullRowContainer,
-  DashCard_halfRow,
-  DashCard_row,
-  DashCardTitle,
-  DashCardValue,
-  Highlight,
-  Message, 
-} from "./styles";
+import { Container, FullCard, HalfCard, Row, Title, Value, Highlight, Message, VerticalScroll } from "./styles";
+
+const data = {
+  total: 2332.81,
+  totalActivities: 83,
+  activeMembers: 362,
+  activeUsers: 19,
+  activePlans: 3,
+  activeProducts: 243,
+  openActivities: 9,
+};
 
 export function Dashboard() {
+  const total = formatCurrency(data.total);
+  const ticket = formatCurrency(data.total / data.totalActivities);
+
   return (
     <Container>
-      <Header />
-      <Message>
-      Esse é um resumo dos{"\n"}totais do <Highlight>clube</Highlight>
-      </Message>
-      <DashCard_fullRowContainer>
-        <DashCardTitle>Valor total das{"\n"}atividades</DashCardTitle>
-        <DashCardValue>R$ 2.332,81</DashCardValue>
-      </DashCard_fullRowContainer>
+      <VerticalScroll>
+        <Header />
+        <Message>
+          Esse é um resumo dos{"\n"}totais do <Highlight>clube</Highlight>
+        </Message>
 
-      <DashCard_fullRowContainer>
-        <DashCardTitle>Atividades{"\n"}cadastradas</DashCardTitle>
-        <DashCardValue>19</DashCardValue>
-      </DashCard_fullRowContainer>
+        <FullCard>
+          <Title>Valor total das atividades</Title>
+          <Value>{total}</Value>
+        </FullCard>
 
-      <DashCard_row>
-        <DashCard_halfRow>
-          <DashCardTitle>Membros ativos</DashCardTitle>
-          <DashCardValue>362</DashCardValue>
-        </DashCard_halfRow>
+        <FullCard>
+          <Title>Atividades cadastradas</Title>
+          <Value>{data.totalActivities}</Value>
+        </FullCard>
 
-        <DashCard_halfRow>
-          <DashCardTitle>Usuários ativos</DashCardTitle>
-          <DashCardValue>19</DashCardValue>
-        </DashCard_halfRow>
-      </DashCard_row>
+        <Row>
+          <HalfCard>
+            <Title>Membros ativos</Title>
+            <Value>{data.activeMembers}</Value>
+          </HalfCard>
 
-      <DashCard_row>
-          <DashCard_halfRow>
-            <DashCardTitle>Planos Ativos</DashCardTitle>
-            <DashCardValue>3</DashCardValue>
-          </DashCard_halfRow>
+          <HalfCard>
+            <Title>Usuários ativos</Title>
+            <Value>{data.activeUsers}</Value>
+          </HalfCard>
+        </Row>
 
-          <DashCard_halfRow>
-            <DashCardTitle>Produtos ativos</DashCardTitle>
-            <DashCardValue>243</DashCardValue>
-          </DashCard_halfRow>
-      </DashCard_row>
+        <Row>
+          <HalfCard>
+            <Title>Planos Ativos</Title>
+            <Value>{data.activePlans}</Value>
+          </HalfCard>
 
-      <DashCard_fullRowContainer>
-        <DashCardTitle>Ticket médio</DashCardTitle>
-        <DashCardValue>R$ 14,67</DashCardValue>
-      </DashCard_fullRowContainer>
+          <HalfCard>
+            <Title>Produtos ativos</Title>
+            <Value>{data.activeProducts}</Value>
+          </HalfCard>
+        </Row>
 
-      <DashCard_fullRowContainer>
-        <DashCardTitle>Atividades{"\n"}em aberto</DashCardTitle>
-        <DashCardValue>9</DashCardValue>
-      </DashCard_fullRowContainer>
+        <FullCard>
+          <Title>Ticket médio</Title>
+          <Value>{ticket}</Value>
+        </FullCard>
 
+        <FullCard>
+          <Title>Atividades em aberto</Title>
+          <Value>{data.openActivities}</Value>
+        </FullCard>
+      </VerticalScroll>
     </Container>
   );
 }
