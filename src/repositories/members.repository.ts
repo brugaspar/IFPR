@@ -1,90 +1,99 @@
-import { PrismaClient } from ".prisma/client"
+import { PrismaClient } from ".prisma/client";
 
-import { pgPool } from "../configuration/pg.configuration"
-import { getDisabledInfo } from "../helpers/disabled.helper"
+import { pgPool } from "../configuration/pg.configuration";
+import { getDisabledInfo } from "../helpers/disabled.helper";
 
-import logsRepository from "./logs.repository"
+import logsRepository from "./logs.repository";
 
-type Gender = "male" | "female" | "other"
-type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced"
-type BloodTyping = "APositive" | "ANegative" | "BPositive" | "BNegative" | "ABPositive" | "ABNegative" | "OPositive" | "ONegative"
+type Gender = "male" | "female" | "other";
+type MaritalStatus = "single" | "married" | "widower" | "legally_separated" | "divorced";
+type BloodTyping =
+  | "APositive"
+  | "ANegative"
+  | "BPositive"
+  | "BNegative"
+  | "ABPositive"
+  | "ABNegative"
+  | "OPositive"
+  | "ONegative";
 
 type RequestMember = {
-  name: string
-  rg: string
-  issuingAuthority: string
-  cpf: string
-  naturalityCityId: number
-  motherName: string
-  fatherName: string
-  profession: string
-  email: string
-  phone: string
-  cellPhone: string
-  crNumber: string
-  issuedAt: string
-  birthDate: string
-  crValidity: string
-  healthIssues: string
-  gender: Gender
-  maritalStatus: MaritalStatus
-  bloodTyping: BloodTyping
-  disabled: boolean
-  planId: string
-}
+  name: string;
+  rg: string;
+  issuingAuthority: string;
+  cpf: string;
+  naturalityCityId: number;
+  motherName: string;
+  fatherName: string;
+  profession: string;
+  email: string;
+  phone: string;
+  cellPhone: string;
+  crNumber: string;
+  issuedAt: string;
+  birthDate: string;
+  crValidity: string;
+  healthIssues: string;
+  gender: Gender;
+  maritalStatus: MaritalStatus;
+  bloodTyping: BloodTyping;
+  disabled: boolean;
+  planId: string;
+  password?: string;
+};
 
 type Member = {
-  id: string
-  name: string
-  rg: string
-  issuing_authority: string
-  cpf: string
-  naturality_city_id: number
-  mother_name: string
-  father_name: string
-  profession: string
-  email: string
-  phone: string
-  cell_phone: string
-  cr_number: string
-  issued_at: string
-  birth_date: string
-  cr_validity: string
-  health_issues: string
-  gender: Gender
-  marital_status: MaritalStatus
-  blood_typing: BloodTyping
-  disabled: boolean
-  plan_id: string
-  disabled_at: string
-  created_at: string
-  updated_at: string
-  disabled_by_user: string
-  last_disabled_by: string
-  last_updated_by: string
-  created_by: string
-}
+  id: string;
+  name: string;
+  rg: string;
+  issuing_authority: string;
+  cpf: string;
+  naturality_city_id: number;
+  mother_name: string;
+  father_name: string;
+  profession: string;
+  email: string;
+  phone: string;
+  cell_phone: string;
+  cr_number: string;
+  issued_at: string;
+  birth_date: string;
+  cr_validity: string;
+  health_issues: string;
+  gender: Gender;
+  marital_status: MaritalStatus;
+  blood_typing: BloodTyping;
+  disabled: boolean;
+  plan_id: string;
+  disabled_at: string;
+  created_at: string;
+  updated_at: string;
+  disabled_by_user: string;
+  last_disabled_by: string;
+  last_updated_by: string;
+  created_by: string;
+};
 
 type UpdateMemberProps = {
-  member: RequestMember
-  requestUserId: string
-  memberId: string
-}
+  member: RequestMember;
+  requestUserId: string;
+  memberId: string;
+};
 
 type FilterMember = {
-  onlyEnabled: boolean
-  search: string
+  onlyEnabled: boolean;
+  search: string;
   sort: {
-    name: string
-    sort: string
-  }
-}
+    name: string;
+    sort: string;
+  };
+};
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 class MembersRepository {
   async store(member: RequestMember, requestUserId: string) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(member.disabled, requestUserId)
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, createdBy, logUserId } = getDisabledInfo(member.disabled, requestUserId);
 
     const { id } = await prisma.members.create({
       data: {
@@ -97,22 +106,22 @@ class MembersRepository {
       select: {
         id: true,
       },
-    })
+    });
 
     await logsRepository.store("members", {
       action: "insert",
       description: "Registro incluído por usuário",
       referenceId: id,
       userId: logUserId,
-    })
+    });
 
-    return id
+    return id;
   }
 
   async findAll({ onlyEnabled = true, search = "", sort }: FilterMember) {
-    const splittedSearch = search.split(" ")
+    const splittedSearch = search.split(" ");
 
-    let searchText = ""
+    let searchText = "";
 
     splittedSearch.forEach((word, index) => {
       searchText += `
@@ -121,33 +130,33 @@ class MembersRepository {
           or
           upper(unaccent(m.email)) like upper(unaccent('%${word}%'))
         )
-      `
+      `;
 
       if (index !== splittedSearch.length - 1) {
-        searchText += "and"
+        searchText += "and";
       }
-    })
+    });
 
     let whereClause = `
       where
         ${onlyEnabled ? `m.disabled = false and` : ""}
         ${searchText}
-    `
+    `;
 
-    const pg = await pgPool.connect()
+    const pg = await pgPool.connect();
 
-    let orderClause = ""
+    let orderClause = "";
 
     if (sort.name) {
       orderClause = `
         order by
           m.${sort.name} ${sort.sort}
-      `
+      `;
     } else {
       orderClause = `
         order by
           m.created_at
-      `
+      `;
     }
 
     const query = `
@@ -184,20 +193,20 @@ class MembersRepository {
         members m
       ${whereClause}
       ${orderClause}
-    `
+    `;
 
-    const members = await pg.query<Member>(query)
+    const members = await pg.query<Member>(query);
 
-    await pg.release()
+    await pg.release();
 
     if (!members) {
-      return []
+      return [];
     }
 
     const parsedMembersResult = members.rows.map((member) => {
-      const disabledAt = member.disabled_at ? new Date(member.disabled_at).toISOString() : null
-      const createdAt = member.created_at ? new Date(member.created_at).toISOString() : null
-      const updatedAt = member.updated_at ? new Date(member.updated_at).toISOString() : null
+      const disabledAt = member.disabled_at ? new Date(member.disabled_at).toISOString() : null;
+      const createdAt = member.created_at ? new Date(member.created_at).toISOString() : null;
+      const updatedAt = member.updated_at ? new Date(member.updated_at).toISOString() : null;
 
       return {
         id: member.id,
@@ -229,10 +238,10 @@ class MembersRepository {
         birthDate: member.birth_date,
         createdBy: member.created_by,
         disabledByUser: member.disabled_by_user,
-      }
-    })
+      };
+    });
 
-    return parsedMembersResult
+    return parsedMembersResult;
   }
 
   async findById(id: string) {
@@ -270,9 +279,9 @@ class MembersRepository {
         birthDate: true,
         memberAddresses: true,
       },
-    })
+    });
 
-    return member
+    return member;
   }
 
   async findByEmail(email: string) {
@@ -280,13 +289,23 @@ class MembersRepository {
       where: {
         email,
       },
-    })
+    });
 
-    return member
+    return member;
+  }
+
+  async findByCPF(cpf: string) {
+    const member = await prisma.members.findUnique({
+      where: {
+        cpf,
+      },
+    });
+
+    return member;
   }
 
   async update({ member, requestUserId, memberId }: UpdateMemberProps) {
-    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(member.disabled, requestUserId)
+    const { disabledAt, lastDisabledBy, lastUpdatedBy, logUserId } = getDisabledInfo(member.disabled, requestUserId);
 
     const { id } = await prisma.members.update({
       data: {
@@ -301,7 +320,7 @@ class MembersRepository {
       select: {
         id: true,
       },
-    })
+    });
 
     if (disabledAt) {
       await logsRepository.store("members", {
@@ -309,23 +328,23 @@ class MembersRepository {
         description: "Registro desativado por usuário",
         referenceId: id,
         userId: logUserId,
-      })
+      });
     } else {
       await logsRepository.store("members", {
         action: "update",
         description: "Registro atualizado por usuário",
         referenceId: id,
         userId: logUserId,
-      })
+      });
     }
 
-    return id
+    return id;
   }
 
   async findCount() {
-    const count = await prisma.members.count()
-    return count
+    const count = await prisma.members.count();
+    return count;
   }
 }
 
-export default new MembersRepository()
+export default new MembersRepository();

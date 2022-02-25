@@ -203,6 +203,7 @@ model Members {
   plan             Plans              @relation(fields: [planId], references: [id])
   memberAddresses  MembersAddresses[]
   memberActivities Activities[]
+  password         String?
 
   @@map("members")
 }
