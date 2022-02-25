@@ -2,6 +2,10 @@ import styled from "styled-components/native";
 
 import { styles } from "../../styles/global";
 
+type TitleProps = {
+  mb?: boolean;
+};
+
 export const Container = styled.View`
   flex: 1;
   padding: 16px;
@@ -32,11 +36,13 @@ export const FullCard = styled.View`
   margin-bottom: 15px;
 `;
 
-export const Title = styled.Text`
+export const Title = styled.Text<TitleProps>`
   font-family: ${styles.fonts.epilogueMedium};
   font-size: 16px;
-  line-height: 25px;
+  line-height: 21px;
   color: ${styles.colors.text};
+
+  margin-bottom: ${(props) => (props.mb ? "5px" : 0)};
 `;
 
 export const Value = styled.Text`

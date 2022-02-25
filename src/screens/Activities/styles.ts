@@ -47,7 +47,7 @@ export const ActivityCardContainer = styled.TouchableOpacity`
 
 export const ActivityCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.green};
 `;
 
@@ -59,9 +59,9 @@ export const ActivityCardSeparator = styled.View`
 
 export const ActivityCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.text};
-  line-height: 20px;
+  line-height: 22px;
 `;
 
 export const ActivityCardNumber = styled.Text`

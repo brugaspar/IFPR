@@ -26,35 +26,35 @@ export function Dashboard() {
         </Message>
 
         <FullCard>
-          <Title>Valor total das atividades</Title>
+          <Title>Valor total{"\n"}das atividades</Title>
           <Value>{total}</Value>
         </FullCard>
 
         <FullCard>
-          <Title>Atividades cadastradas</Title>
+          <Title>Atividades{"\n"}cadastradas</Title>
           <Value>{data.totalActivities}</Value>
         </FullCard>
 
         <Row>
           <HalfCard>
-            <Title>Membros ativos</Title>
+            <Title mb>Membros{"\n"}ativos</Title>
             <Value>{data.activeMembers}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title>Usuários ativos</Title>
+            <Title mb>Usuários{"\n"}ativos</Title>
             <Value>{data.activeUsers}</Value>
           </HalfCard>
         </Row>
 
         <Row>
           <HalfCard>
-            <Title>Planos Ativos</Title>
+            <Title mb>Planos{"\n"}Ativos</Title>
             <Value>{data.activePlans}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title>Produtos ativos</Title>
+            <Title mb>Produtos{"\n"}ativos</Title>
             <Value>{data.activeProducts}</Value>
           </HalfCard>
         </Row>
@@ -65,7 +65,7 @@ export function Dashboard() {
         </FullCard>
 
         <FullCard>
-          <Title>Atividades em aberto</Title>
+          <Title>Atividades{"\n"}em aberto</Title>
           <Value>{data.openActivities}</Value>
         </FullCard>
       </VerticalScroll>

@@ -22,7 +22,7 @@ export const UserCardContainer = styled.View`
 
 export const UserCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.green};
 `;
 
@@ -34,9 +34,9 @@ export const UserCardSeparator = styled.View`
 
 export const UserCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.text};
-  line-height: 20px;
+  line-height: 22px;
 `;
 
 export const UserCardRow = styled.View`

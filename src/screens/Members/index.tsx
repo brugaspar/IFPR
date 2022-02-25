@@ -10,6 +10,8 @@ import {
   Container,
   MemberCardContainer,
   MemberCardIndex,
+  MemberCardPlan,
+  MemberCardPlanText,
   MemberCardRow,
   MemberCardSeparator,
   MemberCardStatusCircle,
@@ -23,6 +25,10 @@ const members = [
     name: "Bruno Gaspar",
     email: "bruninhoogaspar@gmail.com",
     phone: "(45) 9 9996-2223",
+    plan: {
+      id: "plano-ouro",
+      name: "Ouro",
+    },
     disabled: false,
     createdAt: "2021-12-27",
   },
@@ -31,6 +37,10 @@ const members = [
     name: "Guilherme Locks",
     email: "guilherme.outsystems@gmail.com",
     phone: "(45) 9 9818-3657",
+    plan: {
+      id: "plano-prata",
+      name: "Prata",
+    },
     disabled: false,
     createdAt: "2021-12-27",
   },
@@ -39,6 +49,10 @@ const members = [
     name: "Lucas Zorzan",
     email: "lucaszorzan14@gmail.com",
     phone: "(45) 9 9999-1234",
+    plan: {
+      id: "plano-bronze",
+      name: "Bronze",
+    },
     disabled: true,
     createdAt: "2022-02-08",
   },
@@ -76,6 +90,10 @@ type MemberProps = {
   name: string;
   email: string;
   phone: string;
+  plan: {
+    id: string;
+    name: string;
+  };
   disabled: boolean;
   createdAt: string;
 };
@@ -95,7 +113,13 @@ function MemberCard({ member, index, total }: MemberCardProps) {
 
       <MemberCardSeparator />
 
-      <MemberCardText>{member.email}</MemberCardText>
+      <MemberCardRow>
+        <MemberCardText>{member.email}</MemberCardText>
+        <MemberCardPlan>
+          <MemberCardPlanText>{member.plan.name}</MemberCardPlanText>
+        </MemberCardPlan>
+      </MemberCardRow>
+
       <MemberCardText>{member.phone}</MemberCardText>
 
       <MemberCardRow>

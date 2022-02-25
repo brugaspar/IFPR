@@ -22,7 +22,7 @@ export const PlanCardContainer = styled.View`
 
 export const PlanCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.green};
 `;
 
@@ -34,9 +34,9 @@ export const PlanCardSeparator = styled.View`
 
 export const PlanCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.text};
-  line-height: 20px;
+  line-height: 22px;
 `;
 
 export const PlanCardNumber = styled.Text`

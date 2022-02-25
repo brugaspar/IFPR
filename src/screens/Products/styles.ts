@@ -22,7 +22,7 @@ export const ProductCardContainer = styled.View`
 
 export const ProductCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.green};
 `;
 
@@ -34,9 +34,9 @@ export const ProductCardSeparator = styled.View`
 
 export const ProductCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.text};
-  line-height: 20px;
+  line-height: 22px;
 `;
 
 export const ProductCardNumber = styled.Text`

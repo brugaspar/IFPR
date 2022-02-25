@@ -22,7 +22,7 @@ export const MemberCardContainer = styled.View`
 
 export const MemberCardTitle = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.green};
 `;
 
@@ -34,9 +34,9 @@ export const MemberCardSeparator = styled.View`
 
 export const MemberCardText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
-  font-size: 13px;
+  font-size: 14px;
   color: ${styles.colors.text};
-  line-height: 20px;
+  line-height: 22px;
 `;
 
 export const MemberCardRow = styled.View`
@@ -59,4 +59,16 @@ export const MemberCardIndex = styled.Text`
   color: ${styles.colors.green};
   align-self: flex-end;
   margin-top: 8px;
+`;
+
+export const MemberCardPlan = styled.View`
+  background: ${styles.colors.green};
+  padding: 5px 10px;
+  border-radius: 10px;
+`;
+
+export const MemberCardPlanText = styled.Text`
+  font-family: ${styles.fonts.epilogueRegular};
+  font-size: 13px;
+  color: ${styles.colors.background};
 `;
