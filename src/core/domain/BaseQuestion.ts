@@ -1,20 +1,10 @@
 import { Entity } from "./Entity";
+import { QuestionProps } from "../../application/repositories/QuestionRepository";
 
-type QuestionDifficulty = "easy" | "medium" | "hard";
-type QuestionType = "multiple" | "single" | "open";
+export abstract class BaseQuestion extends Entity<QuestionProps> {
+  public props: QuestionProps;
 
-export type BaseQuestionProps = {
-  title: string;
-  description: string;
-  difficulty: QuestionDifficulty;
-  type: QuestionType;
-  tagId: string;
-};
-
-export abstract class BaseQuestion extends Entity<BaseQuestionProps> {
-  public props: BaseQuestionProps;
-
-  constructor(props: BaseQuestionProps) {
+  constructor(props: QuestionProps) {
     super(props);
   }
 }

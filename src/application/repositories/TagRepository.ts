@@ -28,4 +28,14 @@ export class TagRepository {
 
     return tag;
   }
+
+  async findById(id: string) {
+    const tag = await prisma.tag.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return tag;
+  }
 }

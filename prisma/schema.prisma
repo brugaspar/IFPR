@@ -12,4 +12,40 @@ model Tag {
   name        String   @unique
   description String?
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  questions Question[]
+}
+
+enum QuestionType {
+  open
+  single
+  multiple
+}
+
+enum QuestionDifficulty {
+  easy
+  medium
+  hard
+}
+
+model Question {
+  id          String             @id @default(uuid())
+  title       String
+  description String?
+  type        QuestionType       @default(open)
+  difficulty  QuestionDifficulty @default(easy)
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz()
+
+  tagId        String        @map("tag_id")
+  tag          Tag           @relation(fields: [tagId], references: [id])
+  alternatives Alternative[]
+}
+
+model Alternative {
+  id        String  @id @default(uuid())
+  title     String
+  isCorrect Boolean @default(false) @map("is_correct")
+
+  questionId String   @map("question_id")
+  question   Question @relation(fields: [questionId], references: [id])
 }
