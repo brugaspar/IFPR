@@ -60,7 +60,7 @@ export function Dashboard() {
         </Row>
 
         <FullCard>
-          <Title>Ticket médio</Title>
+          <Title>Ticket{"\n"}médio</Title>
           <Value>{ticket}</Value>
         </FullCard>
 

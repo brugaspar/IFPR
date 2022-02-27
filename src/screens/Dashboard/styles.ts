@@ -8,7 +8,7 @@ type TitleProps = {
 
 export const Container = styled.View`
   flex: 1;
-  padding: 16px;
+  padding: 16px 16px 0;
   background: ${styles.colors.background};
 `;
 
