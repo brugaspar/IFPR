@@ -12,6 +12,7 @@ import { Members } from "../screens/Members";
 import { Plans } from "../screens/Plans";
 import { Products } from "../screens/Products";
 import { Activities } from "../screens/Activities";
+import { ActivitiesDetails } from "../screens/ActivitiesDetails";
 
 import { styles } from "../styles/global";
 import { expo } from "../../app.json";
@@ -137,6 +138,7 @@ export function AppRoutes() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DrawerRoutes" component={DrawerRoutes} />
+      <Stack.Screen name="ActivitiesDetails" component={ActivitiesDetails} />
     </Stack.Navigator>
   );
 }

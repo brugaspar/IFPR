@@ -27,7 +27,7 @@ export const Label = styled.Text`
   margin-bottom: 5px;
 `;
 
-export const InputContainer = styled.View<InputContainerProps>`
+export const InputContainer = styled.TouchableOpacity<InputContainerProps>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
