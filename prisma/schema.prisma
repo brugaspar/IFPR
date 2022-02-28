@@ -14,6 +14,8 @@ model Tag {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
   questions Question[]
+
+  @@map("tag")
 }
 
 enum QuestionType {
@@ -39,6 +41,8 @@ model Question {
   tagId        String        @map("tag_id")
   tag          Tag           @relation(fields: [tagId], references: [id])
   alternatives Alternative[]
+
+  @@map("question")
 }
 
 model Alternative {
@@ -47,5 +51,7 @@ model Alternative {
   isCorrect Boolean @default(false) @map("is_correct")
 
   questionId String   @map("question_id")
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("alternative")
 }

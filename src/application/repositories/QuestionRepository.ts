@@ -20,6 +20,17 @@ export class QuestionRepository {
     return newQuestion;
   }
 
+  async update(question: QuestionProps & { id: string }) {
+    const updatedQuestion = await prisma.question.update({
+      where: {
+        id: question.id,
+      },
+      data: question,
+    });
+
+    return updatedQuestion;
+  }
+
   async findAll() {
     const questions = await prisma.question.findMany({
       include: {
@@ -42,5 +53,13 @@ export class QuestionRepository {
     });
 
     return question;
+  }
+
+  async delete(id: string) {
+    await prisma.question.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

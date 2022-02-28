@@ -14,4 +14,33 @@ export class AlternativeRepository {
 
     return newAlternative;
   }
+
+  async update(alternative: AlternativeProps & { id: string }) {
+    const updatedAlternative = await prisma.alternative.update({
+      where: {
+        id: alternative.id,
+      },
+      data: alternative,
+    });
+
+    return updatedAlternative;
+  }
+
+  async delete(id: string) {
+    await prisma.alternative.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async findById(id: string) {
+    const alternative = await prisma.alternative.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return alternative;
+  }
 }

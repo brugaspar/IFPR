@@ -38,4 +38,23 @@ export class TagRepository {
 
     return tag;
   }
+
+  async update(tag: TagProps & { id: string }) {
+    const updatedTag = await prisma.tag.update({
+      where: {
+        id: tag.id,
+      },
+      data: tag,
+    });
+
+    return updatedTag;
+  }
+
+  async delete(id: string) {
+    await prisma.tag.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

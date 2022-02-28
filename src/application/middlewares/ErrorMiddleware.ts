@@ -10,6 +10,12 @@ export class ErrorMiddleware {
       });
     }
 
+    if (error.message.includes("Foreign key constraint") && error.message.includes("tag")) {
+      return response.status(400).json({
+        message: "Essa tag já está relacionada à uma questão",
+      });
+    }
+
     console.log(error);
 
     return response.status(500).json({

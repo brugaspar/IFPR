@@ -14,8 +14,12 @@ const router = Router();
 
 router.post("/tags", (request, response) => tagController.create(request, response));
 router.get("/tags", (request, response) => tagController.findAll(request, response));
+router.put("/tags/:id", (request, response) => tagController.update(request, response));
+router.delete("/tags/:id", (request, response) => tagController.delete(request, response));
 
 router.post("/questions", (request, response) => questionController.create(request, response));
 router.get("/questions", (request, response) => questionController.findAll(request, response));
+router.put("/questions/:id", (request, response) => questionController.update(request, response));
+router.delete("/questions/:id", (request, response) => questionController.delete(request, response));
 
 export { router };
