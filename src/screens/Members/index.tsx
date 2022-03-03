@@ -1,10 +1,13 @@
+import { useRef, useState } from "react";
 import { FlatList } from "react-native";
+import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
+import { StatusModal } from "../../components/Modals/Status";
 
 import {
   Container,
@@ -59,27 +62,54 @@ const members = [
 ];
 
 export function Members() {
+  const statusRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+
+  function handleOpenModal(modal: "status" | "name" | "plan") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "name": {
+      //   nameRef.current?.open();
+      //   break;
+      // }
+      // case "plan": {
+      //   planRef.current?.open();
+      //   break;
+      // }
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
   return (
-    <Container>
-      <Header />
-      <TotalCard title="Membros filtrados" value={members.length} />
+    <>
+      <Container>
+        <Header />
+        <TotalCard title="Membros filtrados" value={members.length} />
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Nome" ml />
-        <Filter title="Plano" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title="Nome" ml />
+          <Filter title="Plano" ml />
+        </FilterWrapper>
 
-      <FlatList
-        data={members}
-        keyExtractor={(member) => member.id}
-        renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={members}
+          keyExtractor={(member) => member.id}
+          renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+    </>
   );
 }
 
