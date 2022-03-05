@@ -73,7 +73,6 @@ export function Questions() {
   };
 
   function handleOpenQuestionModal() {
-    console.log("A");
     setQuestionModalIsOpen(true);
   }
 
@@ -98,8 +97,12 @@ export function Questions() {
         <tbody>
           {questions.map((question) => (
             <tr key={question.id}>
-              <td>{question.title}</td>
-              <td>{question.description}</td>
+              <td className="ellipsis-text" title={question.title}>
+                {question.title}
+              </td>
+              <td className="ellipsis-text" title={question.description}>
+                {question.description}
+              </td>
               <td>{questionType[question.type]}</td>
               <td>{questionDifficulty[question.difficulty]}</td>
               <td>{question.tag.name}</td>

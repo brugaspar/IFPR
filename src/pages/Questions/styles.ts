@@ -70,5 +70,12 @@ export const Container = styled.div`
         color: var(--background);
       }
     }
+
+    .ellipsis-text {
+      max-width: 300px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 `;
