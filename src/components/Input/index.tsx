@@ -15,6 +15,7 @@ type InputProps = TextInputProps & {
   type?: "default" | "password" | "modal";
   iconHasMargin?: boolean;
   error?: boolean;
+  width?: number;
   onPress?: () => void;
 };
 
@@ -25,6 +26,7 @@ export function Input({
   type = "default",
   iconHasMargin = false,
   error = false,
+  width = 100,
   onPress,
   ...rest
 }: InputProps) {
@@ -53,7 +55,7 @@ export function Input({
   }
 
   return (
-    <Container>
+    <Container style={{ width: `${width}%` }}>
       {hasLabel && <Label>{label}</Label>}
       <InputContainer
         activeOpacity={type !== "modal" ? 1 : 0.6}
