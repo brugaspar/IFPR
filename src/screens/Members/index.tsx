@@ -103,7 +103,7 @@ export function Members() {
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
           <Filter title="Nome" ml />
-          <Filter title="Plano" ml onPress={() => handleOpenModal("plan")} />
+          <Filter title={plan ? plan.name : "Plano"} ml onPress={() => handleOpenModal("plan")} />
         </FilterWrapper>
 
         <FlatList

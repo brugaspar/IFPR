@@ -52,7 +52,7 @@ export function StatusModal({ modalRef, selectedStatus, setSelectedStatus }: Sta
   }
 
   return (
-    <ModalView modalRef={modalRef} height={160} onClose={handleModalClose}>
+    <ModalView modalRef={modalRef} height={180} onClose={handleModalClose}>
       <Container>
         <Row>
           <Title>Selecione um status</Title>

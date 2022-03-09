@@ -42,8 +42,13 @@ export const CleanFilterText = styled.Text`
 
 // PlanCard
 
-export const PlanCardContainer = styled.TouchableOpacity`
-  background: ${styles.colors.input};
+type PlanCardProps = {
+  selected: boolean;
+};
+
+export const PlanCardContainer = styled.TouchableOpacity<PlanCardProps>`
+  background: ${(props) => (props.selected ? styles.colors.opaqueGreen : styles.colors.input)};
+  border: 1px solid ${(props) => (props.selected ? styles.colors.green : styles.colors.input)};
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 10px;

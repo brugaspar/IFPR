@@ -49,12 +49,28 @@ const plans = [
 ];
 
 export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansModalProps) {
+  function handleSelectStatus(plan: PlanProps) {
+    if (selectedPlan?.id !== plan.id) {
+      setSelectedPlan(plan);
+    }
+
+    modalRef.current?.close();
+  }
+
+  function handleCleanStatus() {
+    if (selectedPlan !== null) {
+      setSelectedPlan(null);
+    }
+
+    modalRef.current?.close();
+  }
+
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
         <Row>
           <Title>Selecione um plano</Title>
-          <CleanFilterButton>
+          <CleanFilterButton activeOpacity={0.7} onPress={handleCleanStatus}>
             <CleanFilterText>Limpar filtros</CleanFilterText>
           </CleanFilterButton>
         </Row>
@@ -64,7 +80,15 @@ export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansMod
         <FlatList
           data={plans}
           keyExtractor={(plan) => plan.id}
-          renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={plans.length} />}
+          renderItem={({ item, index }) => (
+            <PlanCard
+              selectedPlanId={selectedPlan ? selectedPlan.id : null}
+              selectPlan={handleSelectStatus}
+              plan={item}
+              index={index}
+              total={plans.length}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: -16,
@@ -81,13 +105,15 @@ type PlanCardProps = {
   plan: PlanProps;
   index: number;
   total: number;
+  selectedPlanId: string | null;
+  selectPlan: (plan: PlanProps) => void;
 };
 
-function PlanCard({ plan, index, total }: PlanCardProps) {
+function PlanCard({ plan, index, total, selectPlan, selectedPlanId }: PlanCardProps) {
   const value = formatCurrency(plan.value);
 
   return (
-    <PlanCardContainer activeOpacity={0.7}>
+    <PlanCardContainer selected={selectedPlanId === plan.id} activeOpacity={0.7} onPress={() => selectPlan(plan)}>
       <Row>
         <PlanCardTitle>{plan.name}</PlanCardTitle>
         <PlanCardText>{value}</PlanCardText>
