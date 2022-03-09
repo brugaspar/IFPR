@@ -1,5 +1,6 @@
 import { FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
@@ -60,21 +61,26 @@ const activities = [
 ];
 
 export function Activities() {
+  const navigation = useNavigation();
+
   const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
 
   const total = formatCurrency(activitiesTotal);
 
+  function handleNavigateToDetails(params?: any) {
+    navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
+  }
+
   return (
     <Container>
       <Header />
-      {/* <TotalCard title="Atividades filtradas" value={activities.length} /> */}
       <TotalCard>
         <TotalCardContainer>
           <TotalCardTitle>Atividades filtradas</TotalCardTitle>
           <TotalCardHighlight>{total}</TotalCardHighlight>
         </TotalCardContainer>
 
-        <TotalCardButton activeOpacity={0.8}>
+        <TotalCardButton activeOpacity={0.8} onPress={() => handleNavigateToDetails()}>
           <Ionicons name="add-outline" size={40} color={styles.colors.text} />
         </TotalCardButton>
       </TotalCard>
@@ -88,7 +94,14 @@ export function Activities() {
       <FlatList
         data={activities}
         keyExtractor={(activity) => activity.id}
-        renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
+        renderItem={({ item, index }) => (
+          <ActivityCard
+            activity={item}
+            index={index}
+            total={activities.length}
+            handleNavigateToDetails={handleNavigateToDetails}
+          />
+        )}
         showsVerticalScrollIndicator={false}
         style={{
           marginBottom: -16,
@@ -116,9 +129,10 @@ type ActivityCardProps = {
   activity: ActivityProps;
   index: number;
   total: number;
+  handleNavigateToDetails: (params: any) => void;
 };
 
-function ActivityCard({ activity, index, total }: ActivityCardProps) {
+function ActivityCard({ activity, index, total, handleNavigateToDetails }: ActivityCardProps) {
   const createdAt = moment(activity.createdAt).format("DD/MM/YYYY");
   const finishedAt = moment(activity.finishedAt).format("DD/MM/YYYY");
   const cancelledAt = moment(activity.cancelledAt).format("DD/MM/YYYY");
@@ -132,7 +146,7 @@ function ActivityCard({ activity, index, total }: ActivityCardProps) {
   };
 
   return (
-    <ActivityCardContainer activeOpacity={0.6}>
+    <ActivityCardContainer activeOpacity={0.6} onPress={() => handleNavigateToDetails(activity)}>
       <ActivityCardTitle>{activity.member}</ActivityCardTitle>
 
       <ActivityCardSeparator />
