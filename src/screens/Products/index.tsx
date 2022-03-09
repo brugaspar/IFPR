@@ -9,6 +9,8 @@ import { FilterWrapper } from "../../components/FilterWrapper";
 import { useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { StatusModal } from "../../components/Modals/Status";
+import { GroupsModal } from "../../components/Modals/Group";
+import { BrandsModal } from "../../components/Modals/Brand";
 
 import { formatCurrency } from "../../helpers/strings.helper";
 
@@ -23,6 +25,17 @@ import {
   ProductCardText,
   ProductCardTitle,
 } from "./styles";
+
+
+type GroupProps = {
+  id: string;
+  name: string;
+};
+
+type BrandProps = {
+  id: string;
+  name: string;
+};
 
 const products = [
   {
@@ -84,8 +97,12 @@ const products = [
 export function Products() {
 
   const statusRef = useRef<RBSheet>(null);
+  const groupRef = useRef<RBSheet>(null);
+  const brandRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [group, setGroup] = useState<GroupProps | null>(null);
+  const [brand, setBrand] = useState<BrandProps | null>(null);
 
   function handleOpenModal(modal: "status" | "name" | "group" | "brand") {
     switch (modal) {
@@ -97,14 +114,14 @@ export function Products() {
       //   nameRef.current?.open();
       //   break;
       // }
-      // case "group": {
-      //   planRef.current?.open();
-      //   break;
-      // }
-      // case "brand": {
-      //   planRef.current?.open();
-      //   break;
-      // }
+      case "group": {
+        groupRef.current?.open();
+        break;
+      }
+      case "brand": {
+        brandRef.current?.open();
+        break;
+      }
     }
   }
 
@@ -118,8 +135,8 @@ export function Products() {
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title="Grupo" ml />
-          <Filter title="Marca" ml />
+          <Filter title={group ? group.name : "Grupo"} ml onPress={() => handleOpenModal("group")} />
+          <Filter title={brand ? brand.name : "Marca"} ml onPress={() => handleOpenModal("brand")} />
         </FilterWrapper>
 
         <FlatList
@@ -133,6 +150,8 @@ export function Products() {
         />
       </Container>
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <GroupsModal modalRef={groupRef} selectedGroup={group} setSelectedGroup={setGroup} />
+      <BrandsModal modalRef={brandRef} selectedBrand={brand} setSelectedBrand={setBrand} />
     </>
   );
 }
