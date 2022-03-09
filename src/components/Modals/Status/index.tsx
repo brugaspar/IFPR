@@ -1,17 +1,8 @@
 import { MutableRefObject, useState } from "react";
+import { ModalHeader } from "../../ModalHeader";
 
 import { ModalView } from "../../ModalView";
-import {
-  Container,
-  Separator,
-  StatusButton,
-  Row,
-  StatusText,
-  StyledScrollView,
-  Title,
-  CleanFilterButton,
-  CleanFilterText,
-} from "./styles";
+import { Container, Separator, StatusButton, Row, StatusText, StyledScrollView } from "./styles";
 
 type StatusModalProps = {
   modalRef: MutableRefObject<any>;
@@ -54,12 +45,7 @@ export function StatusModal({ modalRef, selectedStatus, setSelectedStatus }: Sta
   return (
     <ModalView modalRef={modalRef} height={180} onClose={handleModalClose}>
       <Container>
-        <Row>
-          <Title>Selecione um status</Title>
-          <CleanFilterButton activeOpacity={0.6} onPress={handleCleanStatus}>
-            <CleanFilterText>Limpar filtro</CleanFilterText>
-          </CleanFilterButton>
-        </Row>
+        <ModalHeader title="Selecione um status" onCleanFilter={handleCleanStatus} />
 
         <Separator />
 

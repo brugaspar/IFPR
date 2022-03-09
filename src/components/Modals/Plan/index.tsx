@@ -2,21 +2,11 @@ import { MutableRefObject } from "react";
 import { FlatList } from "react-native";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
+import { ModalHeader } from "../../ModalHeader";
 
 import { ModalView } from "../../ModalView";
 
-import {
-  CleanFilterButton,
-  CleanFilterText,
-  Container,
-  PlanCardContainer,
-  PlanCardIndex,
-  PlanCardText,
-  PlanCardTitle,
-  Row,
-  Separator,
-  Title,
-} from "./styles";
+import { Container, PlanCardContainer, PlanCardIndex, PlanCardText, PlanCardTitle, Row, Separator } from "./styles";
 
 type PlanProps = {
   id: string;
@@ -68,12 +58,7 @@ export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansMod
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
-        <Row>
-          <Title>Selecione um plano</Title>
-          <CleanFilterButton activeOpacity={0.7} onPress={handleCleanStatus}>
-            <CleanFilterText>Limpar filtros</CleanFilterText>
-          </CleanFilterButton>
-        </Row>
+        <ModalHeader title="Selecione um plano" onCleanFilter={handleCleanStatus} />
 
         <Separator />
 
