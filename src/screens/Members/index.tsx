@@ -8,6 +8,7 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 import { StatusModal } from "../../components/Modals/Status";
+import { PlansModal } from "../../components/Modals/Plan";
 
 import {
   Container,
@@ -21,6 +22,12 @@ import {
   MemberCardText,
   MemberCardTitle,
 } from "./styles";
+
+type PlanProps = {
+  id: string;
+  name: string;
+  value: number;
+};
 
 const members = [
   {
@@ -63,8 +70,10 @@ const members = [
 
 export function Members() {
   const statusRef = useRef<RBSheet>(null);
+  const planRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [plan, setPlan] = useState<PlanProps | null>(null);
 
   function handleOpenModal(modal: "status" | "name" | "plan") {
     switch (modal) {
@@ -76,10 +85,10 @@ export function Members() {
       //   nameRef.current?.open();
       //   break;
       // }
-      // case "plan": {
-      //   planRef.current?.open();
-      //   break;
-      // }
+      case "plan": {
+        planRef.current?.open();
+        break;
+      }
     }
   }
 
@@ -94,7 +103,7 @@ export function Members() {
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
           <Filter title="Nome" ml />
-          <Filter title="Plano" ml />
+          <Filter title="Plano" ml onPress={() => handleOpenModal("plan")} />
         </FilterWrapper>
 
         <FlatList
@@ -109,6 +118,7 @@ export function Members() {
       </Container>
 
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <PlansModal modalRef={planRef} selectedPlan={plan} setSelectedPlan={setPlan} />
     </>
   );
 }

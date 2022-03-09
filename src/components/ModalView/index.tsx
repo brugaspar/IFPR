@@ -21,8 +21,10 @@ export function ModalView({ children, modalRef, height = 250, ...rest }: ModalVi
       customStyles={{
         container: {
           backgroundColor: styles.colors.background,
-          borderTopWidth: 1,
-          borderTopColor: styles.colors.input,
+          borderWidth: 1,
+          borderColor: styles.colors.input,
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
         },
         draggableIcon: {
           backgroundColor: styles.colors.green,
