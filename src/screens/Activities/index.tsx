@@ -6,9 +6,14 @@ import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { StatusModal } from "../../components/Modals/Status";
+
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import { styles } from "../../styles/global";
+
 
 import {
   Container,
@@ -26,6 +31,7 @@ import {
   TotalCardContainer,
   TotalCardButton,
 } from "./styles";
+
 
 const activities = [
   {
@@ -60,41 +66,70 @@ const activities = [
 ];
 
 export function Activities() {
-  const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
 
+  const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
   const total = formatCurrency(activitiesTotal);
 
+  const statusRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+
+  function handleOpenModal(modal: "status" | "name" | "plan") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "membro": {
+      //   nameRef.current?.open();
+      //   break;
+      // }
+      // case "data": {
+      //   planRef.current?.open();
+      //   break;
+      // }
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+
   return (
-    <Container>
-      <Header />
-      {/* <TotalCard title="Atividades filtradas" value={activities.length} /> */}
-      <TotalCard>
-        <TotalCardContainer>
-          <TotalCardTitle>Atividades filtradas</TotalCardTitle>
-          <TotalCardHighlight>{total}</TotalCardHighlight>
-        </TotalCardContainer>
+    <>
+      <Container>
+        <Header />
+        {/* <TotalCard title="Atividades filtradas" value={activities.length} /> */}
+        <TotalCard>
+          <TotalCardContainer>
+            <TotalCardTitle>Atividades filtradas</TotalCardTitle>
+            <TotalCardHighlight>{total}</TotalCardHighlight>
+          </TotalCardContainer>
 
-        <TotalCardButton activeOpacity={0.8}>
-          <Ionicons name="add-outline" size={40} color={styles.colors.text} />
-        </TotalCardButton>
-      </TotalCard>
+          <TotalCardButton activeOpacity={0.8}>
+            <Ionicons name="add-outline" size={40} color={styles.colors.text} />
+          </TotalCardButton>
+        </TotalCard>
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Membro" ml />
-        <Filter title="Data" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title="Membro" ml />
+          <Filter title="Data" ml />
+        </FilterWrapper>
 
-      <FlatList
-        data={activities}
-        keyExtractor={(activity) => activity.id}
-        renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={activities}
+          keyExtractor={(activity) => activity.id}
+          renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+      
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+
+    </>      
   );
 }
 

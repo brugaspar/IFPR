@@ -6,6 +6,10 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { StatusModal } from "../../components/Modals/Status";
+
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import {
@@ -78,28 +82,58 @@ const products = [
 ];
 
 export function Products() {
+
+  const statusRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+
+  function handleOpenModal(modal: "status" | "name" | "group" | "brand") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "name": {
+      //   nameRef.current?.open();
+      //   break;
+      // }
+      // case "group": {
+      //   planRef.current?.open();
+      //   break;
+      // }
+      // case "brand": {
+      //   planRef.current?.open();
+      //   break;
+      // }
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
   return (
-    <Container>
-      <Header />
-      <TotalCard title="Produtos filtrados" value={products.length} />
+    <>
+      <Container>
+        <Header />
+        <TotalCard title="Produtos filtrados" value={products.length} />
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Nome" ml />
-        <Filter title="Grupo" ml />
-        <Filter title="Marca" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title="Grupo" ml />
+          <Filter title="Marca" ml />
+        </FilterWrapper>
 
-      <FlatList
-        data={products}
-        keyExtractor={(product) => product.id}
-        renderItem={({ item, index }) => <ProductCard product={item} index={index} total={products.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={products}
+          keyExtractor={(product) => product.id}
+          renderItem={({ item, index }) => <ProductCard product={item} index={index} total={products.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+    </>
   );
 }
 
