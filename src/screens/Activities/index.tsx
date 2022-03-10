@@ -9,6 +9,7 @@ import { FilterWrapper } from "../../components/FilterWrapper";
 import { useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { StatusModal } from "../../components/Modals/Status";
+import { MemberModal } from "../../components/Modals/Member";
 
 import { formatCurrency } from "../../helpers/strings.helper";
 
@@ -31,7 +32,12 @@ import {
   TotalCardContainer,
   TotalCardButton,
 } from "./styles";
+import { Members } from "../Members";
 
+type MemberProps = {
+  id: string;
+  name: string;
+};
 
 const activities = [
   {
@@ -71,28 +77,30 @@ export function Activities() {
   const total = formatCurrency(activitiesTotal);
 
   const statusRef = useRef<RBSheet>(null);
+  const memberRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [member, setMember] = useState<MemberProps | null>(null);
 
-  function handleOpenModal(modal: "status" | "name" | "plan") {
+  function handleOpenModal(modal: "status" | "name" | "member") {
     switch (modal) {
       case "status": {
         statusRef.current?.open();
         break;
       }
-      // case "membro": {
-      //   nameRef.current?.open();
-      //   break;
-      // }
       // case "data": {
       //   planRef.current?.open();
       //   break;
       // }
+      case "member": {
+        memberRef.current?.open();
+        break;
+      }      
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
-
+  
 
   return (
     <>
@@ -112,10 +120,10 @@ export function Activities() {
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title="Membro" ml />
+          <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />
           <Filter title="Data" ml />
         </FilterWrapper>
-
+  
         <FlatList
           data={activities}
           keyExtractor={(activity) => activity.id}
@@ -128,7 +136,7 @@ export function Activities() {
       </Container>
       
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
-
+      <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />   
     </>      
   );
 }
