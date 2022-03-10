@@ -32,9 +32,13 @@ type SignInPayload = {
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: User | null;
+  isValidMember: boolean;
+  isMember: boolean;
 
   signIn: (payload: SignInPayload) => Promise<void>;
   signOut: () => void;
+  verifyMemberCPF: (cpf: string) => Promise<void>;
+  createMemberPassword: (password: string) => Promise<void>;
 };
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -42,7 +46,13 @@ const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [memberCPF, setMemberCPF] = useState("");
+  const [memberHasPassword, setMemberHasPassword] = useState(false);
+
   const isAuthenticated = !!user;
+  const isValidMember = !!memberCPF;
+  const isMember = !!memberHasPassword;
+  //! TODO: REVER FLUXO DO MEMBRO
 
   async function signIn({ username, password, keepConnected }: SignInPayload) {
     const response = await api.post("authenticate", {
@@ -59,6 +69,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function verifyMemberCPF(cpf: string) {
+    setMemberCPF(cpf);
+    // const response = await api.post("members/verify", {
+    //   cpf,
+    // });
+    // setMemberCPF(response.data.cpf);
+    await AsyncStorage.setItem("@mark-one:member", JSON.stringify(cpf));
+  }
+
+  async function createMemberPassword(password: string) {
+    // const response = await api.post("members/create-password", {
+    //   cpf: memberCPF,
+    //   password,
+    // });
+    setMemberHasPassword(true);
+    await AsyncStorage.setItem("@mark-one:hasPassword", "true");
+  }
+
   async function signOut() {
     await AsyncStorage.multiRemove(["@mark-one:user", "@mark-one:token"]);
     setUser(null);
@@ -67,6 +95,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function loadStoredData() {
     const storedUser = await AsyncStorage.getItem("@mark-one:user");
     const storedToken = await AsyncStorage.getItem("@mark-one:token");
+    const storedMember = await AsyncStorage.getItem("@mark-one:member");
+    const memberAlreadyHasPassword = await AsyncStorage.getItem("@mark-one:hasPassword");
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -74,6 +104,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (storedToken) {
       api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    }
+
+    if (storedMember) {
+      setMemberCPF(JSON.parse(storedMember));
+    }
+
+    if (memberAlreadyHasPassword) {
+      setMemberHasPassword(true);
     }
 
     setLoading(false);
@@ -93,7 +131,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated,
         signIn,
         user,
+        isValidMember,
+        isMember,
         signOut,
+        verifyMemberCPF,
+        createMemberPassword,
       }}
     >
       {children}

@@ -83,11 +83,11 @@ export const KeepConnectedText = styled.Text`
   margin-left: 8px;
 `;
 
-export const MemberContainer = styled.View`
+export const UserContainer = styled.View`
   margin-top: 15px;
 `;
 
-export const MemberText = styled.Text`
+export const UserText = styled.Text`
   font-family: ${styles.fonts.epilogueRegular};
   font-size: 14px;
   color: ${styles.colors.text};

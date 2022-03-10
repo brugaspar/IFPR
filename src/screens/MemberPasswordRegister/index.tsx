@@ -1,30 +1,23 @@
 import { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-import {
-  Container,
-  Highlight,
-  LogoImage,
-  Message,
-  VersionContainer,
-  VersionText,
-  InvisibleButton,
-} from "./styles";
+import { Container, Highlight, LogoImage, Message, VersionContainer, VersionText, InvisibleButton } from "./styles";
 
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
 import { ErrorModal } from "../../components/ErrorModal";
 
-import { useAuth } from "../../contexts/AuthContext";
-import { handleKeyboardDismiss, handlePhoneVibration } from "../../helpers/device.helper";
+import { handleKeyboardDismiss } from "../../helpers/device.helper";
 
+import { useAuth } from "../../contexts/AuthContext";
 import { expo } from "../../../app.json";
 import { styles } from "../../styles/global";
 
 import logoImage from "../../assets/logo.png";
 
 export function MemberPasswordRegister() {
-  // const { signIn } = useAuth(); VERIFICAR
+  const { createMemberPassword } = useAuth();
+  const navigation = useNavigation();
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,7 +25,7 @@ export function MemberPasswordRegister() {
 
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  
+
   const [errorModal, setErrorModal] = useState("");
 
   function handleInputChangeText(text: string, type: "password" | "confirmPassword") {
@@ -51,7 +44,39 @@ export function MemberPasswordRegister() {
       setPasswordError(true);
     }
 
-    // DESENVOLVER VALIDAÇÕES    
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError(true);
+    }
+
+    if (!password.trim() || !confirmPassword.trim()) {
+      return;
+    }
+
+    if (!(password === confirmPassword)) {
+      setErrorModal("Senhas não conferem");
+      return;
+    }
+
+    try {
+      await createMemberPassword(password);
+      navigation.navigate("SignIn" as never);
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.data.message) {
+          if (Array.isArray(error.response.data.message)) {
+            setErrorModal(error.response.data.message.join("\n"));
+          } else {
+            setErrorModal(error.response.data.message);
+          }
+        } else {
+          setErrorModal("Erro interno, tente novamente");
+        }
+      } else {
+        setErrorModal("Erro interno, tente novamente");
+      }
+
+      setLoading(false);
+    }
   }
 
   return (
@@ -60,32 +85,28 @@ export function MemberPasswordRegister() {
         <Container>
           <LogoImage source={logoImage} />
 
-          <Message> 
-          Crie uma <Highlight>senha </Highlight>para continuar
+          <Message>
+            Crie uma <Highlight>senha </Highlight>para continuar
           </Message>
 
           <Input
-            name="password"
             label="Senha"
             placeholder="Informe sua senha"
             icon="md-lock-closed-outline"
             value={password}
             onChangeText={(text) => handleInputChangeText(text, "password")}
-            editable={!loading}
             error={passwordError}
           />
           <Input
-            name="passwordConfirm"
             label="Confirme sua senha"
             placeholder="Confirme sua senha"
             icon="md-lock-closed-outline"
             value={confirmPassword}
             onChangeText={(text) => handleInputChangeText(text, "confirmPassword")}
-            editable={!loading}
-            error={passwordError}
+            error={confirmPasswordError}
           />
 
-          <Button title="Finalizar" onPress={handlePasswordValidation} loading={loading} />
+          <Button title="Finalizar" onPress={handlePasswordValidation} />
 
           <VersionContainer>
             <VersionText>{expo.version}</VersionText>

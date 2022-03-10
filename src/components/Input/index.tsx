@@ -9,7 +9,6 @@ import { Container, ErrorText, IconContainer, InputContainer, Label, PasswordBut
 import { styles } from "../../styles/global";
 
 type InputProps = TextInputProps & {
-  name: string;
   label: string;
   hasLabel?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;

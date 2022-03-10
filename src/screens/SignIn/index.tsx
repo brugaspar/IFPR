@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Container,
@@ -30,7 +31,8 @@ import { styles } from "../../styles/global";
 import logoImage from "../../assets/logo.png";
 
 export function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn, isMember } = useAuth();
+  const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +42,14 @@ export function SignIn() {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorModal, setErrorModal] = useState("");
+
+  function handleNavigateToMemberSignIn() {
+    if (isMember) {
+      console.log("MUDAR PARA USUÁRIO");
+    } else {
+      navigation.navigate("MemberMailValidation" as never);
+    }
+  }
 
   function handleToggleCheckbox() {
     handlePhoneVibration();
@@ -106,14 +116,14 @@ export function SignIn() {
           <LogoImage source={logoImage} />
 
           <Message>
-            Informe seu <Highlight>usuário</Highlight> e sua <Highlight>senha</Highlight>
+            Informe seu <Highlight>{isMember ? "CPF" : "usuário"}</Highlight> e sua <Highlight>senha</Highlight>
             {"\n"}para acessar o aplicativo
           </Message>
 
           <Input
-            label="Usuário"
-            placeholder="Informe seu usuário"
-            icon="person-outline"
+            label={isMember ? "CPF" : "Usuário"}
+            placeholder={`Informe seu ${isMember ? "CPF" : "usuário"}`}
+            icon={isMember ? "filter" : "person-outline"}
             value={username}
             onChangeText={(text) => handleInputChangeText(text, "username")}
             editable={!loading}
@@ -148,7 +158,7 @@ export function SignIn() {
 
           <MemberContainer>
             <MemberText>
-              É membro? <Highlight onPress={() => console.log("Login do membro")}>Clique aqui</Highlight>
+              É {isMember ? "usuário" : "membro"}? <Highlight onPress={handleNavigateToMemberSignIn}>Clique aqui</Highlight>
             </MemberText>
           </MemberContainer>
 

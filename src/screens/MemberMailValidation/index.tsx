@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Container,
@@ -8,13 +9,13 @@ import {
   Message,
   VersionContainer,
   VersionText,
-  KeepConnectedBox,
-  KeepConnectedButton,
-  KeepConnectedText,
-  KeepConnectedContainer,
-  MemberText,
-  MemberContainer,
   InvisibleButton,
+  KeepConnectedContainer,
+  KeepConnectedButton,
+  KeepConnectedBox,
+  KeepConnectedText,
+  UserContainer,
+  UserText,
 } from "./styles";
 
 import { Input } from "../../components/Input";
@@ -30,26 +31,59 @@ import { styles } from "../../styles/global";
 import logoImage from "../../assets/logo.png";
 
 export function MemberMailValidation() {
-  // const { signIn } = useAuth(); VERIFICAR
+  const { isValidMember, verifyMemberCPF } = useAuth();
+  const navigation = useNavigation();
 
-  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
+
+  const [cpfError, setCpfError] = useState(false);
+  const [keepConnected, setKeepConnected] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [emailError, setEmailError] = useState(false);
-  
   const [errorModal, setErrorModal] = useState("");
 
-  function handleInputChangeText(text: string, type: "e-mail") {   
-      setEmail(text);
-      setEmailError(false); 
+  function handleNavigateToUserSignIn() {
+    navigation.navigate("SignIn" as never);
   }
 
-  async function handleEmailValidation() {
-    if (!email.trim()) {
-      setEmailError(true);
+  function handleToggleCheckbox() {
+    handlePhoneVibration();
+    setKeepConnected(!keepConnected);
+  }
+
+  function handleInputChangeText(text: string, type: "e-mail") {
+    setCpf(text);
+    setCpfError(false);
+  }
+
+  async function handleCPFValidation() {
+    setLoading(true);
+
+    if (!cpf.trim()) {
+      setCpfError(true);
+      return;
     }
 
-    // DESENVOLVER VALIDAÇÕES    
+    try {
+      await verifyMemberCPF(cpf);
+      navigation.navigate("MemberPasswordRegister" as never);
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.data.message) {
+          if (Array.isArray(error.response.data.message)) {
+            setErrorModal(error.response.data.message.join("\n"));
+          } else {
+            setErrorModal(error.response.data.message);
+          }
+        } else {
+          setErrorModal("Erro interno, tente novamente");
+        }
+      } else {
+        setErrorModal("Erro interno, tente novamente");
+      }
+
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,27 +92,52 @@ export function MemberMailValidation() {
         <Container>
           <LogoImage source={logoImage} />
 
-          <Message> 
-            Informe seu <Highlight>e-mail</Highlight> para continuar
+          <Message>
+            Informe seu <Highlight>CPF</Highlight> para continuar
           </Message>
 
           <Input
-            label="E-mail"
-            placeholder="Informe seu e-mail"
-            icon="person-outline"
-            value={email}
+            label="CPF"
+            placeholder="Informe seu CPF"
+            icon="filter"
+            value={cpf}
             onChangeText={(text) => handleInputChangeText(text, "e-mail")}
-            editable={!loading}
-            error={emailError}
+            error={cpfError}
           />
 
-          <Button title="Continuar" onPress={handleEmailValidation} loading={loading} />
+          {isValidMember && (
+            <KeepConnectedContainer>
+              <KeepConnectedButton
+                activeOpacity={0.8}
+                onPress={handleToggleCheckbox}
+                disabled={loading}
+                opacity={loading ? 0.5 : 1}
+              >
+                <KeepConnectedBox active={keepConnected}>
+                  {keepConnected && <Ionicons name="checkmark-sharp" size={17} color={styles.colors.background} />}
+                </KeepConnectedBox>
+                <KeepConnectedText>Manter conectado</KeepConnectedText>
+              </KeepConnectedButton>
+            </KeepConnectedContainer>
+          )}
+
+          <Button title={isValidMember ? "Entrar" : "Continuar"} onPress={handleCPFValidation} />
+          {!isValidMember && <Button onPress={navigation.goBack} title="Cancelar" background={styles.colors.background} />}
+
+          {isValidMember && (
+            <UserContainer>
+              <UserText>
+                É usuário? <Highlight onPress={handleNavigateToUserSignIn}>Clique aqui</Highlight>
+              </UserText>
+            </UserContainer>
+          )}
 
           <VersionContainer>
             <VersionText>{expo.version}</VersionText>
           </VersionContainer>
         </Container>
       </InvisibleButton>
+
       <ErrorModal error={errorModal} setError={setErrorModal} />
     </>
   );
