@@ -15,7 +15,6 @@ import { formatCurrency } from "../../helpers/strings.helper";
 
 import { styles } from "../../styles/global";
 
-
 import {
   Container,
   ActivityCardContainer,
@@ -72,7 +71,6 @@ const activities = [
 ];
 
 export function Activities() {
-
   const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
   const total = formatCurrency(activitiesTotal);
 
@@ -95,12 +93,11 @@ export function Activities() {
       case "member": {
         memberRef.current?.open();
         break;
-      }      
+      }
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
-  
 
   return (
     <>
@@ -123,7 +120,7 @@ export function Activities() {
           <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />
           <Filter title="Data" ml />
         </FilterWrapper>
-  
+
         <FlatList
           data={activities}
           keyExtractor={(activity) => activity.id}
@@ -134,10 +131,10 @@ export function Activities() {
           }}
         />
       </Container>
-      
+
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
-      <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />   
-    </>      
+      <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
+    </>
   );
 }
 

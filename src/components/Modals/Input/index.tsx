@@ -1,67 +1,49 @@
 import { MutableRefObject, useState } from "react";
 import { ModalHeader } from "../../ModalHeader";
-import { Input } from "../../Input"
+import { Input } from "../../Input";
 import { ModalView } from "../../ModalView";
-import { Container, Separator, InputButton, Row, InputText, StyledScrollView } from "./styles";
+import { Container, Separator, StyledScrollView } from "./styles";
+import { Button } from "../../Button";
 
 type InputModalProps = {
   modalRef: MutableRefObject<any>;
-  selectedInput: string | null;
-  setSelectedInput: (input: string | null) => void;
+  selectedText: string | null;
+  setSelectedText: (input: string | null) => void;
 };
 
-export function InputModal({ modalRef, selectedInput, setSelectedInput }: InputModalProps) {
-  // const [currentInput, setCurrentInput] = useState<string | null>(selectedInput);
+export function InputModal({ modalRef, selectedText, setSelectedText }: InputModalProps) {
+  const [text, setText] = useState(selectedText || "");
 
-  var input : string;
-
-
-  function handleModalClose() {
-    // if (currentInput !== selectedInput) {
-    //   setSelectedInput(currentInput);
-    // }
-  }
-
-  function handleSelectInput(input: string) {
-    if (selectedInput !== input) {
-      // setCurrentInput(Input);
-      setSelectedInput(input);
-    }
-
+  function handleSelectText() {
+    setSelectedText(text);
     modalRef.current?.close();
   }
 
   function handleCleanInput() {
-    if (selectedInput !== null) {
-      // setCurrentInput(null);
-      setSelectedInput(null);
-    }
-
+    setSelectedText(null);
+    setText("");
     modalRef.current?.close();
   }
 
   return (
-    
-    <ModalView modalRef={modalRef} height={180} onClose={handleModalClose}>
+    <ModalView modalRef={modalRef} height={250}>
       <Container>
         <ModalHeader title="Procure um nome" onCleanFilter={handleCleanInput} />
 
         <Separator />
 
         <StyledScrollView showsVerticalScrollIndicator={false}>
-        <Input
+          <Input
+            hasLabel={false}
             label="Nome"
             placeholder="Informe o nome"
-            icon="person-outline"
-  
+            icon="search-outline"
+            value={text}
+            onChangeText={setText}
+            returnKeyType="search"
+            onSubmitEditing={handleSelectText}
           />
-          <Row>
-              <InputButton onPress={() => handleSelectInput(input)}>
-              
-                <InputText>Pesquisar</InputText>
-              </InputButton>
-   
-          </Row>
+          <Button title="Pesquisar" onPress={handleSelectText} />
         </StyledScrollView>
       </Container>
     </ModalView>

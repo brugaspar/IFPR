@@ -22,6 +22,7 @@ import {
   MemberCardText,
   MemberCardTitle,
 } from "./styles";
+import { InputModal } from "../../components/Modals/Input";
 
 type PlanProps = {
   id: string;
@@ -71,9 +72,11 @@ const members = [
 export function Members() {
   const statusRef = useRef<RBSheet>(null);
   const planRef = useRef<RBSheet>(null);
+  const nameRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
   const [plan, setPlan] = useState<PlanProps | null>(null);
+  const [name, setName] = useState<string | null>("");
 
   function handleOpenModal(modal: "status" | "name" | "plan") {
     switch (modal) {
@@ -81,10 +84,10 @@ export function Members() {
         statusRef.current?.open();
         break;
       }
-      // case "name": {
-      //   nameRef.current?.open();
-      //   break;
-      // }
+      case "name": {
+        nameRef.current?.open();
+        break;
+      }
       case "plan": {
         planRef.current?.open();
         break;
@@ -102,7 +105,7 @@ export function Members() {
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title="Nome" ml />
+          <Filter title={name || "Nome"} ml onPress={() => handleOpenModal("name")} />
           <Filter title={plan ? plan.name : "Plano"} ml onPress={() => handleOpenModal("plan")} />
         </FilterWrapper>
 
@@ -119,6 +122,7 @@ export function Members() {
 
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
       <PlansModal modalRef={planRef} selectedPlan={plan} setSelectedPlan={setPlan} />
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
     </>
   );
 }

@@ -30,7 +30,7 @@ function DrawerRoutes() {
       useLegacyImplementation
       screenOptions={{
         headerShown: false,
-        swipeEdgeWidth: Dimensions.get("window").width,
+        swipeEdgeWidth: Dimensions.get("window").width / 4,
         drawerType: "back",
         drawerStyle: {
           backgroundColor: styles.colors.background,
