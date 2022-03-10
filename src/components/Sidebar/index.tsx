@@ -13,7 +13,9 @@ export function Sidebar() {
         <Link to="/">Provas</Link>
         <Link to="questions">Questões</Link>
       </div>
-      <div>FOOTER</div>
+      <div>@Copyright IFPR
+        <h6>Bruno Gaspar | Eduardo Rezes</h6>
+      </div>
     </Container>
   );
 }
