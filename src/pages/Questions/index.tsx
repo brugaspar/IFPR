@@ -1,8 +1,9 @@
+import moment from "moment";
 import { useState } from "react";
-import { Button } from "../../components/Button";
 
 import { QuestionModal } from "../../components/QuestionModal";
 import { Separator } from "../../components/Separator";
+import { Button } from "../../components/Button";
 
 import { Container } from "./styles";
 
@@ -31,6 +32,7 @@ export function Questions() {
       description: "Conteúdo: padrões de projeto, matéria do último semestre.",
       type: "single",
       difficulty: "medium",
+      createdAt: "2022-02-20",
       tag: {
         id: "1",
         name: "Padrões de Projeto",
@@ -42,6 +44,7 @@ export function Questions() {
       description: "Conteúdo: padrões de projeto, matéria do último semestre.",
       type: "multiple",
       difficulty: "hard",
+      createdAt: "2022-03-14",
       tag: {
         id: "1",
         name: "Padrões de Projeto",
@@ -53,6 +56,7 @@ export function Questions() {
       description: "",
       type: "open",
       difficulty: "easy",
+      createdAt: "2022-01-11",
       tag: {
         id: "2",
         name: "Banco de Dados",
@@ -92,6 +96,7 @@ export function Questions() {
             <th>Tipo</th>
             <th>Dificuldade</th>
             <th>Tag</th>
+            <th>Dt. Criado</th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +111,7 @@ export function Questions() {
               <td>{questionType[question.type]}</td>
               <td>{questionDifficulty[question.difficulty]}</td>
               <td>{question.tag.name}</td>
+              <td>{moment(question.createdAt).format("DD/MM/YYYY")}</td>
             </tr>
           ))}
         </tbody>

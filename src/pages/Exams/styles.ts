@@ -26,7 +26,7 @@ export const Container = styled.div`
       }
     }
   }
-  
+
   table {
     border-collapse: collapse;
     margin: 1.5rem 0;
@@ -68,6 +68,13 @@ export const Container = styled.div`
         background: var(--green);
         color: var(--background);
       }
+    }
+
+    .ellipsis-text {
+      max-width: 300px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 `;
