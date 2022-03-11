@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
 
-import logoIfpr from "../../assets/img/IFPR Banner.png";
-
+import ifprLogo from "../../assets/img/ifpr-logo.png";
 
 import { Container } from "./styles";
 
 export function Sidebar() {
   return (
     <Container>
-      <img src={logoIfpr}/>
+      <img src={ifprLogo} />
       <div>
         <Link to="/">Provas</Link>
         <Link to="questions">Questões</Link>
       </div>
-      <div>@Copyright IFPR
-        <h6>Bruno Gaspar | Eduardo Rezes</h6>
+      <div className="footer-text">
+        © Copyright IFPR
+        <h5>Bruno Gaspar | Eduardo Rezes</h5>
       </div>
     </Container>
   );

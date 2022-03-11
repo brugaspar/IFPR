@@ -12,8 +12,9 @@ export const Container = styled.div`
   color: var(--background);
 
   img {
-    width:100%;
-    height:90px;
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
   }
 
   display: flex;
@@ -43,5 +44,9 @@ export const Container = styled.div`
     &:hover {
       filter: brightness(0.8);
     }
+  }
+
+  .footer-text {
+    text-align: center;
   }
 `;
