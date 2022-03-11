@@ -6,7 +6,7 @@ import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { StatusModal } from "../../components/Modals/Status";
 import { MemberModal } from "../../components/Modals/Member";
@@ -31,7 +31,7 @@ import {
   TotalCardContainer,
   TotalCardButton,
 } from "./styles";
-import { Members } from "../Members";
+
 
 type MemberProps = {
   id: string;
@@ -41,7 +41,7 @@ type MemberProps = {
 const activities = [
   {
     id: "1",
-    member: "Guilherme Locks Gregorio",
+    member: "Bruno Gaspar",
     totalItems: 7,
     seller: "Bruno Gaspar",
     value: 299.99,
@@ -50,7 +50,7 @@ const activities = [
   },
   {
     id: "2",
-    member: "Joaquim Pereira",
+    member: "Guilherme Lokcs Gregorio",
     totalItems: 3,
     seller: "Bruno Gaspar",
     value: 123.99,
@@ -60,7 +60,7 @@ const activities = [
   },
   {
     id: "3",
-    member: "Maria Apacerecida",
+    member: "Lucas Guilherme Zorzan",
     totalItems: 10,
     seller: "Mohammed Ali",
     value: 350.99,
@@ -80,6 +80,9 @@ export function Activities() {
   const [status, setStatus] = useState<string | null>(null);
   const [member, setMember] = useState<MemberProps | null>(null);
 
+  const [filteredData, setFilteredData] = useState(activities);
+  const [masterData, setMasterData] = useState(activities);
+
   function handleOpenModal(modal: "status" | "name" | "member") {
     switch (modal) {
       case "status": {
@@ -98,6 +101,24 @@ export function Activities() {
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+  useEffect(()=> {
+    if (member?.id) {
+      const newData = masterData.filter(
+        function (item) {
+          if (item.id) {
+            const itemData = item.id.toUpperCase();
+            const textData = member.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setMember(member);
+    } else {
+      setFilteredData(masterData);
+      setMember(member);
+    }
+  },[member])
 
   return (
     <>
@@ -122,7 +143,7 @@ export function Activities() {
         </FilterWrapper>
 
         <FlatList
-          data={activities}
+          data={filteredData}
           keyExtractor={(activity) => activity.id}
           renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
           showsVerticalScrollIndicator={false}

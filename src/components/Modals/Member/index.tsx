@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject, useState } from "react";
 import { FlatList } from "react-native";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
@@ -14,6 +14,7 @@ type MemberProps = {
   name: string;
 //   plan: string;
 }; 
+
 
 type MembersModalProps = {
   modalRef: MutableRefObject<any>;
@@ -36,7 +37,31 @@ const members = [
   },
 ];
 
+
 export function MemberModal({ modalRef, selectedMember, setSelectedMember }: MembersModalProps) {
+  
+  const [text, setText] = useState("");
+  const [filteredData, setFilteredData] = useState(members);
+  const [masterData, setMasterData] = useState(members);
+
+  const searchFilter = (text : string) => {
+    if (text) {
+      const newData = masterData.filter(
+        function (item) {
+          if (item.name) {
+            const itemData = item.name.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setText(text);
+    } else {
+      setFilteredData(masterData);
+      setText(text);
+    }
+  };
+  
   function handleSelectStatus(member: MemberProps) {
     if (selectedMember?.id !== member.id) {
       setSelectedMember(member);
@@ -44,6 +69,7 @@ export function MemberModal({ modalRef, selectedMember, setSelectedMember }: Mem
 
     modalRef.current?.close();
   }
+
 
   function handleCleanStatus() {
     if (selectedMember !== null) {
@@ -58,10 +84,24 @@ export function MemberModal({ modalRef, selectedMember, setSelectedMember }: Mem
       <Container>
         <ModalHeader title="Selecione um membro" onCleanFilter={handleCleanStatus} />
        
-        <Separator />
-
+        
+        <Input
+            hasLabel={false}
+            label="Nome"
+            placeholder="Informe o nome"
+            icon="search-outline"
+            value={text}
+            onChangeText={(text) => searchFilter(text)}
+            returnKeyType="search"
+            style={{
+              marginBottom : 0,
+              marginTop : 5
+              
+            }}
+          />
+          <Separator />
         <FlatList
-          data={members}
+          data={filteredData}
           keyExtractor={(member) => member.id}
           renderItem={({ item, index }) => (
             <MemberCard

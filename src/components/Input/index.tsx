@@ -51,7 +51,7 @@ export function Input({
   }
 
   return (
-    <Container>
+    <Container style={rest.style}>
       {hasLabel && <Label>{label}</Label>}
       <InputContainer opacity={inputOpacity} multilineStyle={rest.multiline} error={error}>
         {icon && (
