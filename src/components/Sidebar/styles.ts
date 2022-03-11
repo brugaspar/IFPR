@@ -11,6 +11,12 @@ export const Container = styled.div`
   background: var(--primary);
   color: var(--background);
 
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+  }
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -38,5 +44,9 @@ export const Container = styled.div`
     &:hover {
       filter: brightness(0.8);
     }
+  }
+
+  .footer-text {
+    text-align: center;
   }
 `;
