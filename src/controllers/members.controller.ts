@@ -299,6 +299,24 @@ class MemberController {
 
     return response.status(200).json({ id: updatedMember.id });
   }
+
+  async verifyCPF(request: Request, response: Response) {
+    const { cpf } = request.body;
+
+    const schema = {
+      cpf: yup.string().required(),
+    };
+
+    await checkBodySchema(schema, request.body);
+
+    const memberExists = await membersRepository.findByCPF(cpf);
+
+    if (!memberExists) {
+      throw new AppError("Membro não encontrado");
+    }
+
+    return response.status(200).json({ cpf: memberExists.cpf });
+  }
 }
 
 export default new MemberController();

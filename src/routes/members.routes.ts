@@ -32,4 +32,6 @@ membersRouter.put(
 
 membersRouter.patch("/members/create-password", membersController.createPassword);
 
+membersRouter.post("/members/verify", membersController.verifyCPF);
+
 export default membersRouter;
