@@ -7,7 +7,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --background: #f1f3f5;
     --primary: #131313;
     --contrast: #232323;
-    --green: #2e9e3f;
+    --green: #2f9e41;
   }
 
   * {
