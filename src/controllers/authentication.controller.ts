@@ -50,7 +50,7 @@ class AuthenticationController {
 
     // const user = await usersRepository.findByUsername(username);
     if (isMember) {
-      user = await membersRepository.findByCPF(username);
+      user = await membersRepository.findByCPF(username.trim().replace(/[^\d]/g, ""));
     } else {
       user = await usersRepository.findByUsername(username);
     }

@@ -285,7 +285,7 @@ class MemberController {
 
     await checkBodySchema(schema, request.body);
 
-    const memberExists = await membersRepository.findByCPF(cpf);
+    const memberExists = await membersRepository.findByCPF(cpf.trim().replace(/[^\d]/g, ""));
 
     if (!memberExists) {
       throw new AppError("Membro não encontrado");
@@ -309,13 +309,19 @@ class MemberController {
 
     await checkBodySchema(schema, request.body);
 
-    const memberExists = await membersRepository.findByCPF(cpf);
+    const memberExists = await membersRepository.findByCPF(cpf.trim().replace(/[^\d]/g, ""));
 
     if (!memberExists) {
       throw new AppError("Membro não encontrado");
     }
 
-    return response.status(200).json({ cpf: memberExists.cpf });
+    let memberHasPassword = false;
+
+    if (memberExists.password) {
+      memberHasPassword = true;
+    }
+
+    return response.status(200).json({ cpf: memberExists.cpf, memberHasPassword });
   }
 }
 
