@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
@@ -9,6 +9,7 @@ import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 import { StatusModal } from "../../components/Modals/Status";
 import { PlansModal } from "../../components/Modals/Plan";
+import { InputModal } from "../../components/Modals/Input";
 
 import {
   Container,
@@ -22,13 +23,14 @@ import {
   MemberCardText,
   MemberCardTitle,
 } from "./styles";
-import { InputModal } from "../../components/Modals/Input";
+
 
 type PlanProps = {
   id: string;
   name: string;
   value: number;
 };
+
 
 const members = [
   {
@@ -78,6 +80,9 @@ export function Members() {
   const [plan, setPlan] = useState<PlanProps | null>(null);
   const [name, setName] = useState<string | null>("");
 
+  const [filteredData, setFilteredData] = useState<MemberProps[] | null>(null);
+  const [masterData, setMasterData] = useState(members);
+
   function handleOpenModal(modal: "status" | "name" | "plan") {
     switch (modal) {
       case "status": {
@@ -97,6 +102,42 @@ export function Members() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
+  useEffect(()=> {
+      let newData = masterData;
+      if (name) {
+        newData = newData.filter(
+          function (item) {
+            if (item.name) {
+              const itemData = item.name.toUpperCase();
+              const textData = name.toUpperCase();
+              return itemData.indexOf(textData) > -1;
+            }
+        });
+        setFilteredData(newData);
+        setName(name);
+      } else {
+        if(status || plan){
+          setFilteredData(newData);
+        }else{
+          setFilteredData(masterData);
+        }
+        setName(name);
+      }
+
+      if (status) {
+        newData = newData.filter(item => item.disabled === (status === "disabled"));
+        setFilteredData(newData);
+        setStatus(status);
+      } else {
+        if(name || plan){
+          setFilteredData(newData);
+        }else{
+          setFilteredData(masterData);
+        }
+        setStatus(status); 
+      }
+  },[name,status])
+  
   return (
     <>
       <Container>
@@ -110,7 +151,7 @@ export function Members() {
         </FilterWrapper>
 
         <FlatList
-          data={members}
+          data={filteredData}
           keyExtractor={(member) => member.id}
           renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
           showsVerticalScrollIndicator={false}
