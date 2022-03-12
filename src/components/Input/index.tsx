@@ -63,6 +63,7 @@ export function Input({
         opacity={inputOpacity}
         multilineStyle={rest.multiline}
         error={error}
+        disabled={!rest.editable}
       >
         {icon && (
           <IconContainer hasMargin={iconHasMargin}>

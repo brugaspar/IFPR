@@ -16,7 +16,7 @@ import { styles } from "../../styles/global";
 import logoImage from "../../assets/logo.png";
 
 export function MemberPasswordRegister() {
-  const { createMemberPassword } = useAuth();
+  const { signIn, memberHasPassword, memberCpf, createMemberPassword } = useAuth();
   const navigation = useNavigation();
 
   const [password, setPassword] = useState("");
@@ -44,22 +44,32 @@ export function MemberPasswordRegister() {
       setPasswordError(true);
     }
 
-    if (!confirmPassword.trim()) {
+    if (!confirmPassword.trim() && !memberHasPassword) {
       setConfirmPasswordError(true);
     }
 
-    if (!password.trim() || !confirmPassword.trim()) {
+    if (!password.trim() || (!confirmPassword.trim() && !memberHasPassword)) {
       return;
     }
 
-    if (!(password === confirmPassword)) {
-      setErrorModal("Senhas não conferem");
-      return;
+    if (!memberHasPassword) {
+      if (!(password === confirmPassword)) {
+        setErrorModal("Senhas não conferem");
+        return;
+      }
     }
 
     try {
-      await createMemberPassword(password);
-      navigation.navigate("SignIn" as never);
+      if (memberHasPassword) {
+        await signIn({
+          username: memberCpf,
+          password,
+          keepConnected: true,
+          isMember: true,
+        });
+      } else {
+        await createMemberPassword(password);
+      }
     } catch (error: any) {
       if (error.response) {
         if (error.response.data.message) {
@@ -86,7 +96,7 @@ export function MemberPasswordRegister() {
           <LogoImage source={logoImage} />
 
           <Message>
-            Crie uma <Highlight>senha </Highlight>para continuar
+            {memberHasPassword ? "Informe sua" : "Crie uma"} <Highlight>senha</Highlight> para continuar
           </Message>
 
           <Input
@@ -97,16 +107,18 @@ export function MemberPasswordRegister() {
             onChangeText={(text) => handleInputChangeText(text, "password")}
             error={passwordError}
           />
-          <Input
-            label="Confirme sua senha"
-            placeholder="Confirme sua senha"
-            icon="md-lock-closed-outline"
-            value={confirmPassword}
-            onChangeText={(text) => handleInputChangeText(text, "confirmPassword")}
-            error={confirmPasswordError}
-          />
+          {!memberHasPassword && (
+            <Input
+              label="Confirme sua senha"
+              placeholder="Confirme sua senha"
+              icon="md-lock-closed-outline"
+              value={confirmPassword}
+              onChangeText={(text) => handleInputChangeText(text, "confirmPassword")}
+              error={confirmPasswordError}
+            />
+          )}
 
-          <Button title="Finalizar" onPress={handlePasswordValidation} />
+          <Button title={memberHasPassword ? "Entrar" : "Criar senha"} onPress={handlePasswordValidation} />
 
           <VersionContainer>
             <VersionText>{expo.version}</VersionText>

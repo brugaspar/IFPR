@@ -25,6 +25,7 @@ import { styles } from "../../styles/global";
 type RouteProps = {
   activity: {
     id: string;
+    status: "open" | "cancelled" | "closed";
   };
 };
 
@@ -65,13 +66,18 @@ export function ActivitiesDetails() {
   const route = useRoute();
   const navigation = useNavigation();
   const [activityId, setActivityId] = useState("");
+  const [activityStatus, setActivityStatus] = useState("");
 
   const [observation, setObservation] = useState("");
+
+  const activityLabel = activityStatus === "open" ? "Editando atividade" : "Visualizando atividade";
+  const canEdit = activityStatus === "open";
 
   useEffect(() => {
     if (route.params) {
       const { activity } = route.params as RouteProps;
       if (activity) {
+        setActivityStatus(activity.status);
         setActivityId(activity.id);
       }
     }
@@ -83,12 +89,12 @@ export function ActivitiesDetails() {
         <BackButton activeOpacity={0.6} onPress={navigation.goBack}>
           <Ionicons name="chevron-back" size={30} color={styles.colors.text} />
         </BackButton>
-        <Title>{activityId ? "Editando atividade" : "Nova atividade"}</Title>
+        <Title>{activityId ? activityLabel : "Nova atividade"}</Title>
       </Row>
 
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <Input label="Membro" placeholder="Selecione o membro" type="modal" />
-        <Input label="Vendedor" placeholder="Selecione o vendedor" type="modal" />
+        <Input label="Membro" placeholder="Selecione o membro" type="modal" editable={canEdit} />
+        <Input label="Vendedor" placeholder="Selecione o vendedor" type="modal" editable={canEdit} />
 
         <Input
           label={`Observações | ${observation.length}/255`}
@@ -96,16 +102,17 @@ export function ActivitiesDetails() {
           multiline
           maxLength={255}
           onChangeText={setObservation}
+          editable={canEdit}
         />
 
-        <Input label="Produto" placeholder="Selecione o produto" type="modal" />
+        <Input label="Produto" placeholder="Selecione o produto" type="modal" editable={canEdit} />
 
         <Row>
-          <Input label="Preço" placeholder="Informe o preço" width={48.5} keyboardType="numeric" />
-          <Input label="Quantidade" placeholder="Informe a quantidade" width={48.5} keyboardType="numeric" />
+          <Input label="Preço" placeholder="Informe o preço" width={48.5} keyboardType="numeric" editable={canEdit} />
+          <Input label="Quantidade" placeholder="Informe a quantidade" width={48.5} keyboardType="numeric" editable={canEdit} />
         </Row>
 
-        <Button title="Adicionar" background={styles.colors.blue} />
+        <Button title="Adicionar" background={styles.colors.blue} disabled={!canEdit} />
 
         <Separator />
 
@@ -121,10 +128,10 @@ export function ActivitiesDetails() {
                 <Row>
                   <ItemCardTitle />
                   <Row>
-                    <ItemsButton>
+                    <ItemsButton disabled={!canEdit}>
                       <Ionicons name="brush" size={15} color={styles.colors.blue} />
                     </ItemsButton>
-                    <ItemsButton>
+                    <ItemsButton disabled={!canEdit}>
                       <Ionicons name="trash-bin" size={15} color={styles.colors.red} />
                     </ItemsButton>
                   </Row>
