@@ -90,6 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsMember(true);
       await AsyncStorage.setItem("@mark-one:isMember", "true");
     } else {
+      setIsMember(false);
       await AsyncStorage.removeItem("@mark-one:isMember");
     }
   }
@@ -114,6 +115,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (storedMember) {
       setIsMember(true);
+    } else {
+      setIsMember(false);
     }
 
     setLoading(false);

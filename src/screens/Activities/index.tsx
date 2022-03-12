@@ -33,7 +33,6 @@ import {
   TotalCardButton,
 } from "./styles";
 
-
 type MemberProps = {
   id: string;
   name: string;
@@ -105,15 +104,18 @@ export function Activities() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
-  useEffect(()=> {
+  function handleNavigateToDetails(params?: any) {
+    navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
+  }
+
+  useEffect(() => {
     if (member?.id) {
-      const newData = masterData.filter(
-        function (item) {
-          if (item.id) {
-            const itemData = item.id.toUpperCase();
-            const textData = member.id.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          }
+      const newData = masterData.filter(function (item) {
+        if (item.id) {
+          const itemData = item.id.toUpperCase();
+          const textData = member.id.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
       });
       setFilteredData(newData);
       setMember(member);
@@ -121,7 +123,7 @@ export function Activities() {
       setFilteredData(masterData);
       setMember(member);
     }
-  },[member])
+  }, [member]);
 
   return (
     <>
@@ -148,7 +150,14 @@ export function Activities() {
         <FlatList
           data={filteredData}
           keyExtractor={(activity) => activity.id}
-          renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
+          renderItem={({ item, index }) => (
+            <ActivityCard
+              activity={item}
+              index={index}
+              total={activities.length}
+              handleNavigateToDetails={handleNavigateToDetails}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: -16,
