@@ -1,10 +1,15 @@
+import { useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
+import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
+import { StatusModal } from "../../components/Modals/Status";
+import { PlansModal } from "../../components/Modals/Plan";
+import { InputModal } from "../../components/Modals/Input";
 
 import {
   Container,
@@ -18,6 +23,14 @@ import {
   MemberCardText,
   MemberCardTitle,
 } from "./styles";
+
+
+type PlanProps = {
+  id: string;
+  name: string;
+  value: number;
+};
+
 
 const members = [
   {
@@ -59,27 +72,99 @@ const members = [
 ];
 
 export function Members() {
+  const statusRef = useRef<RBSheet>(null);
+  const planRef = useRef<RBSheet>(null);
+  const nameRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+  const [plan, setPlan] = useState<PlanProps | null>(null);
+  const [name, setName] = useState<string | null>("");
+
+  const [filteredData, setFilteredData] = useState<MemberProps[] | null>(null);
+  const [masterData, setMasterData] = useState(members);
+
+  function handleOpenModal(modal: "status" | "name" | "plan") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      case "name": {
+        nameRef.current?.open();
+        break;
+      }
+      case "plan": {
+        planRef.current?.open();
+        break;
+      }
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+  useEffect(()=> {
+      let newData = masterData;
+      if (name) {
+        newData = newData.filter(
+          function (item) {
+            if (item.name) {
+              const itemData = item.name.toUpperCase();
+              const textData = name.toUpperCase();
+              return itemData.indexOf(textData) > -1;
+            }
+        });
+        setFilteredData(newData);
+        setName(name);
+      } else {
+        if(status || plan){
+          setFilteredData(newData);
+        }else{
+          setFilteredData(masterData);
+        }
+        setName(name);
+      }
+
+      if (status) {
+        newData = newData.filter(item => item.disabled === (status === "disabled"));
+        setFilteredData(newData);
+        setStatus(status);
+      } else {
+        if(name || plan){
+          setFilteredData(newData);
+        }else{
+          setFilteredData(masterData);
+        }
+        setStatus(status); 
+      }
+  },[name,status])
+  
   return (
-    <Container>
-      <Header />
-      <TotalCard title="Membros filtrados" value={members.length} />
+    <>
+      <Container>
+        <Header />
+        <TotalCard title="Membros filtrados" value={members.length} />
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Nome" ml />
-        <Filter title="Plano" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={name || "Nome"} ml onPress={() => handleOpenModal("name")} />
+          <Filter title={plan ? plan.name : "Plano"} ml onPress={() => handleOpenModal("plan")} />
+        </FilterWrapper>
 
-      <FlatList
-        data={members}
-        keyExtractor={(member) => member.id}
-        renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={filteredData}
+          keyExtractor={(member) => member.id}
+          renderItem={({ item, index }) => <MemberCard member={item} index={index} total={members.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <PlansModal modalRef={planRef} selectedPlan={plan} setSelectedPlan={setPlan} />
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
+    </>
   );
 }
 

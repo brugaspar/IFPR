@@ -7,6 +7,11 @@ import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { useEffect, useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { StatusModal } from "../../components/Modals/Status";
+import { MemberModal } from "../../components/Modals/Member";
+
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import { styles } from "../../styles/global";
@@ -28,10 +33,16 @@ import {
   TotalCardButton,
 } from "./styles";
 
+
+type MemberProps = {
+  id: string;
+  name: string;
+};
+
 const activities = [
   {
     id: "1",
-    member: "Guilherme Locks Gregorio",
+    member: "Bruno Gaspar",
     totalItems: 7,
     seller: "Bruno Gaspar",
     value: 299.99,
@@ -40,7 +51,7 @@ const activities = [
   },
   {
     id: "2",
-    member: "Joaquim Pereira",
+    member: "Guilherme Lokcs Gregorio",
     totalItems: 3,
     seller: "Bruno Gaspar",
     value: 123.99,
@@ -50,7 +61,7 @@ const activities = [
   },
   {
     id: "3",
-    member: "Maria Apacerecida",
+    member: "Lucas Guilherme Zorzan",
     totalItems: 10,
     seller: "Mohammed Ali",
     value: 350.99,
@@ -64,50 +75,90 @@ export function Activities() {
   const navigation = useNavigation();
 
   const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
-
   const total = formatCurrency(activitiesTotal);
 
-  function handleNavigateToDetails(params?: any) {
-    navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
+  const statusRef = useRef<RBSheet>(null);
+  const memberRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+  const [member, setMember] = useState<MemberProps | null>(null);
+
+  const [filteredData, setFilteredData] = useState(activities);
+  const [masterData, setMasterData] = useState(activities);
+
+  function handleOpenModal(modal: "status" | "name" | "member") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "data": {
+      //   planRef.current?.open();
+      //   break;
+      // }
+      case "member": {
+        memberRef.current?.open();
+        break;
+      }
+    }
   }
 
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+  useEffect(()=> {
+    if (member?.id) {
+      const newData = masterData.filter(
+        function (item) {
+          if (item.id) {
+            const itemData = item.id.toUpperCase();
+            const textData = member.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setMember(member);
+    } else {
+      setFilteredData(masterData);
+      setMember(member);
+    }
+  },[member])
+
   return (
-    <Container>
-      <Header />
-      <TotalCard>
-        <TotalCardContainer>
-          <TotalCardTitle>Atividades filtradas</TotalCardTitle>
-          <TotalCardHighlight>{total}</TotalCardHighlight>
-        </TotalCardContainer>
+    <>
+      <Container>
+        <Header />
+        {/* <TotalCard title="Atividades filtradas" value={activities.length} /> */}
+        <TotalCard>
+          <TotalCardContainer>
+            <TotalCardTitle>Atividades filtradas</TotalCardTitle>
+            <TotalCardHighlight>{total}</TotalCardHighlight>
+          </TotalCardContainer>
 
-        <TotalCardButton activeOpacity={0.8} onPress={() => handleNavigateToDetails()}>
-          <Ionicons name="add-outline" size={40} color={styles.colors.text} />
-        </TotalCardButton>
-      </TotalCard>
+          <TotalCardButton activeOpacity={0.8}>
+            <Ionicons name="add-outline" size={40} color={styles.colors.text} />
+          </TotalCardButton>
+        </TotalCard>
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Membro" ml />
-        <Filter title="Data" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />
+          <Filter title="Data" ml />
+        </FilterWrapper>
 
-      <FlatList
-        data={activities}
-        keyExtractor={(activity) => activity.id}
-        renderItem={({ item, index }) => (
-          <ActivityCard
-            activity={item}
-            index={index}
-            total={activities.length}
-            handleNavigateToDetails={handleNavigateToDetails}
-          />
-        )}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={filteredData}
+          keyExtractor={(activity) => activity.id}
+          renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
+    </>
   );
 }
 

@@ -6,6 +6,12 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { StatusModal } from "../../components/Modals/Status";
+import { GroupsModal } from "../../components/Modals/Group";
+import { BrandsModal } from "../../components/Modals/Brand";
+
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import {
@@ -19,6 +25,17 @@ import {
   ProductCardText,
   ProductCardTitle,
 } from "./styles";
+
+
+type GroupProps = {
+  id: string;
+  name: string;
+};
+
+type BrandProps = {
+  id: string;
+  name: string;
+};
 
 const products = [
   {
@@ -78,28 +95,64 @@ const products = [
 ];
 
 export function Products() {
+
+  const statusRef = useRef<RBSheet>(null);
+  const groupRef = useRef<RBSheet>(null);
+  const brandRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+  const [group, setGroup] = useState<GroupProps | null>(null);
+  const [brand, setBrand] = useState<BrandProps | null>(null);
+
+  function handleOpenModal(modal: "status" | "name" | "group" | "brand") {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "name": {
+      //   nameRef.current?.open();
+      //   break;
+      // }
+      case "group": {
+        groupRef.current?.open();
+        break;
+      }
+      case "brand": {
+        brandRef.current?.open();
+        break;
+      }
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
   return (
-    <Container>
-      <Header />
-      <TotalCard title="Produtos filtrados" value={products.length} />
+    <>
+      <Container>
+        <Header />
+        <TotalCard title="Produtos filtrados" value={products.length} />
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Nome" ml />
-        <Filter title="Grupo" ml />
-        <Filter title="Marca" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={group ? group.name : "Grupo"} ml onPress={() => handleOpenModal("group")} />
+          <Filter title={brand ? brand.name : "Marca"} ml onPress={() => handleOpenModal("brand")} />
+        </FilterWrapper>
 
-      <FlatList
-        data={products}
-        keyExtractor={(product) => product.id}
-        renderItem={({ item, index }) => <ProductCard product={item} index={index} total={products.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={products}
+          keyExtractor={(product) => product.id}
+          renderItem={({ item, index }) => <ProductCard product={item} index={index} total={products.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <GroupsModal modalRef={groupRef} selectedGroup={group} setSelectedGroup={setGroup} />
+      <BrandsModal modalRef={brandRef} selectedBrand={brand} setSelectedBrand={setBrand} />
+    </>
   );
 }
 

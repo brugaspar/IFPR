@@ -55,7 +55,7 @@ export function Input({
   }
 
   return (
-    <Container style={{ width: `${width}%` }}>
+    <Container style={{ width: `${width}%`, ...rest.style }}>
       {hasLabel && <Label>{label}</Label>}
       <InputContainer
         activeOpacity={type !== "modal" ? 1 : 0.6}

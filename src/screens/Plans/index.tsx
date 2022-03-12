@@ -6,6 +6,10 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
+import { useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { StatusModal } from "../../components/Modals/Status";
+
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import {
@@ -48,26 +52,52 @@ const plans = [
 ];
 
 export function Plans() {
+
+  const statusRef = useRef<RBSheet>(null);
+
+  const [status, setStatus] = useState<string | null>(null);
+
+  function handleOpenModal(modal: "status" | "name" ) {
+    switch (modal) {
+      case "status": {
+        statusRef.current?.open();
+        break;
+      }
+      // case "name": {
+      //   nameRef.current?.open();
+      //   break;
+      // }
+      
+    }
+  }
+
+  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+
   return (
-    <Container>
-      <Header />
-      <TotalCard title="Planos filtrados" value={plans.length} />
+    <>
+      <Container>
+        <Header />
+        <TotalCard title="Planos filtrados" value={plans.length} />
 
-      <FilterWrapper>
-        <Filter title="Status" />
-        <Filter title="Nome" ml />
-      </FilterWrapper>
+        <FilterWrapper>
+        <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title="Nome" ml />
+        </FilterWrapper>
 
-      <FlatList
-        data={plans}
-        keyExtractor={(plan) => plan.id}
-        renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={plans.length} />}
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: -16,
-        }}
-      />
-    </Container>
+        <FlatList
+          data={plans}
+          keyExtractor={(plan) => plan.id}
+          renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={plans.length} />}
+          showsVerticalScrollIndicator={false}
+          style={{
+            marginBottom: -16,
+          }}
+        />
+      </Container>
+
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+    </>      
   );
 }
 
