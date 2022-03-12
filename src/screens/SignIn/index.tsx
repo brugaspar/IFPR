@@ -31,7 +31,7 @@ import { styles } from "../../styles/global";
 import logoImage from "../../assets/logo.png";
 
 export function SignIn() {
-  const { signIn, isMember } = useAuth();
+  const { signIn } = useAuth();
   const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
@@ -44,11 +44,7 @@ export function SignIn() {
   const [errorModal, setErrorModal] = useState("");
 
   function handleNavigateToMemberSignIn() {
-    if (isMember) {
-      console.log("MUDAR PARA USUÁRIO");
-    } else {
-      navigation.navigate("MemberMailValidation" as never);
-    }
+    navigation.navigate("MemberMailValidation" as never);
   }
 
   function handleToggleCheckbox() {
@@ -116,14 +112,14 @@ export function SignIn() {
           <LogoImage source={logoImage} />
 
           <Message>
-            Informe seu <Highlight>{isMember ? "CPF" : "usuário"}</Highlight> e sua <Highlight>senha</Highlight>
+            Informe seu <Highlight>usuário</Highlight> e sua <Highlight>senha</Highlight>
             {"\n"}para acessar o aplicativo
           </Message>
 
           <Input
-            label={isMember ? "CPF" : "Usuário"}
-            placeholder={`Informe seu ${isMember ? "CPF" : "usuário"}`}
-            icon={isMember ? "filter" : "person-outline"}
+            label="Usuário"
+            placeholder="Informe seu usuário"
+            icon="person-outline"
             value={username}
             onChangeText={(text) => handleInputChangeText(text, "username")}
             editable={!loading}
@@ -158,7 +154,7 @@ export function SignIn() {
 
           <MemberContainer>
             <MemberText>
-              É {isMember ? "usuário" : "membro"}? <Highlight onPress={handleNavigateToMemberSignIn}>Clique aqui</Highlight>
+              É membro? <Highlight onPress={handleNavigateToMemberSignIn}>Clique aqui</Highlight>
             </MemberText>
           </MemberContainer>
 

@@ -2,21 +2,7 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-import {
-  Container,
-  Highlight,
-  LogoImage,
-  Message,
-  VersionContainer,
-  VersionText,
-  InvisibleButton,
-  KeepConnectedContainer,
-  KeepConnectedButton,
-  KeepConnectedBox,
-  KeepConnectedText,
-  UserContainer,
-  UserText,
-} from "./styles";
+import { Container, Highlight, LogoImage, Message, VersionContainer, VersionText, InvisibleButton } from "./styles";
 
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
@@ -26,12 +12,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import { handleKeyboardDismiss, handlePhoneVibration } from "../../helpers/device.helper";
 
 import { expo } from "../../../app.json";
-import { styles } from "../../styles/global";
 
 import logoImage from "../../assets/logo.png";
 
 export function MemberMailValidation() {
-  const { isValidMember, verifyMemberCPF } = useAuth();
+  const { handleCpfValidation: validateCpf } = useAuth();
   const navigation = useNavigation();
 
   const [cpf, setCpf] = useState("");
@@ -56,7 +41,7 @@ export function MemberMailValidation() {
     setCpfError(false);
   }
 
-  async function handleCPFValidation() {
+  async function handleCpfValidation() {
     setLoading(true);
 
     if (!cpf.trim()) {
@@ -65,7 +50,7 @@ export function MemberMailValidation() {
     }
 
     try {
-      await verifyMemberCPF(cpf);
+      await validateCpf(cpf);
       navigation.navigate("MemberPasswordRegister" as never);
     } catch (error: any) {
       if (error.response) {
@@ -105,32 +90,7 @@ export function MemberMailValidation() {
             error={cpfError}
           />
 
-          {isValidMember && (
-            <KeepConnectedContainer>
-              <KeepConnectedButton
-                activeOpacity={0.8}
-                onPress={handleToggleCheckbox}
-                disabled={loading}
-                opacity={loading ? 0.5 : 1}
-              >
-                <KeepConnectedBox active={keepConnected}>
-                  {keepConnected && <Ionicons name="checkmark-sharp" size={17} color={styles.colors.background} />}
-                </KeepConnectedBox>
-                <KeepConnectedText>Manter conectado</KeepConnectedText>
-              </KeepConnectedButton>
-            </KeepConnectedContainer>
-          )}
-
-          <Button title={isValidMember ? "Entrar" : "Continuar"} onPress={handleCPFValidation} />
-          {!isValidMember && <Button onPress={navigation.goBack} title="Cancelar" background={styles.colors.background} />}
-
-          {isValidMember && (
-            <UserContainer>
-              <UserText>
-                É usuário? <Highlight onPress={handleNavigateToUserSignIn}>Clique aqui</Highlight>
-              </UserText>
-            </UserContainer>
-          )}
+          <Button title="Continuar" onPress={handleCpfValidation} />
 
           <VersionContainer>
             <VersionText>{expo.version}</VersionText>

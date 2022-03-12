@@ -1,4 +1,5 @@
 import { Header } from "../../components/Header";
+import { useAuth } from "../../contexts/AuthContext";
 import { formatCurrency } from "../../helpers/strings.helper";
 
 import { Container, FullCard, HalfCard, Row, Title, Value, Highlight, Message, VerticalScroll } from "./styles";
@@ -14,6 +15,8 @@ const data = {
 };
 
 export function Dashboard() {
+  const { isMember } = useAuth();
+
   const total = formatCurrency(data.total);
   const ticket = formatCurrency(data.total / data.totalActivities);
 
@@ -21,10 +24,15 @@ export function Dashboard() {
     <Container>
       <VerticalScroll>
         <Header />
-        <Message>
-          Esse é um resumo dos{"\n"}totais do <Highlight>clube</Highlight>
-        </Message>
-
+        {isMember ? (
+          <Message>
+            Esse é um resumo dos{"\n"}totais de <Highlight>suas atividades</Highlight>
+          </Message>
+        ) : (
+          <Message>
+            Esse é um resumo dos{"\n"}totais do <Highlight>clube</Highlight>
+          </Message>
+        )}
         <FullCard>
           <Title>Valor total{"\n"}das atividades</Title>
           <Value>{total}</Value>

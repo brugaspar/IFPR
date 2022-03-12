@@ -27,17 +27,19 @@ type SignInPayload = {
   username: string;
   password: string;
   keepConnected: boolean;
+  isMember?: boolean;
 };
 
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: User | null;
-  isValidMember: boolean;
+  memberCpf: string;
+  memberHasPassword: boolean;
   isMember: boolean;
 
   signIn: (payload: SignInPayload) => Promise<void>;
   signOut: () => void;
-  verifyMemberCPF: (cpf: string) => Promise<void>;
+  handleCpfValidation: (cpf: string) => Promise<void>;
   createMemberPassword: (password: string) => Promise<void>;
 };
 
@@ -46,18 +48,34 @@ const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [memberCPF, setMemberCPF] = useState("");
+
+  const [memberCpf, setMemberCpf] = useState("");
   const [memberHasPassword, setMemberHasPassword] = useState(false);
+  const [isMember, setIsMember] = useState(false);
 
   const isAuthenticated = !!user;
-  const isValidMember = !!memberCPF;
-  const isMember = !!memberHasPassword;
-  //! TODO: REVER FLUXO DO MEMBRO
 
-  async function signIn({ username, password, keepConnected }: SignInPayload) {
+  async function handleCpfValidation(cpf: string) {
+    const response = await api.post("/members/verify", { cpf });
+    if (response.data.memberHasPassword) {
+      setMemberHasPassword(true);
+    }
+    setMemberCpf(cpf);
+  }
+
+  async function createMemberPassword(password: string) {
+    await api.patch("/members/create-password", {
+      cpf: memberCpf,
+      password,
+    });
+    setMemberHasPassword(true);
+  }
+
+  async function signIn({ username, password, keepConnected, isMember = false }: SignInPayload) {
     const response = await api.post("authenticate", {
       username,
       password,
+      isMember,
     });
 
     setUser(response.data.user);
@@ -67,24 +85,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await AsyncStorage.setItem("@mark-one:user", JSON.stringify(response.data.user));
       await AsyncStorage.setItem("@mark-one:token", response.data.token);
     }
-  }
 
-  async function verifyMemberCPF(cpf: string) {
-    setMemberCPF(cpf);
-    // const response = await api.post("members/verify", {
-    //   cpf,
-    // });
-    // setMemberCPF(response.data.cpf);
-    await AsyncStorage.setItem("@mark-one:member", JSON.stringify(cpf));
-  }
-
-  async function createMemberPassword(password: string) {
-    // const response = await api.post("members/create-password", {
-    //   cpf: memberCPF,
-    //   password,
-    // });
-    setMemberHasPassword(true);
-    await AsyncStorage.setItem("@mark-one:hasPassword", "true");
+    if (isMember) {
+      setIsMember(true);
+      await AsyncStorage.setItem("@mark-one:isMember", "true");
+    } else {
+      await AsyncStorage.removeItem("@mark-one:isMember");
+    }
   }
 
   async function signOut() {
@@ -95,8 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function loadStoredData() {
     const storedUser = await AsyncStorage.getItem("@mark-one:user");
     const storedToken = await AsyncStorage.getItem("@mark-one:token");
-    const storedMember = await AsyncStorage.getItem("@mark-one:member");
-    const memberAlreadyHasPassword = await AsyncStorage.getItem("@mark-one:hasPassword");
+    const storedMember = await AsyncStorage.getItem("@mark-one:isMember");
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -107,11 +113,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     if (storedMember) {
-      setMemberCPF(JSON.parse(storedMember));
-    }
-
-    if (memberAlreadyHasPassword) {
-      setMemberHasPassword(true);
+      setIsMember(true);
     }
 
     setLoading(false);
@@ -129,13 +131,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        signIn,
         user,
-        isValidMember,
+        memberCpf,
+        memberHasPassword,
         isMember,
-        signOut,
-        verifyMemberCPF,
         createMemberPassword,
+        handleCpfValidation,
+        signIn,
+        signOut,
       }}
     >
       {children}
