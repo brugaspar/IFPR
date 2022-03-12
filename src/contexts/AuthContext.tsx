@@ -27,14 +27,20 @@ type SignInPayload = {
   username: string;
   password: string;
   keepConnected: boolean;
+  isMember?: boolean;
 };
 
 type AuthContextProps = {
   isAuthenticated: boolean;
   user: User | null;
+  memberCpf: string;
+  memberHasPassword: boolean;
+  isMember: boolean;
 
   signIn: (payload: SignInPayload) => Promise<void>;
   signOut: () => void;
+  handleCpfValidation: (cpf: string) => Promise<void>;
+  createMemberPassword: (password: string) => Promise<void>;
 };
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -42,12 +48,34 @@ const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+
+  const [memberCpf, setMemberCpf] = useState("");
+  const [memberHasPassword, setMemberHasPassword] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+
   const isAuthenticated = !!user;
 
-  async function signIn({ username, password, keepConnected }: SignInPayload) {
+  async function handleCpfValidation(cpf: string) {
+    const response = await api.post("/members/verify", { cpf });
+    if (response.data.memberHasPassword) {
+      setMemberHasPassword(true);
+    }
+    setMemberCpf(cpf);
+  }
+
+  async function createMemberPassword(password: string) {
+    await api.patch("/members/create-password", {
+      cpf: memberCpf,
+      password,
+    });
+    setMemberHasPassword(true);
+  }
+
+  async function signIn({ username, password, keepConnected, isMember = false }: SignInPayload) {
     const response = await api.post("authenticate", {
       username,
       password,
+      isMember,
     });
 
     setUser(response.data.user);
@@ -56,6 +84,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (keepConnected) {
       await AsyncStorage.setItem("@mark-one:user", JSON.stringify(response.data.user));
       await AsyncStorage.setItem("@mark-one:token", response.data.token);
+    }
+
+    if (isMember) {
+      setIsMember(true);
+      await AsyncStorage.setItem("@mark-one:isMember", "true");
+    } else {
+      await AsyncStorage.removeItem("@mark-one:isMember");
     }
   }
 
@@ -67,6 +102,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function loadStoredData() {
     const storedUser = await AsyncStorage.getItem("@mark-one:user");
     const storedToken = await AsyncStorage.getItem("@mark-one:token");
+    const storedMember = await AsyncStorage.getItem("@mark-one:isMember");
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -74,6 +110,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (storedToken) {
       api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    }
+
+    if (storedMember) {
+      setIsMember(true);
     }
 
     setLoading(false);
@@ -91,8 +131,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        signIn,
         user,
+        memberCpf,
+        memberHasPassword,
+        isMember,
+        createMemberPassword,
+        handleCpfValidation,
+        signIn,
         signOut,
       }}
     >

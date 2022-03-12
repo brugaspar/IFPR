@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Container,
@@ -31,6 +32,7 @@ import logoImage from "../../assets/logo.png";
 
 export function SignIn() {
   const { signIn } = useAuth();
+  const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +42,10 @@ export function SignIn() {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorModal, setErrorModal] = useState("");
+
+  function handleNavigateToMemberSignIn() {
+    navigation.navigate("MemberMailValidation" as never);
+  }
 
   function handleToggleCheckbox() {
     handlePhoneVibration();
@@ -148,7 +154,7 @@ export function SignIn() {
 
           <MemberContainer>
             <MemberText>
-              É membro? <Highlight onPress={() => console.log("Login do membro")}>Clique aqui</Highlight>
+              É membro? <Highlight onPress={handleNavigateToMemberSignIn}>Clique aqui</Highlight>
             </MemberText>
           </MemberContainer>
 

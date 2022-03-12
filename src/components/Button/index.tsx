@@ -14,7 +14,7 @@ type ButtonProps = TouchableOpacityProps & {
 };
 
 export function Button({ title, background = styles.colors.green, loading = false, ...rest }: ButtonProps) {
-  rest.disabled = loading;
+  rest.disabled = rest.disabled ?? loading;
 
   const darkColor = getColorLuminosity(background);
   const buttonOpacity = rest.disabled ? 0.5 : 1;
