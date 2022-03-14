@@ -6,11 +6,12 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { StatusModal } from "../../components/Modals/Status";
 import { GroupsModal } from "../../components/Modals/Group";
 import { BrandsModal } from "../../components/Modals/Brand";
+import { InputModal } from "../../components/Modals/Input";
 
 import { formatCurrency } from "../../helpers/strings.helper";
 
@@ -25,6 +26,7 @@ import {
   ProductCardText,
   ProductCardTitle,
 } from "./styles";
+
 
 
 type GroupProps = {
@@ -42,7 +44,14 @@ const products = [
     id: "1",
     name: "Munição 9mm",
     quantity: 34,
-    brand: "Taurus",
+    brand: {
+      id: "1",
+      name:"Taurus"
+    },
+    group: {
+      id: "1",
+      name:"Munições"
+    },
     value: 7.45,
     disabled: false,
     createdAt: "2021-12-27",
@@ -51,7 +60,14 @@ const products = [
     id: "2",
     name: "Munição .50",
     quantity: 456,
-    brand: "CBC",
+    brand: {
+      id: "4",
+      name:"CBC"
+    },
+    group: {
+      id: "1",
+      name:"Munições"
+    },
     value: 15.5,
     disabled: false,
     createdAt: "2021-12-27",
@@ -60,7 +76,14 @@ const products = [
     id: "3",
     name: "Aluguel 9mm",
     quantity: 1,
-    brand: "Glock",
+    brand: {
+      id: "2",
+      name:"Glock"
+    },
+    group: {
+      id: "2",
+      name:"Serviços"
+    },
     value: 225.0,
     disabled: false,
     createdAt: "2021-12-27",
@@ -69,7 +92,14 @@ const products = [
     id: "4",
     name: "Munição .40",
     quantity: 299,
-    brand: "CBC",
+    brand: {
+      id: "4",
+      name:"CBC"
+    },
+    group: {
+      id: "1",
+      name:"Munições"
+    },
     value: 6.25,
     disabled: false,
     createdAt: "2021-12-27",
@@ -78,7 +108,14 @@ const products = [
     id: "5",
     name: "Camiseta M",
     quantity: 45,
-    brand: "Estatex",
+    brand: {
+      id: "5",
+      name:"Estatex"
+    },
+    group: {
+      id: "3",
+      name:"Camisetas"
+    },
     value: 59.0,
     disabled: false,
     createdAt: "2021-12-27",
@@ -87,9 +124,16 @@ const products = [
     id: "6",
     name: "Camiseta GG",
     quantity: 32,
-    brand: "Estatex",
+    brand: {
+      id: "5",
+      name:"Estatex"
+    },
+    group: {
+      id: "3",
+      name:"Camisetas"
+    },
     value: 79.0,
-    disabled: false,
+    disabled: true,
     createdAt: "2021-12-27",
   },
 ];
@@ -99,10 +143,15 @@ export function Products() {
   const statusRef = useRef<RBSheet>(null);
   const groupRef = useRef<RBSheet>(null);
   const brandRef = useRef<RBSheet>(null);
+  const nameRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
   const [group, setGroup] = useState<GroupProps | null>(null);
   const [brand, setBrand] = useState<BrandProps | null>(null);
+  const [name, setName] = useState<string | null>("");
+
+  const [filteredData, setFilteredData] = useState<ProductProps[] | null>(null);
+  const [masterData, setMasterData] = useState(products);
 
   function handleOpenModal(modal: "status" | "name" | "group" | "brand") {
     switch (modal) {
@@ -110,10 +159,10 @@ export function Products() {
         statusRef.current?.open();
         break;
       }
-      // case "name": {
-      //   nameRef.current?.open();
-      //   break;
-      // }
+      case "name": {
+        nameRef.current?.open();
+        break;
+      }
       case "group": {
         groupRef.current?.open();
         break;
@@ -127,6 +176,83 @@ export function Products() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
+  useEffect(()=> {
+    let newData = masterData;
+    if (name) {
+      newData = newData.filter(
+        function (item) {
+          if (item.name) {
+            const itemData = item.name.toUpperCase();
+            const textData = name.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setName(name);
+    } else {
+      if(status || brand || group){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setName(name);
+    }
+
+    if (status) {
+      newData = newData.filter(item => item.disabled === (status === "disabled"));
+      setFilteredData(newData);
+      setStatus(status);
+    } else {
+      if(name || brand || group){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setStatus(status); 
+    }
+
+    if (brand) {
+      newData = newData.filter(
+        function (item) {
+          if (item.brand.id) {
+            const itemData = item.brand.id.toUpperCase();
+            const textData = brand.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setBrand(brand);
+    } else {
+      if(status || name || group){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setBrand(brand);
+    }
+
+    if (group) {
+      newData = newData.filter(
+        function (item) {
+          if (item.group.id) {
+            const itemData = item.group.id.toUpperCase();
+            const textData = group.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setGroup(group);
+    } else {
+      if(status || name || brand){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setGroup(group);
+    }
+
+},[name,status,brand,group])
+
   return (
     <>
       <Container>
@@ -135,12 +261,13 @@ export function Products() {
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={name || "Nome"} ml onPress={() => handleOpenModal("name")} />
           <Filter title={group ? group.name : "Grupo"} ml onPress={() => handleOpenModal("group")} />
           <Filter title={brand ? brand.name : "Marca"} ml onPress={() => handleOpenModal("brand")} />
         </FilterWrapper>
 
         <FlatList
-          data={products}
+          data={filteredData}
           keyExtractor={(product) => product.id}
           renderItem={({ item, index }) => <ProductCard product={item} index={index} total={products.length} />}
           showsVerticalScrollIndicator={false}
@@ -150,6 +277,7 @@ export function Products() {
         />
       </Container>
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
       <GroupsModal modalRef={groupRef} selectedGroup={group} setSelectedGroup={setGroup} />
       <BrandsModal modalRef={brandRef} selectedBrand={brand} setSelectedBrand={setBrand} />
     </>
@@ -162,7 +290,14 @@ type ProductProps = {
   id: string;
   name: string;
   quantity: number;
-  brand: string;
+  brand: {
+    id: string;
+    name: string;
+  };
+  group: {
+    id: string;
+    name: string;
+  };
   value: number;
   disabled: boolean;
   createdAt: string;
@@ -187,7 +322,7 @@ function ProductCard({ product, index, total }: ProductCardProps) {
 
       <ProductCardRow>
         <ProductCardText>Estoque: {product.quantity}</ProductCardText>
-        <ProductCardText>Marca: {product.brand}</ProductCardText>
+        <ProductCardText>Marca: {product.brand.name}</ProductCardText>
       </ProductCardRow>
 
       <ProductCardText>

@@ -5,10 +5,12 @@ import { Filter } from "../../components/Filter";
 import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
-
-import { useRef, useState } from "react";
-import RBSheet from "react-native-raw-bottom-sheet";
+import { InputModal } from "../../components/Modals/Input";
 import { StatusModal } from "../../components/Modals/Status";
+
+import { useEffect, useRef, useState } from "react";
+import RBSheet from "react-native-raw-bottom-sheet";
+
 
 import {
   Container,
@@ -20,6 +22,7 @@ import {
   UserCardText,
   UserCardTitle,
 } from "./styles";
+
 
 const users = [
   {
@@ -74,8 +77,13 @@ const users = [
 
 export function Users() {
   const statusRef = useRef<RBSheet>(null);
+  const nameRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>("");
+
+  const [filteredData, setFilteredData] = useState<UserProps[] | null>(null);
+  const [masterData, setMasterData] = useState(users);
 
   function handleOpenModal(modal: "status" | "name") {
     switch (modal) {
@@ -83,15 +91,45 @@ export function Users() {
         statusRef.current?.open();
         break;
       }
-      // case "name": {
-      //   nameRef.current?.open();
-      //   break;
-      // }
+      case "name": {
+        nameRef.current?.open();
+        break;
+      }
       
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+  useEffect(()=> {
+    let newData = masterData;
+    if (name) {
+      newData = newData.filter(item => item.name.toUpperCase().includes(name.toUpperCase()) || item.email.toUpperCase().includes(name.toUpperCase()));
+      setFilteredData(newData);
+      setName(name);
+    } else {
+      if(status){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setName(name);
+    }
+
+    if (status) {
+      newData = newData.filter(item => item.disabled === (status === "disabled"));
+      setFilteredData(newData);
+      setStatus(status);
+    } else {
+      if(name){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setStatus(status); 
+    }
+
+},[name,status])
 
 
   return (
@@ -102,11 +140,11 @@ export function Users() {
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title="Nome ou e-mail" ml />
+          <Filter title={name || "Nome ou e-mail"} ml onPress={() => handleOpenModal("name")} />
         </FilterWrapper>
 
         <FlatList
-          data={users}
+          data={filteredData}
           keyExtractor={(user) => user.id}
           renderItem={({ item, index }) => <UserCard user={item} index={index} total={users.length} />}
           showsVerticalScrollIndicator={false}
@@ -116,7 +154,8 @@ export function Users() {
         />
       </Container>
 
-      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />      
+      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />      
     </>
   );
 }
