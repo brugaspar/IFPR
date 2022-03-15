@@ -53,7 +53,15 @@ export class QuestionRepository {
 
     const counter = await prisma.question.count({ where });
 
-    const skip = records && Math.floor(Math.random() * (counter - 1));
+    let skip = records && Math.floor(Math.random() * (counter - 1));
+
+    while (skip > counter - records) {
+      skip -= 1;
+    }
+
+    if (counter < records) {
+      skip = 0;
+    }
 
     const questions = await prisma.question.findMany({
       include: {
@@ -88,5 +96,11 @@ export class QuestionRepository {
         id,
       },
     });
+  }
+
+  async findCount() {
+    const count = await prisma.question.count();
+
+    return count;
   }
 }
