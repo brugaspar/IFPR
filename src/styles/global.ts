@@ -8,12 +8,24 @@ export const GlobalStyle = styled.createGlobalStyle`
     --primary: #131313;
     --contrast: #232323;
     --green: #2f9e41;
+    --red: #e53e3e;
   }
 
   * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+
+    &::-webkit-scrollbar {
+      width: 0.35rem;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--background);
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--green);
+      border: 3px solid var(--green);
+    }
   }
 
   body {
