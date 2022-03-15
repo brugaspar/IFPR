@@ -150,6 +150,17 @@ class PlansRepository {
 
     const plans = await pg.query<Plan>(query)
 
+    const plansWithMembers = await prisma.plans.findMany({
+      select: {
+        id: true,
+        members: {
+          select: {
+            _count: true
+          }
+        }
+      }
+    })
+    
     await pg.release()
 
     if (!plans) {
@@ -180,6 +191,7 @@ class PlansRepository {
         lastUpdatedBy: plan.last_updated_by,
         createdBy: plan.created_by,
         disabledByUser: plan.disabled_by_user,
+        membersQuantity: plansWithMembers.find(plan => plan.id === plan.id)?.members.length
       }
     })
 
