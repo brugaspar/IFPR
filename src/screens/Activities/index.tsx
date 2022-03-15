@@ -38,6 +38,11 @@ type MemberProps = {
   name: string;
 };
 
+type ActivityStatusProps = {
+  id: string;
+  name: string;
+}
+
 const activities = [
   {
     id: "1",
@@ -77,7 +82,7 @@ export function Activities() {
   const statusRef = useRef<RBSheet>(null);
   const memberRef = useRef<RBSheet>(null);
 
-  const [activityStatus, setActivityStatus] = useState<string | null>(null);
+  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>(null);
   const [member, setMember] = useState<MemberProps | null>(null);
 
   const [filteredData, setFilteredData] = useState(activities);
@@ -103,18 +108,20 @@ export function Activities() {
   // const statusName = activityStatus === "enabled" ? "Ativo" : "Inativo";
   let statusName = "status";
 
-  if(activityStatus === "open"){
+  if(activityStatus?.id === "open"){
     statusName = "Aberta";
-  }else if(activityStatus === "closed"){
+  }else if(activityStatus?.id === "closed"){
     statusName = "Encerrada";
-  }else if(activityStatus === "cancelled"){
+  }else if(activityStatus?.id === "cancelled"){
     statusName = "Cancelada";
   }else{
     statusName = "Status";
   }
+
   useEffect(()=> {
-    if (member?.id) {
-      const newData = masterData.filter(
+    let newData = masterData;
+    if (member) {
+      newData = newData.filter(
         function (item) {
           if (item.id) {
             const itemData = item.id.toUpperCase();
@@ -125,10 +132,35 @@ export function Activities() {
       setFilteredData(newData);
       setMember(member);
     } else {
-      setFilteredData(masterData);
+      if(activityStatus){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
       setMember(member);
     }
-  },[member])
+
+    if (activityStatus) {
+      newData = newData.filter(
+        function (item) {
+          if (item.status) {
+            const itemData = item.status.toUpperCase();
+            const textData = activityStatus.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setActivityStatus(activityStatus);
+    } else {
+      if(member){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setActivityStatus(activityStatus);
+    }
+
+  },[member, activityStatus])
 
   return (
     <>
@@ -196,7 +228,7 @@ function ActivityCard({ activity, index, total }: ActivityCardProps) {
 
   const value = formatCurrency(activity.value);
 
-  const activityStatus: { [key: string]: string } = {
+  const activityStatusName: { [key: string]: string } = {
     open: "Aberta",
     cancelled: "Cancelada",
     closed: "Encerrada",
@@ -223,7 +255,7 @@ function ActivityCard({ activity, index, total }: ActivityCardProps) {
       <ActivityCardRow>
         <ActivityCardRow>
           <ActivityCardStatusCircle status={activity.status} />
-          <ActivityCardText>{activityStatus[activity.status]}</ActivityCardText>
+          <ActivityCardText>{activityStatusName[activity.status]}</ActivityCardText>
         </ActivityCardRow>
 
         {activity.finishedAt && !activity.cancelledAt && <ActivityCardText>Encerramento: {finishedAt}</ActivityCardText>}

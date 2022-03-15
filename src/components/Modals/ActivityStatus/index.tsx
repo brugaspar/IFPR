@@ -4,10 +4,15 @@ import { ModalHeader } from "../../ModalHeader";
 import { ModalView } from "../../ModalView";
 import { Container, Separator, StatusButton, Row, StatusText, StyledScrollView } from "./styles";
 
+type ActivityStatusProps = {
+  id: string;
+  name: string;
+}
+
 type ActivityStatusModalProps = {
   modalRef: MutableRefObject<any>;
-  selectedActivityStatus: string | null;
-  setSelectedActivityStatus: (status: string | null) => void;
+  selectedActivityStatus: ActivityStatusProps | null;
+  setSelectedActivityStatus: (status: ActivityStatusProps | null) => void;
 };
 
 export function ActivityStatusModal({ modalRef, selectedActivityStatus, setSelectedActivityStatus }: ActivityStatusModalProps) {
@@ -25,8 +30,8 @@ export function ActivityStatusModal({ modalRef, selectedActivityStatus, setSelec
     // }
   }
 
-  function handleSelectActivityStatus(status: string) {
-    if (selectedActivityStatus !== status) {
+  function handleSelectActivityStatus(status: ActivityStatusProps) {
+    if (selectedActivityStatus?.id !== status.id) {
       // setCurrentStatus(status);
       setSelectedActivityStatus(status);
     }
@@ -54,12 +59,12 @@ export function ActivityStatusModal({ modalRef, selectedActivityStatus, setSelec
           {/* <Row> */}
             {activityStatusList.map((status) => (
               <StatusButton
-                selected={selectedActivityStatus === status.id}
+                selected={selectedActivityStatus?.id === status.id}
                 key={status.id}
                 activeOpacity={0.6}
-                onPress={() => handleSelectActivityStatus(status.id)}
+                onPress={() => handleSelectActivityStatus(status)}
               >
-                <StatusText selected={selectedActivityStatus === status.id}>{status.name}</StatusText>
+                <StatusText selected={selectedActivityStatus === status}>{status.name}</StatusText>
               </StatusButton>
             ))}
           {/* </Row> */}
