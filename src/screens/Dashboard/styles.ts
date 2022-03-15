@@ -62,7 +62,10 @@ export const HalfCard = styled.View`
   border-radius: 4px;
   margin-bottom: 15px;
   padding: 16px;
-  width: 48%;
+  width: 48.5%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const VerticalScroll = styled.ScrollView.attrs({

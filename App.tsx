@@ -30,7 +30,19 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        colors: {
+          background: styles.colors.background,
+          text: styles.colors.text,
+          border: styles.colors.background,
+          card: styles.colors.background,
+          notification: styles.colors.background,
+          primary: styles.colors.background,
+        },
+        dark: true,
+      }}
+    >
       <AuthProvider>
         <SafeAreaView style={{ flex: 1 }}>
           <Routes />

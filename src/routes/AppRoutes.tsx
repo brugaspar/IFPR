@@ -12,6 +12,7 @@ import { Members } from "../screens/Members";
 import { Plans } from "../screens/Plans";
 import { Products } from "../screens/Products";
 import { Activities } from "../screens/Activities";
+import { ActivitiesDetails } from "../screens/ActivitiesDetails";
 
 import { styles } from "../styles/global";
 import { expo } from "../../app.json";
@@ -22,7 +23,7 @@ import logo from "../../assets/icon.png";
 const Drawer = createDrawerNavigator();
 
 function DrawerRoutes() {
-  const { signOut } = useAuth();
+  const { signOut, isMember } = useAuth();
 
   return (
     <Drawer.Navigator
@@ -87,46 +88,50 @@ function DrawerRoutes() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Members"
-        component={Members}
-        options={{
-          title: "Membros",
-          drawerIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "people" : "people-outline"} color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Plans"
-        component={Plans}
-        options={{
-          title: "Planos",
-          drawerIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "bookmarks" : "bookmarks-outline"} color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Products"
-        component={Products}
-        options={{
-          title: "Produtos",
-          drawerIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "archive" : "archive-outline"} color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Users"
-        component={Users}
-        options={{
-          title: "Usuários",
-          drawerIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "person" : "person-outline"} color={color} size={size} />
-          ),
-        }}
-      />
+      {!isMember && (
+        <>
+          <Drawer.Screen
+            name="Members"
+            component={Members}
+            options={{
+              title: "Membros",
+              drawerIcon: ({ focused, color, size }) => (
+                <Ionicons name={focused ? "people" : "people-outline"} color={color} size={size} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Plans"
+            component={Plans}
+            options={{
+              title: "Planos",
+              drawerIcon: ({ focused, color, size }) => (
+                <Ionicons name={focused ? "bookmarks" : "bookmarks-outline"} color={color} size={size} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Products"
+            component={Products}
+            options={{
+              title: "Produtos",
+              drawerIcon: ({ focused, color, size }) => (
+                <Ionicons name={focused ? "archive" : "archive-outline"} color={color} size={size} />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Users"
+            component={Users}
+            options={{
+              title: "Usuários",
+              drawerIcon: ({ focused, color, size }) => (
+                <Ionicons name={focused ? "person" : "person-outline"} color={color} size={size} />
+              ),
+            }}
+          />
+        </>
+      )}
     </Drawer.Navigator>
   );
 }
@@ -137,6 +142,7 @@ export function AppRoutes() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="DrawerRoutes" component={DrawerRoutes} />
+      <Stack.Screen name="ActivitiesDetails" component={ActivitiesDetails} />
     </Stack.Navigator>
   );
 }

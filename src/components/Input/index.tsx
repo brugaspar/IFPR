@@ -12,9 +12,11 @@ type InputProps = TextInputProps & {
   label: string;
   hasLabel?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
-  type?: "default" | "password";
+  type?: "default" | "password" | "modal";
   iconHasMargin?: boolean;
   error?: boolean;
+  width?: number;
+  onPress?: () => void;
 };
 
 export function Input({
@@ -24,14 +26,16 @@ export function Input({
   type = "default",
   iconHasMargin = false,
   error = false,
+  width = 100,
+  onPress,
   ...rest
 }: InputProps) {
   rest.multiline = rest.multiline ? true : false;
-  rest.editable = rest.editable ?? true;
+  rest.editable = type === "modal" ? false : rest.editable ?? true;
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-  const inputOpacity = rest.editable === false ? 0.7 : 1;
+  const inputOpacity = type === "modal" ? 1 : rest.editable === false ? 0.7 : 1;
 
   function toggleSecureTextEntry() {
     handlePhoneVibration();
@@ -41,7 +45,7 @@ export function Input({
   let inputWidth = 100;
   let inputPadding = 10;
 
-  if (type === "password") {
+  if (type === "password" || type === "modal") {
     inputWidth -= 10;
   }
 
@@ -51,9 +55,16 @@ export function Input({
   }
 
   return (
-    <Container style={rest.style}>
+    <Container style={{ width: `${width}%`, ...rest.style }}>
       {hasLabel && <Label>{label}</Label>}
-      <InputContainer opacity={inputOpacity} multilineStyle={rest.multiline} error={error}>
+      <InputContainer
+        activeOpacity={type !== "modal" ? 1 : 0.6}
+        onPress={onPress}
+        opacity={inputOpacity}
+        multilineStyle={rest.multiline}
+        error={error}
+        disabled={!rest.editable}
+      >
         {icon && (
           <IconContainer hasMargin={iconHasMargin}>
             <Ionicons name={icon} color={styles.colors.text} size={18} />
@@ -74,6 +85,11 @@ export function Input({
         {type === "password" && (
           <PasswordButton activeOpacity={0.6} onPress={toggleSecureTextEntry} disabled={!rest.editable}>
             <Ionicons name={secureTextEntry ? "eye-off-outline" : "eye-outline"} color={styles.colors.text} size={18} />
+          </PasswordButton>
+        )}
+        {type === "modal" && (
+          <PasswordButton activeOpacity={0.6} onPress={toggleSecureTextEntry} disabled={!rest.editable}>
+            <Ionicons name="chevron-down" color={styles.colors.text} size={18} />
           </PasswordButton>
         )}
       </InputContainer>

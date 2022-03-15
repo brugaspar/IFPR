@@ -1,5 +1,6 @@
 import { FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
@@ -31,7 +32,6 @@ import {
   TotalCardContainer,
   TotalCardButton,
 } from "./styles";
-
 
 type MemberProps = {
   id: string;
@@ -76,6 +76,8 @@ const activities = [
 ];
 
 export function Activities() {
+  const navigation = useNavigation();
+
   const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
   const total = formatCurrency(activitiesTotal);
 
@@ -116,6 +118,10 @@ export function Activities() {
     statusName = "Cancelada";
   }else{
     statusName = "Status";
+  }
+
+  function handleNavigateToDetails(params?: any) {
+    navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
   useEffect(()=> {
@@ -187,7 +193,14 @@ export function Activities() {
         <FlatList
           data={filteredData}
           keyExtractor={(activity) => activity.id}
-          renderItem={({ item, index }) => <ActivityCard activity={item} index={index} total={activities.length} />}
+          renderItem={({ item, index }) => (
+            <ActivityCard
+              activity={item}
+              index={index}
+              total={activities.length}
+              handleNavigateToDetails={handleNavigateToDetails}
+            />
+          )}
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: -16,
@@ -219,9 +232,10 @@ type ActivityCardProps = {
   activity: ActivityProps;
   index: number;
   total: number;
+  handleNavigateToDetails: (params: any) => void;
 };
 
-function ActivityCard({ activity, index, total }: ActivityCardProps) {
+function ActivityCard({ activity, index, total, handleNavigateToDetails }: ActivityCardProps) {
   const createdAt = moment(activity.createdAt).format("DD/MM/YYYY");
   const finishedAt = moment(activity.finishedAt).format("DD/MM/YYYY");
   const cancelledAt = moment(activity.cancelledAt).format("DD/MM/YYYY");
@@ -235,7 +249,7 @@ function ActivityCard({ activity, index, total }: ActivityCardProps) {
   };
 
   return (
-    <ActivityCardContainer activeOpacity={0.6}>
+    <ActivityCardContainer activeOpacity={0.6} onPress={() => handleNavigateToDetails(activity)}>
       <ActivityCardTitle>{activity.member}</ActivityCardTitle>
 
       <ActivityCardSeparator />
