@@ -71,6 +71,9 @@ export class QuestionRepository {
       where,
       take: records,
       skip,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return questions;

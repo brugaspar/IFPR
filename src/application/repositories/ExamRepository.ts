@@ -39,6 +39,9 @@ export class ExamRepository {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return exams;
