@@ -33,7 +33,7 @@ export const StatusButton = styled.TouchableOpacity<StatusProps>`
   padding: 10px;
   align-items: center;
   justify-content: center;
-  width: 48%;
+  width: 100%;
   border: 1px solid ${(props) => (props.selected ? styles.colors.green : styles.colors.input)};
 `;
 
