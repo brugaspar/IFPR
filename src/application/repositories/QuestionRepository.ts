@@ -11,6 +11,13 @@ export type QuestionProps = {
   tagId: string;
 };
 
+export type QuestionFilters = {
+  types?: QuestionType[];
+  difficulties?: QuestionDifficulty[];
+  tags?: string[];
+  records?: number;
+};
+
 export class QuestionRepository {
   async save(question: QuestionProps) {
     const newQuestion = await prisma.question.create({
@@ -31,13 +38,33 @@ export class QuestionRepository {
     return updatedQuestion;
   }
 
-  async findAll() {
+  async findAll({ difficulties, types, tags, records }: QuestionFilters) {
+    const where = {
+      tagId: {
+        in: tags,
+      },
+      difficulty: {
+        in: difficulties,
+      },
+      type: {
+        in: types,
+      },
+    };
+
+    const counter = await prisma.question.count({ where });
+
+    const skip = records && Math.floor(Math.random() * (counter - 1));
+
     const questions = await prisma.question.findMany({
       include: {
         alternatives: true,
         tag: true,
       },
+      where,
+      take: records,
+      skip,
     });
+
     return questions;
   }
 

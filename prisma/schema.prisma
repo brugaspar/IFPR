@@ -38,9 +38,10 @@ model Question {
   difficulty  QuestionDifficulty @default(easy)
   createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz()
 
-  tagId        String        @map("tag_id")
-  tag          Tag           @relation(fields: [tagId], references: [id])
-  alternatives Alternative[]
+  tagId          String         @map("tag_id")
+  tag            Tag            @relation(fields: [tagId], references: [id])
+  alternatives   Alternative[]
+  examsQuestions ExamQuestion[]
 
   @@map("question")
 }
@@ -54,4 +55,39 @@ model Alternative {
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@map("alternative")
+}
+
+enum ExamStatus {
+  draft
+  published
+  finished
+}
+
+model Exam {
+  id          String     @id @default(uuid())
+  status      ExamStatus @default(draft)
+  title       String
+  description String?
+  grade       Decimal?
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+  finishedAt  DateTime?  @map("finished_at") @db.Timestamptz()
+
+  questions ExamQuestion[]
+
+  @@map("exam")
+}
+
+model ExamQuestion {
+  id           String   @id @default(uuid())
+  grade        Decimal?
+  answer       String?
+  alternatives Json?
+  commentary   String?
+
+  examId     String
+  exam       Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("exam_question")
 }

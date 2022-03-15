@@ -4,6 +4,7 @@ import { AppError } from "../handlers/AppError";
 import { QuestionDifficulty, QuestionRepository, QuestionType } from "../repositories/QuestionRepository";
 import { AlternativeRepository } from "../repositories/AlternativeRepository";
 import { TagRepository } from "../repositories/TagRepository";
+
 import { QuestionFactory } from "../../domain/factories/QuestionFactory";
 import { Alternative } from "../../domain/entities/Alternative";
 
@@ -195,7 +196,7 @@ export class QuestionController {
   }
 
   async findAll(request: Request, response: Response) {
-    const questions = await this.questionRepository.findAll();
+    const questions = await this.questionRepository.findAll({});
     return response.status(200).json(questions);
   }
 }
