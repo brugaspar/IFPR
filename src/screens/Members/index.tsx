@@ -39,7 +39,7 @@ const members = [
     email: "bruninhoogaspar@gmail.com",
     phone: "(45) 9 9996-2223",
     plan: {
-      id: "plano-ouro",
+      id: "gold-plan",
       name: "Ouro",
     },
     disabled: false,
@@ -51,7 +51,7 @@ const members = [
     email: "guilherme.outsystems@gmail.com",
     phone: "(45) 9 9818-3657",
     plan: {
-      id: "plano-prata",
+      id: "silver-plan",
       name: "Prata",
     },
     disabled: false,
@@ -63,7 +63,7 @@ const members = [
     email: "lucaszorzan14@gmail.com",
     phone: "(45) 9 9999-1234",
     plan: {
-      id: "plano-bronze",
+      id: "bronze-plan",
       name: "Bronze",
     },
     disabled: true,
@@ -136,7 +136,27 @@ export function Members() {
         }
         setStatus(status); 
       }
-  },[name,status])
+
+      if (plan) {
+        newData = newData.filter(
+          function (item) {
+            if (item.plan.id) {
+              const itemData = item.plan.id.toUpperCase();
+              const textData = plan.id.toUpperCase();
+              return itemData.indexOf(textData) > -1;
+            }
+        });
+        setFilteredData(newData);
+        setPlan(plan);
+      } else {
+        if(status || name){
+          setFilteredData(newData);
+        }else{
+          setFilteredData(masterData);
+        }
+        setPlan(plan);
+      }
+  },[name,status,plan])
   
   return (
     <>

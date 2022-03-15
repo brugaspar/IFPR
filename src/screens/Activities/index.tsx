@@ -9,7 +9,7 @@ import { FilterWrapper } from "../../components/FilterWrapper";
 
 import { useEffect, useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { StatusModal } from "../../components/Modals/Status";
+import { ActivityStatusModal } from "../../components/Modals/ActivityStatus";
 import { MemberModal } from "../../components/Modals/Member";
 
 import { formatCurrency } from "../../helpers/strings.helper";
@@ -37,6 +37,11 @@ type MemberProps = {
   id: string;
   name: string;
 };
+
+type ActivityStatusProps = {
+  id: string;
+  name: string;
+}
 
 const activities = [
   {
@@ -79,7 +84,7 @@ export function Activities() {
   const statusRef = useRef<RBSheet>(null);
   const memberRef = useRef<RBSheet>(null);
 
-  const [status, setStatus] = useState<string | null>(null);
+  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>(null);
   const [member, setMember] = useState<MemberProps | null>(null);
 
   const [filteredData, setFilteredData] = useState(activities);
@@ -102,28 +107,66 @@ export function Activities() {
     }
   }
 
-  const statusName = status === "enabled" ? "Ativo" : "Inativo";
+  // const statusName = activityStatus === "enabled" ? "Ativo" : "Inativo";
+  let statusName = "status";
+
+  if(activityStatus?.id === "open"){
+    statusName = "Aberta";
+  }else if(activityStatus?.id === "closed"){
+    statusName = "Encerrada";
+  }else if(activityStatus?.id === "cancelled"){
+    statusName = "Cancelada";
+  }else{
+    statusName = "Status";
+  }
 
   function handleNavigateToDetails(params?: any) {
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
-  useEffect(() => {
-    if (member?.id) {
-      const newData = masterData.filter(function (item) {
-        if (item.id) {
-          const itemData = item.id.toUpperCase();
-          const textData = member.id.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
+  useEffect(()=> {
+    let newData = masterData;
+    if (member) {
+      newData = newData.filter(
+        function (item) {
+          if (item.id) {
+            const itemData = item.id.toUpperCase();
+            const textData = member.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
       });
       setFilteredData(newData);
       setMember(member);
     } else {
-      setFilteredData(masterData);
+      if(activityStatus){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
       setMember(member);
     }
-  }, [member]);
+
+    if (activityStatus) {
+      newData = newData.filter(
+        function (item) {
+          if (item.status) {
+            const itemData = item.status.toUpperCase();
+            const textData = activityStatus.id.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setActivityStatus(activityStatus);
+    } else {
+      if(member){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setActivityStatus(activityStatus);
+    }
+
+  },[member, activityStatus])
 
   return (
     <>
@@ -142,7 +185,7 @@ export function Activities() {
         </TotalCard>
 
         <FilterWrapper>
-          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={activityStatus ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
           <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />
           <Filter title="Data" ml />
         </FilterWrapper>
@@ -165,7 +208,7 @@ export function Activities() {
         />
       </Container>
 
-      <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <ActivityStatusModal modalRef={statusRef} selectedActivityStatus={activityStatus} setSelectedActivityStatus={setActivityStatus} />
       <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
     </>
   );
@@ -199,7 +242,7 @@ function ActivityCard({ activity, index, total, handleNavigateToDetails }: Activ
 
   const value = formatCurrency(activity.value);
 
-  const status: { [key: string]: string } = {
+  const activityStatusName: { [key: string]: string } = {
     open: "Aberta",
     cancelled: "Cancelada",
     closed: "Encerrada",
@@ -226,7 +269,7 @@ function ActivityCard({ activity, index, total, handleNavigateToDetails }: Activ
       <ActivityCardRow>
         <ActivityCardRow>
           <ActivityCardStatusCircle status={activity.status} />
-          <ActivityCardText>{status[activity.status]}</ActivityCardText>
+          <ActivityCardText>{activityStatusName[activity.status]}</ActivityCardText>
         </ActivityCardRow>
 
         {activity.finishedAt && !activity.cancelledAt && <ActivityCardText>Encerramento: {finishedAt}</ActivityCardText>}

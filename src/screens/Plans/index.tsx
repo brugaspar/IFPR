@@ -6,9 +6,10 @@ import { Header } from "../../components/Header";
 import { TotalCard } from "../../components/TotalCard";
 import { FilterWrapper } from "../../components/FilterWrapper";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { StatusModal } from "../../components/Modals/Status";
+import { InputModal } from "../../components/Modals/Input";
 
 import { formatCurrency } from "../../helpers/strings.helper";
 
@@ -23,6 +24,7 @@ import {
   PlanCardText,
   PlanCardTitle,
 } from "./styles";
+
 
 const plans = [
   {
@@ -46,7 +48,7 @@ const plans = [
     name: "Bronze",
     membersQuantity: 19,
     value: 459.99,
-    disabled: false,
+    disabled: true,
     createdAt: "2021-12-27",
   },
 ];
@@ -54,8 +56,13 @@ const plans = [
 export function Plans() {
 
   const statusRef = useRef<RBSheet>(null);
+  const nameRef = useRef<RBSheet>(null);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>("");
+
+  const [filteredData, setFilteredData] = useState<PlanProps[] | null>(null);
+  const [masterData, setMasterData] = useState(plans);
 
   function handleOpenModal(modal: "status" | "name" ) {
     switch (modal) {
@@ -63,15 +70,52 @@ export function Plans() {
         statusRef.current?.open();
         break;
       }
-      // case "name": {
-      //   nameRef.current?.open();
-      //   break;
-      // }
+      case "name": {
+        nameRef.current?.open();
+        break;
+      }
       
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
+
+  useEffect(()=> {
+    let newData = masterData;
+    if (name) {
+      newData = newData.filter(
+        function (item) {
+          if (item.name) {
+            const itemData = item.name.toUpperCase();
+            const textData = name.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          }
+      });
+      setFilteredData(newData);
+      setName(name);
+    } else {
+      if(status){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setName(name);
+    }
+
+    if (status) {
+      newData = newData.filter(item => item.disabled === (status === "disabled"));
+      setFilteredData(newData);
+      setStatus(status);
+    } else {
+      if(name){
+        setFilteredData(newData);
+      }else{
+        setFilteredData(masterData);
+      }
+      setStatus(status); 
+    }
+
+},[name,status])
 
 
   return (
@@ -81,12 +125,12 @@ export function Plans() {
         <TotalCard title="Planos filtrados" value={plans.length} />
 
         <FilterWrapper>
-        <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title="Nome" ml />
+          <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
+          <Filter title={name || "Nome"} ml onPress={() => handleOpenModal("name")} />
         </FilterWrapper>
 
         <FlatList
-          data={plans}
+          data={filteredData}
           keyExtractor={(plan) => plan.id}
           renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={plans.length} />}
           showsVerticalScrollIndicator={false}
@@ -97,6 +141,7 @@ export function Plans() {
       </Container>
 
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
     </>      
   );
 }
