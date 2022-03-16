@@ -66,7 +66,7 @@ export function ActivitiesDetails() {
   const route = useRoute();
   const navigation = useNavigation();
   const [activityId, setActivityId] = useState("");
-  const [activityStatus, setActivityStatus] = useState("");
+  const [activityStatus, setActivityStatus] = useState("open");
 
   const [observation, setObservation] = useState("");
 

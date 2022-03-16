@@ -1,18 +1,12 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
-import { ModalHeader } from "../../ModalHeader";
 
+import { api } from "../../../services/api.service";
+
+import { ModalHeader } from "../../ModalHeader";
 import { ModalView } from "../../ModalView";
 
-import {
-
-  Container,
-  BrandCardContainer,
-  BrandCardIndex,
-  BrandCardTitle,
-  Row,
-  Separator,
-} from "./styles";
+import { Container, BrandCardContainer, BrandCardIndex, BrandCardTitle, Row, Separator } from "./styles";
 
 type BrandProps = {
   id: string;
@@ -25,30 +19,32 @@ type BrandsModalProps = {
   setSelectedBrand: (brand: BrandProps | null) => void;
 };
 
-const brands = [
-  {
-    id: "1",
-    name: "Taurus",
-  },
-  {
-    id: "2",
-    name: "Glock",
-  },
-  {
-    id: "3",
-    name: "CMC",
-  },
-  {
-    id: "4",
-    name: "CBC",
-  },
-  {
-    id: "5",
-    name: "Estatex",
-  },
-];
+// const brands = [
+//   {
+//     id: "1",
+//     name: "Taurus",
+//   },
+//   {
+//     id: "2",
+//     name: "Glock",
+//   },
+//   {
+//     id: "3",
+//     name: "CMC",
+//   },
+//   {
+//     id: "4",
+//     name: "CBC",
+//   },
+//   {
+//     id: "5",
+//     name: "Estatex",
+//   },
+// ];
 
 export function BrandsModal({ modalRef, selectedBrand, setSelectedBrand }: BrandsModalProps) {
+  const [brands, setBrands] = useState<BrandProps[]>([]);
+
   function handleSelectStatus(brand: BrandProps) {
     if (selectedBrand?.id !== brand.id) {
       setSelectedBrand(brand);
@@ -65,10 +61,19 @@ export function BrandsModal({ modalRef, selectedBrand, setSelectedBrand }: Brand
     modalRef.current?.close();
   }
 
+  useEffect(() => {
+    async function loadBrands() {
+      const response = await api.get("/brands");
+      setBrands(response.data);
+    }
+
+    loadBrands();
+  }, []);
+
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
-      <ModalHeader title="Selecione uma marca" onCleanFilter={handleCleanStatus} />
+        <ModalHeader title="Selecione uma marca" onCleanFilter={handleCleanStatus} />
 
         <Separator />
 
@@ -105,7 +110,6 @@ type BrandCardProps = {
 };
 
 function BrandCard({ brand, index, total, selectBrand, selectedBrandId }: BrandCardProps) {
-
   return (
     <BrandCardContainer selected={selectedBrandId === brand.id} activeOpacity={0.7} onPress={() => selectBrand(brand)}>
       <Row>
@@ -114,7 +118,6 @@ function BrandCard({ brand, index, total, selectBrand, selectedBrandId }: BrandC
           {index + 1} / {total}
         </BrandCardIndex>
       </Row>
-      
     </BrandCardContainer>
   );
 }

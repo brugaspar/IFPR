@@ -1,7 +1,8 @@
-import { MutableRefObject, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
+import { api } from "../../../services/api.service";
 import { Input } from "../../Input";
 import { ModalHeader } from "../../ModalHeader";
 
@@ -12,9 +13,7 @@ import { Container, MemberCardContainer, MemberCardIndex, MemberCardText, Member
 type MemberProps = {
   id: string;
   name: string;
-//   plan: string;
-}; 
-
+};
 
 type MembersModalProps = {
   modalRef: MutableRefObject<any>;
@@ -22,46 +21,29 @@ type MembersModalProps = {
   setSelectedMember: (member: MemberProps | null) => void;
 };
 
-const members = [
-  {
-    id: "1",
-    name: "Bruno Gaspar",
-  },
-  {
-    id: "2",
-    name: "Guilherme Gregorio Locks",
-  },
-  {
-    id: "3",
-    name: "Lucas Guilherme Zorzan",
-  },
-];
-
-
 export function MemberModal({ modalRef, selectedMember, setSelectedMember }: MembersModalProps) {
-  
   const [text, setText] = useState("");
-  const [filteredData, setFilteredData] = useState(members);
-  const [masterData, setMasterData] = useState(members);
 
-  const searchFilter = (text : string) => {
+  const [members, setMembers] = useState<MemberProps[]>([]);
+  const [filteredData, setFilteredData] = useState<MemberProps[] | null>(null);
+
+  const searchFilter = (text: string) => {
     if (text) {
-      const newData = masterData.filter(
-        function (item) {
-          if (item.name) {
-            const itemData = item.name.toUpperCase();
-            const textData = text.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          }
+      const newData = members.filter(function (item) {
+        if (item.name) {
+          const itemData = item.name.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
       });
       setFilteredData(newData);
       setText(text);
     } else {
-      setFilteredData(masterData);
+      setFilteredData(members);
       setText(text);
     }
   };
-  
+
   function handleSelectStatus(member: MemberProps) {
     if (selectedMember?.id !== member.id) {
       setSelectedMember(member);
@@ -69,7 +51,6 @@ export function MemberModal({ modalRef, selectedMember, setSelectedMember }: Mem
 
     modalRef.current?.close();
   }
-
 
   function handleCleanStatus() {
     if (selectedMember !== null) {
@@ -79,27 +60,34 @@ export function MemberModal({ modalRef, selectedMember, setSelectedMember }: Mem
     modalRef.current?.close();
   }
 
+  useEffect(() => {
+    async function loadMembers() {
+      const response = await api.get("/members");
+      setMembers(response.data);
+      setFilteredData(response.data);
+    }
+    loadMembers();
+  }, []);
+
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
         <ModalHeader title="Selecione um membro" onCleanFilter={handleCleanStatus} />
-       
-        
+
         <Input
-            hasLabel={false}
-            label="Nome"
-            placeholder="Informe o nome"
-            icon="search-outline"
-            value={text}
-            onChangeText={(text) => searchFilter(text)}
-            returnKeyType="search"
-            style={{
-              marginBottom : 0,
-              marginTop : 5
-              
-            }}
-          />
-          <Separator />
+          hasLabel={false}
+          label="Nome"
+          placeholder="Informe o nome"
+          icon="search-outline"
+          value={text}
+          onChangeText={(text) => searchFilter(text)}
+          returnKeyType="search"
+          style={{
+            marginBottom: 0,
+            marginTop: 5,
+          }}
+        />
+        <Separator />
         <FlatList
           data={filteredData}
           keyExtractor={(member) => member.id}
@@ -133,7 +121,7 @@ type MemberCardProps = {
 };
 
 function MemberCard({ member, index, total, selectMember, selectedMemberId }: MemberCardProps) {
-//   const value = formatCurrency(member.value);
+  //   const value = formatCurrency(member.value);
 
   return (
     <MemberCardContainer selected={selectedMemberId === member.id} activeOpacity={0.7} onPress={() => selectMember(member)}>
@@ -141,10 +129,9 @@ function MemberCard({ member, index, total, selectMember, selectedMemberId }: Me
         <MemberCardTitle>{member.name}</MemberCardTitle>
         {/* <MemberCardText>{value}</MemberCardText> */}
         <MemberCardIndex>
-            {index + 1} / {total}
+          {index + 1} / {total}
         </MemberCardIndex>
       </Row>
-      
     </MemberCardContainer>
   );
 }
