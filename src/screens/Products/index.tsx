@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
@@ -28,6 +28,7 @@ import {
   ProductCardText,
   ProductCardTitle,
 } from "./styles";
+import { styles } from "../../styles/global";
 
 type GroupProps = {
   id: string;
@@ -39,105 +40,6 @@ type BrandProps = {
   name: string;
 };
 
-// const products = [
-//   {
-//     id: "1",
-//     name: "Munição 9mm",
-//     quantity: 34,
-//     brand: {
-//       id: "1",
-//       name: "Taurus",
-//     },
-//     group: {
-//       id: "1",
-//       name: "Munições",
-//     },
-//     value: 7.45,
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "2",
-//     name: "Munição .50",
-//     quantity: 456,
-//     brand: {
-//       id: "4",
-//       name: "CBC",
-//     },
-//     group: {
-//       id: "1",
-//       name: "Munições",
-//     },
-//     value: 15.5,
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "3",
-//     name: "Aluguel 9mm",
-//     quantity: 1,
-//     brand: {
-//       id: "2",
-//       name: "Glock",
-//     },
-//     group: {
-//       id: "2",
-//       name: "Serviços",
-//     },
-//     value: 225.0,
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "4",
-//     name: "Munição .40",
-//     quantity: 299,
-//     brand: {
-//       id: "4",
-//       name: "CBC",
-//     },
-//     group: {
-//       id: "1",
-//       name: "Munições",
-//     },
-//     value: 6.25,
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "5",
-//     name: "Camiseta M",
-//     quantity: 45,
-//     brand: {
-//       id: "5",
-//       name: "Estatex",
-//     },
-//     group: {
-//       id: "3",
-//       name: "Camisetas",
-//     },
-//     value: 59.0,
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "6",
-//     name: "Camiseta GG",
-//     quantity: 32,
-//     brand: {
-//       id: "5",
-//       name: "Estatex",
-//     },
-//     group: {
-//       id: "3",
-//       name: "Camisetas",
-//     },
-//     value: 79.0,
-//     disabled: true,
-//     createdAt: "2021-12-27",
-//   },
-// ];
-
 export function Products() {
   const statusRef = useRef<RBSheet>(null);
   const groupRef = useRef<RBSheet>(null);
@@ -145,6 +47,7 @@ export function Products() {
   const nameRef = useRef<RBSheet>(null);
 
   const [products, setProducts] = useState<ProductProps[]>([]);
+  const [reload, setReload] = useState(false);
 
   const [status, setStatus] = useState<string | null>(null);
   const [group, setGroup] = useState<GroupProps | null>(null);
@@ -176,11 +79,13 @@ export function Products() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
+  async function loadProducts() {
+    const response = await api.get("/products");
+    setProducts(response.data);
+    setReload(!reload);
+  }
+
   useEffect(() => {
-    async function loadProducts() {
-      const response = await api.get("/products");
-      setProducts(response.data);
-    }
     loadProducts();
   }, []);
 
@@ -255,7 +160,7 @@ export function Products() {
       }
       setGroup(group);
     }
-  }, [name, status, brand, group, products.length]);
+  }, [name, status, brand, group, products.length, reload]);
 
   return (
     <>
@@ -278,6 +183,14 @@ export function Products() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadProducts}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />

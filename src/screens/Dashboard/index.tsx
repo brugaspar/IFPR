@@ -1,11 +1,14 @@
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+
 import { Header } from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
+
 import { formatCurrency } from "../../helpers/strings.helper";
+
 import { api } from "../../services/api.service";
 
 import { Container, FullCard, HalfCard, Row, Title, Value, Highlight, Message, VerticalScroll } from "./styles";
-
 
 type TotalsProps = {
   activitiesTotal: number;
@@ -15,16 +18,16 @@ type TotalsProps = {
   plansCount: number;
   productsCount: number;
   activitiesOpen: number;
-}
-
+};
 
 export function Dashboard() {
   const { isMember } = useAuth();
+  const navigation = useNavigation();
 
+  const [data, setData] = useState<TotalsProps | null>(null);
+  const [reload, setReload] = useState(false);
 
-const [data, setData] = useState<TotalsProps | null>(null);
- 
-const ticket = formatCurrency((data?.activitiesTotal || 0 )/ (data?.activitiesCount || 0));
+  const ticket = formatCurrency((data?.activitiesTotal || 0) / (data?.activitiesCount || 1));
 
   useEffect(() => {
     async function loadTotals() {
@@ -34,7 +37,13 @@ const ticket = formatCurrency((data?.activitiesTotal || 0 )/ (data?.activitiesCo
     }
 
     loadTotals();
-  }, []);
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      setReload(!reload);
+    });
+
+    return unsubscribe;
+  }, [reload]);
 
   return (
     <Container>
@@ -50,7 +59,7 @@ const ticket = formatCurrency((data?.activitiesTotal || 0 )/ (data?.activitiesCo
           </Message>
         )}
         <FullCard>
-          <Title>Valor total{"\n"}das atividades</Title>
+          <Title>Valor total das{"\n"}atividades fechadas</Title>
           <Value>{formatCurrency(data?.activitiesTotal || 0)}</Value>
         </FullCard>
 
@@ -61,24 +70,24 @@ const ticket = formatCurrency((data?.activitiesTotal || 0 )/ (data?.activitiesCo
 
         <Row>
           <HalfCard>
-            <Title mb>Membros{"\n"}ativos</Title>
+            <Title mb>Membros{"\n"}cadastrados</Title>
             <Value>{data?.membersCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title mb>Usuários{"\n"}ativos</Title>
+            <Title mb>Usuários{"\n"}cadastrados</Title>
             <Value>{data?.usersCount || 0}</Value>
           </HalfCard>
         </Row>
 
         <Row>
           <HalfCard>
-            <Title mb>Planos{"\n"}Ativos</Title>
+            <Title mb>Planos{"\n"}cadastrados</Title>
             <Value>{data?.plansCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title mb>Produtos{"\n"}ativos</Title>
+            <Title mb>Produtos{"\n"}cadastrados</Title>
             <Value>{data?.productsCount || 0}</Value>
           </HalfCard>
         </Row>

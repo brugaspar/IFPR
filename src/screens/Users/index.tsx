@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
@@ -22,12 +22,14 @@ import {
   UserCardText,
   UserCardTitle,
 } from "./styles";
+import { styles } from "../../styles/global";
 
 export function Users() {
   const statusRef = useRef<RBSheet>(null);
   const nameRef = useRef<RBSheet>(null);
 
   const [users, setUsers] = useState<UserProps[]>([]);
+  const [reload, setReload] = useState(false);
 
   const [status, setStatus] = useState<string | null>(null);
   const [name, setName] = useState<string | null>("");
@@ -49,12 +51,13 @@ export function Users() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
-  useEffect(() => {
-    async function loadUsers() {
-      const response = await api.get("/users");
-      setUsers(response.data);
-    }
+  async function loadUsers() {
+    const response = await api.get("/users");
+    setUsers(response.data);
+    setReload(!reload);
+  }
 
+  useEffect(() => {
     loadUsers();
   }, []);
 
@@ -87,7 +90,7 @@ export function Users() {
       }
       setStatus(status);
     }
-  }, [users.length, name, status]);
+  }, [users.length, name, status, reload]);
 
   return (
     <>
@@ -108,6 +111,14 @@ export function Users() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadUsers}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 

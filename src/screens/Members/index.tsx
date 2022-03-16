@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
@@ -25,6 +25,7 @@ import {
   MemberCardText,
   MemberCardTitle,
 } from "./styles";
+import { styles } from "../../styles/global";
 
 type PlanProps = {
   id: string;
@@ -32,51 +33,13 @@ type PlanProps = {
   value: number;
 };
 
-// const members = [
-//   {
-//     id: "bruno-gaspar",
-//     name: "Bruno Gaspar",
-//     email: "bruninhoogaspar@gmail.com",
-//     phone: "(45) 9 9996-2223",
-//     plan: {
-//       id: "gold-plan",
-//       name: "Ouro",
-//     },
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "guilherme-locks",
-//     name: "Guilherme Locks",
-//     email: "guilherme.outsystems@gmail.com",
-//     phone: "(45) 9 9818-3657",
-//     plan: {
-//       id: "silver-plan",
-//       name: "Prata",
-//     },
-//     disabled: false,
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "lucas-zorzan",
-//     name: "Lucas Zorzan",
-//     email: "lucaszorzan14@gmail.com",
-//     phone: "(45) 9 9999-1234",
-//     plan: {
-//       id: "bronze-plan",
-//       name: "Bronze",
-//     },
-//     disabled: true,
-//     createdAt: "2022-02-08",
-//   },
-// ];
-
 export function Members() {
   const statusRef = useRef<RBSheet>(null);
   const planRef = useRef<RBSheet>(null);
   const nameRef = useRef<RBSheet>(null);
 
   const [members, setMembers] = useState<MemberProps[]>([]);
+  const [reload, setReload] = useState(false);
 
   const [status, setStatus] = useState<string | null>(null);
   const [plan, setPlan] = useState<PlanProps | null>(null);
@@ -103,12 +66,13 @@ export function Members() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
-  useEffect(() => {
-    async function loadMembers() {
-      const response = await api.get("/members");
-      setMembers(response.data);
-    }
+  async function loadMembers() {
+    const response = await api.get("/members");
+    setMembers(response.data);
+    setReload(!reload);
+  }
 
+  useEffect(() => {
     loadMembers();
   }, []);
 
@@ -164,7 +128,7 @@ export function Members() {
       }
       setPlan(plan);
     }
-  }, [name, status, plan, members.length]);
+  }, [name, status, plan, members.length, reload]);
 
   return (
     <>
@@ -186,6 +150,14 @@ export function Members() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadMembers}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 
@@ -202,7 +174,7 @@ type MemberProps = {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  cellPhone: string;
   plan: {
     id: string;
     name: string;
@@ -220,6 +192,10 @@ type MemberCardProps = {
 function MemberCard({ member, index, total }: MemberCardProps) {
   const createdAt = moment(member.createdAt).format("DD/MM/YYYY");
 
+  function maskCellPhone(cellPhone: string) {
+    return cellPhone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+  }
+
   return (
     <MemberCardContainer>
       <MemberCardTitle>{member.name}</MemberCardTitle>
@@ -233,7 +209,7 @@ function MemberCard({ member, index, total }: MemberCardProps) {
         </MemberCardPlan>
       </MemberCardRow>
 
-      <MemberCardText>{member.phone}</MemberCardText>
+      <MemberCardText>{maskCellPhone(member.cellPhone)}</MemberCardText>
 
       <MemberCardRow>
         <MemberCardRow>

@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
@@ -25,12 +25,14 @@ import {
   PlanCardTitle,
 } from "./styles";
 import { api } from "../../services/api.service";
+import { styles } from "../../styles/global";
 
 export function Plans() {
   const statusRef = useRef<RBSheet>(null);
   const nameRef = useRef<RBSheet>(null);
 
   const [plans, setPlans] = useState<PlanProps[]>([]);
+  const [reload, setReload] = useState(false);
 
   const [status, setStatus] = useState<string | null>(null);
   const [name, setName] = useState<string | null>("");
@@ -52,13 +54,14 @@ export function Plans() {
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
+  async function loadPlans() {
+    const response = await api.get("/plans");
+
+    setPlans(response.data);
+    setReload(!reload);
+  }
+
   useEffect(() => {
-    async function loadPlans() {
-      const response = await api.get("/plans");
-
-      setPlans(response.data);
-    }
-
     loadPlans();
   }, []);
 
@@ -95,7 +98,7 @@ export function Plans() {
       }
       setStatus(status);
     }
-  }, [name, status, plans.length]);
+  }, [name, status, plans.length, reload]);
 
   return (
     <>
@@ -116,6 +119,14 @@ export function Plans() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadPlans}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 

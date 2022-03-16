@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
@@ -44,38 +44,6 @@ type ActivityStatusProps = {
   name: string;
 };
 
-// const activities = [
-//   {
-//     id: "1",
-//     member: "Bruno Gaspar",
-//     totalItems: 7,
-//     seller: "Bruno Gaspar",
-//     value: 299.99,
-//     status: "open",
-//     createdAt: "2021-12-27",
-//   },
-//   {
-//     id: "2",
-//     member: "Guilherme Lokcs Gregorio",
-//     totalItems: 3,
-//     seller: "Bruno Gaspar",
-//     value: 123.99,
-//     status: "cancelled",
-//     createdAt: "2021-12-27",
-//     cancelledAt: "2022-01-05",
-//   },
-//   {
-//     id: "3",
-//     member: "Lucas Guilherme Zorzan",
-//     totalItems: 10,
-//     seller: "Mohammed Ali",
-//     value: 350.99,
-//     status: "closed",
-//     createdAt: "2021-12-27",
-//     finishedAt: "2021-12-27",
-//   },
-// ];
-
 export function Activities() {
   const navigation = useNavigation();
 
@@ -84,21 +52,22 @@ export function Activities() {
   const statusRef = useRef<RBSheet>(null);
   const memberRef = useRef<RBSheet>(null);
 
-  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>(null);
+  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>({ id: "open", name: "Aberta" });
   const [member, setMember] = useState<MemberProps | null>(null);
+  const [reload, setReload] = useState(false);
 
   const [filteredData, setFilteredData] = useState<ActivityProps[] | null>(null);
 
   const activitiesTotal = filteredData?.reduce((acc, activity) => acc + activity.total, 0) || 0;
   const total = formatCurrency(activitiesTotal);
 
-  function handleOpenModal(modal: "status" | "name" | "member") {
+  function handleOpenModal(modal: "status" | "date" | "member") {
     switch (modal) {
       case "status": {
         statusRef.current?.open();
         break;
       }
-      // case "data": {
+      // case "date": {
       //   planRef.current?.open();
       //   break;
       // }
@@ -126,16 +95,18 @@ export function Activities() {
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
-  useEffect(() => {
-    async function loadActivities() {
-      const response = await api.get("/activities", {
-        params: {
-          onlyEnabled: false,
-        },
-      });
-      setActivities(response.data);
-    }
+  async function loadActivities() {
+    const response = await api.get("/activities", {
+      params: {
+        onlyEnabled: false,
+      },
+    });
 
+    setActivities(response.data);
+    setReload(!reload);
+  }
+
+  useEffect(() => {
     loadActivities();
   }, []);
 
@@ -178,7 +149,7 @@ export function Activities() {
       }
       setActivityStatus(activityStatus);
     }
-  }, [member, activityStatus, activities.length]);
+  }, [member, activityStatus, activities.length, reload]);
 
   return (
     <>
@@ -217,6 +188,14 @@ export function Activities() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadActivities}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 
