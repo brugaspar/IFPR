@@ -106,7 +106,6 @@ export function Members() {
   useEffect(() => {
     async function loadMembers() {
       const response = await api.get("/members");
-      //! TODO: include plan object on member (backend)
       setMembers(response.data);
     }
 
