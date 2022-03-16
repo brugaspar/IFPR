@@ -1,24 +1,40 @@
+import { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
 import { formatCurrency } from "../../helpers/strings.helper";
+import { api } from "../../services/api.service";
 
 import { Container, FullCard, HalfCard, Row, Title, Value, Highlight, Message, VerticalScroll } from "./styles";
 
-const data = {
-  total: 2332.81,
-  totalActivities: 83,
-  activeMembers: 362,
-  activeUsers: 19,
-  activePlans: 3,
-  activeProducts: 243,
-  openActivities: 9,
-};
+
+type TotalsProps = {
+  activitiesTotal: number;
+  activitiesCount: number;
+  membersCount: number;
+  usersCount: number;
+  plansCount: number;
+  productsCount: number;
+  activitiesOpen: number;
+}
+
 
 export function Dashboard() {
   const { isMember } = useAuth();
 
-  const total = formatCurrency(data.total);
-  const ticket = formatCurrency(data.total / data.totalActivities);
+
+const [data, setData] = useState<TotalsProps | null>(null);
+ 
+const ticket = formatCurrency((data?.activitiesTotal || 0 )/ (data?.activitiesCount || 0));
+
+  useEffect(() => {
+    async function loadTotals() {
+      const response = await api.get("/totals");
+
+      setData(response.data);
+    }
+
+    loadTotals();
+  }, []);
 
   return (
     <Container>
@@ -35,35 +51,35 @@ export function Dashboard() {
         )}
         <FullCard>
           <Title>Valor total{"\n"}das atividades</Title>
-          <Value>{total}</Value>
+          <Value>{formatCurrency(data?.activitiesTotal || 0)}</Value>
         </FullCard>
 
         <FullCard>
           <Title>Atividades{"\n"}cadastradas</Title>
-          <Value>{data.totalActivities}</Value>
+          <Value>{data?.activitiesCount || 0}</Value>
         </FullCard>
 
         <Row>
           <HalfCard>
             <Title mb>Membros{"\n"}ativos</Title>
-            <Value>{data.activeMembers}</Value>
+            <Value>{data?.membersCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
             <Title mb>Usuários{"\n"}ativos</Title>
-            <Value>{data.activeUsers}</Value>
+            <Value>{data?.usersCount || 0}</Value>
           </HalfCard>
         </Row>
 
         <Row>
           <HalfCard>
             <Title mb>Planos{"\n"}Ativos</Title>
-            <Value>{data.activePlans}</Value>
+            <Value>{data?.plansCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
             <Title mb>Produtos{"\n"}ativos</Title>
-            <Value>{data.activeProducts}</Value>
+            <Value>{data?.productsCount || 0}</Value>
           </HalfCard>
         </Row>
 
@@ -74,7 +90,7 @@ export function Dashboard() {
 
         <FullCard>
           <Title>Atividades{"\n"}em aberto</Title>
-          <Value>{data.openActivities}</Value>
+          <Value>{data?.activitiesOpen || 0}</Value>
         </FullCard>
       </VerticalScroll>
     </Container>
