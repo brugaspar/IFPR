@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
@@ -24,47 +24,22 @@ import {
   PlanCardText,
   PlanCardTitle,
 } from "./styles";
-
-
-const plans = [
-  {
-    id: "ouro",
-    name: "Ouro",
-    membersQuantity: 34,
-    value: 1299.99,
-    disabled: false,
-    createdAt: "2021-12-27",
-  },
-  {
-    id: "prata",
-    name: "Prata",
-    membersQuantity: 123,
-    value: 989.99,
-    disabled: false,
-    createdAt: "2021-12-27",
-  },
-  {
-    id: "bronze",
-    name: "Bronze",
-    membersQuantity: 19,
-    value: 459.99,
-    disabled: true,
-    createdAt: "2021-12-27",
-  },
-];
+import { api } from "../../services/api.service";
+import { styles } from "../../styles/global";
 
 export function Plans() {
-
   const statusRef = useRef<RBSheet>(null);
   const nameRef = useRef<RBSheet>(null);
+
+  const [plans, setPlans] = useState<PlanProps[]>([]);
+  const [reload, setReload] = useState(false);
 
   const [status, setStatus] = useState<string | null>(null);
   const [name, setName] = useState<string | null>("");
 
   const [filteredData, setFilteredData] = useState<PlanProps[] | null>(null);
-  const [masterData, setMasterData] = useState(plans);
 
-  function handleOpenModal(modal: "status" | "name" ) {
+  function handleOpenModal(modal: "status" | "name") {
     switch (modal) {
       case "status": {
         statusRef.current?.open();
@@ -74,55 +49,62 @@ export function Plans() {
         nameRef.current?.open();
         break;
       }
-      
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
-  useEffect(()=> {
-    let newData = masterData;
+  async function loadPlans() {
+    const response = await api.get("/plans");
+
+    setPlans(response.data);
+    setReload(!reload);
+  }
+
+  useEffect(() => {
+    loadPlans();
+  }, []);
+
+  useEffect(() => {
+    let newData = plans;
     if (name) {
-      newData = newData.filter(
-        function (item) {
-          if (item.name) {
-            const itemData = item.name.toUpperCase();
-            const textData = name.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          }
+      newData = newData.filter(function (item) {
+        if (item.name) {
+          const itemData = item.name.toUpperCase();
+          const textData = name.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
       });
       setFilteredData(newData);
       setName(name);
     } else {
-      if(status){
+      if (status) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(plans);
       }
       setName(name);
     }
 
     if (status) {
-      newData = newData.filter(item => item.disabled === (status === "disabled"));
+      newData = newData.filter((item) => item.disabled === (status === "disabled"));
       setFilteredData(newData);
       setStatus(status);
     } else {
-      if(name){
+      if (name) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(plans);
       }
-      setStatus(status); 
+      setStatus(status);
     }
-
-},[name,status])
-
+  }, [name, status, plans.length, reload]);
 
   return (
     <>
       <Container>
         <Header />
-        <TotalCard title="Planos filtrados" value={plans.length} />
+        <TotalCard title="Planos filtrados" value={filteredData?.length || 0} />
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
@@ -132,17 +114,25 @@ export function Plans() {
         <FlatList
           data={filteredData}
           keyExtractor={(plan) => plan.id}
-          renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={plans.length} />}
+          renderItem={({ item, index }) => <PlanCard plan={item} index={index} total={filteredData?.length || 0} />}
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadPlans}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
       <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
-    </>      
+    </>
   );
 }
 

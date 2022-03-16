@@ -1,4 +1,6 @@
-import { FlatList } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { FlatList, RefreshControl } from "react-native";
+import RBSheet from "react-native-raw-bottom-sheet";
 import moment from "moment";
 
 import { Filter } from "../../components/Filter";
@@ -8,9 +10,7 @@ import { FilterWrapper } from "../../components/FilterWrapper";
 import { InputModal } from "../../components/Modals/Input";
 import { StatusModal } from "../../components/Modals/Status";
 
-import { useEffect, useRef, useState } from "react";
-import RBSheet from "react-native-raw-bottom-sheet";
-
+import { api } from "../../services/api.service";
 
 import {
   Container,
@@ -22,68 +22,19 @@ import {
   UserCardText,
   UserCardTitle,
 } from "./styles";
-
-
-const users = [
-  {
-    id: "bruno-gaspar",
-    name: "Bruno Gaspar",
-    email: "bruninhoogaspar@gmail.com",
-    username: "brugaspar",
-    disabled: false,
-    createdAt: "2021-12-27",
-  },
-  {
-    id: "guilherme-locks",
-    name: "Guilherme Locks",
-    email: "guilocksgregorio@gmail.com",
-    username: "guilocks",
-    disabled: true,
-    createdAt: "2022-01-06",
-  },
-  {
-    id: "lucas-zorzan",
-    name: "Lucas Zorzan",
-    email: "lucaszorzan14@gmail.com",
-    username: "lucas.zorzan",
-    disabled: false,
-    createdAt: "2022-02-08",
-  },
-  {
-    id: "joaquim-silva",
-    name: "Joaquim da Silva",
-    email: "joaquim.silva@gmail.com",
-    username: "joaquim",
-    disabled: false,
-    createdAt: "2022-01-28",
-  },
-  {
-    id: "juliana-benacchio",
-    name: "Juliana Benacchio",
-    email: "juliana.benacchio@ifpr.edu.br",
-    username: "juliana.benacchio",
-    disabled: false,
-    createdAt: "2022-02-18",
-  },
-  {
-    id: "felippe-scheidt",
-    name: "Felippe Scheidt",
-    email: "felippe.scheidt@ifpr.edu.br",
-    username: "felippe.scheidt",
-    disabled: true,
-    createdAt: "2022-02-18",
-  },
-];
+import { styles } from "../../styles/global";
 
 export function Users() {
   const statusRef = useRef<RBSheet>(null);
   const nameRef = useRef<RBSheet>(null);
 
+  const [users, setUsers] = useState<UserProps[]>([]);
+  const [reload, setReload] = useState(false);
+
   const [status, setStatus] = useState<string | null>(null);
   const [name, setName] = useState<string | null>("");
 
   const [filteredData, setFilteredData] = useState<UserProps[] | null>(null);
-  const [masterData, setMasterData] = useState(users);
 
   function handleOpenModal(modal: "status" | "name") {
     switch (modal) {
@@ -95,48 +46,57 @@ export function Users() {
         nameRef.current?.open();
         break;
       }
-      
     }
   }
 
   const statusName = status === "enabled" ? "Ativo" : "Inativo";
 
-  useEffect(()=> {
-    let newData = masterData;
+  async function loadUsers() {
+    const response = await api.get("/users");
+    setUsers(response.data);
+    setReload(!reload);
+  }
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  useEffect(() => {
+    let newData = users;
     if (name) {
-      newData = newData.filter(item => item.name.toUpperCase().includes(name.toUpperCase()) || item.email.toUpperCase().includes(name.toUpperCase()));
+      newData = newData.filter(
+        (item) => item.name.toUpperCase().includes(name.toUpperCase()) || item.email.toUpperCase().includes(name.toUpperCase())
+      );
       setFilteredData(newData);
       setName(name);
     } else {
-      if(status){
+      if (status) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(users);
       }
       setName(name);
     }
 
     if (status) {
-      newData = newData.filter(item => item.disabled === (status === "disabled"));
+      newData = newData.filter((item) => item.disabled === (status === "disabled"));
       setFilteredData(newData);
       setStatus(status);
     } else {
-      if(name){
+      if (name) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(users);
       }
-      setStatus(status); 
+      setStatus(status);
     }
-
-},[name,status])
-
+  }, [users.length, name, status, reload]);
 
   return (
     <>
       <Container>
         <Header />
-        <TotalCard title="Usuários filtrados" value={users.length} />
+        <TotalCard title="Usuários filtrados" value={filteredData?.length || 0} />
 
         <FilterWrapper>
           <Filter title={status ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
@@ -146,16 +106,24 @@ export function Users() {
         <FlatList
           data={filteredData}
           keyExtractor={(user) => user.id}
-          renderItem={({ item, index }) => <UserCard user={item} index={index} total={users.length} />}
+          renderItem={({ item, index }) => <UserCard user={item} index={index} total={filteredData?.length || 0} />}
           showsVerticalScrollIndicator={false}
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadUsers}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 
       <StatusModal modalRef={statusRef} selectedStatus={status} setSelectedStatus={setStatus} />
-      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />      
+      <InputModal modalRef={nameRef} selectedText={name} setSelectedText={setName} />
     </>
   );
 }

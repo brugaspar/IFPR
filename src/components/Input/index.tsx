@@ -31,7 +31,7 @@ export function Input({
   ...rest
 }: InputProps) {
   rest.multiline = rest.multiline ? true : false;
-  rest.editable = type === "modal" ? false : rest.editable ?? true;
+  rest.editable = rest.editable ?? true;
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
@@ -55,7 +55,7 @@ export function Input({
   }
 
   return (
-    <Container style={{ width: `${width}%`, ...rest.style }}>
+    <Container style={{ width: `${width}%`, ...(rest.style as any) }}>
       {hasLabel && <Label>{label}</Label>}
       <InputContainer
         activeOpacity={type !== "modal" ? 1 : 0.6}
@@ -73,6 +73,7 @@ export function Input({
 
         <StyledInput
           {...rest}
+          editable={rest.editable && type !== "modal"}
           multilineStyle={rest.multiline}
           width={inputWidth}
           padding={inputPadding}

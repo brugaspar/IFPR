@@ -1,4 +1,4 @@
-import { FlatList } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
@@ -32,6 +32,7 @@ import {
   TotalCardContainer,
   TotalCardButton,
 } from "./styles";
+import { api } from "../../services/api.service";
 
 type MemberProps = {
   id: string;
@@ -41,62 +42,32 @@ type MemberProps = {
 type ActivityStatusProps = {
   id: string;
   name: string;
-}
-
-const activities = [
-  {
-    id: "1",
-    member: "Bruno Gaspar",
-    totalItems: 7,
-    seller: "Bruno Gaspar",
-    value: 299.99,
-    status: "open",
-    createdAt: "2021-12-27",
-  },
-  {
-    id: "2",
-    member: "Guilherme Lokcs Gregorio",
-    totalItems: 3,
-    seller: "Bruno Gaspar",
-    value: 123.99,
-    status: "cancelled",
-    createdAt: "2021-12-27",
-    cancelledAt: "2022-01-05",
-  },
-  {
-    id: "3",
-    member: "Lucas Guilherme Zorzan",
-    totalItems: 10,
-    seller: "Mohammed Ali",
-    value: 350.99,
-    status: "closed",
-    createdAt: "2021-12-27",
-    finishedAt: "2021-12-27",
-  },
-];
+};
 
 export function Activities() {
   const navigation = useNavigation();
 
-  const activitiesTotal = activities.reduce((acc, activity) => acc + activity.value, 0);
-  const total = formatCurrency(activitiesTotal);
+  const [activities, setActivities] = useState<ActivityProps[]>([]);
 
   const statusRef = useRef<RBSheet>(null);
   const memberRef = useRef<RBSheet>(null);
 
-  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>(null);
+  const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>({ id: "open", name: "Aberta" });
   const [member, setMember] = useState<MemberProps | null>(null);
+  const [reload, setReload] = useState(false);
 
-  const [filteredData, setFilteredData] = useState(activities);
-  const [masterData, setMasterData] = useState(activities);
+  const [filteredData, setFilteredData] = useState<ActivityProps[] | null>(null);
 
-  function handleOpenModal(modal: "status" | "name" | "member") {
+  const activitiesTotal = filteredData?.reduce((acc, activity) => acc + activity.total, 0) || 0;
+  const total = formatCurrency(activitiesTotal);
+
+  function handleOpenModal(modal: "status" | "date" | "member") {
     switch (modal) {
       case "status": {
         statusRef.current?.open();
         break;
       }
-      // case "data": {
+      // case "date": {
       //   planRef.current?.open();
       //   break;
       // }
@@ -110,13 +81,13 @@ export function Activities() {
   // const statusName = activityStatus === "enabled" ? "Ativo" : "Inativo";
   let statusName = "status";
 
-  if(activityStatus?.id === "open"){
+  if (activityStatus?.id === "open") {
     statusName = "Aberta";
-  }else if(activityStatus?.id === "closed"){
+  } else if (activityStatus?.id === "closed") {
     statusName = "Encerrada";
-  }else if(activityStatus?.id === "cancelled"){
+  } else if (activityStatus?.id === "cancelled") {
     statusName = "Cancelada";
-  }else{
+  } else {
     statusName = "Status";
   }
 
@@ -124,49 +95,61 @@ export function Activities() {
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
-  useEffect(()=> {
-    let newData = masterData;
+  async function loadActivities() {
+    const response = await api.get("/activities", {
+      params: {
+        onlyEnabled: false,
+      },
+    });
+
+    setActivities(response.data);
+    setReload(!reload);
+  }
+
+  useEffect(() => {
+    loadActivities();
+  }, []);
+
+  useEffect(() => {
+    let newData = activities;
     if (member) {
-      newData = newData.filter(
-        function (item) {
-          if (item.id) {
-            const itemData = item.id.toUpperCase();
-            const textData = member.id.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          }
+      newData = newData.filter(function (item) {
+        if (item.member.id) {
+          const itemData = item.member.id.toUpperCase();
+          const textData = member.id.toUpperCase();
+          return itemData === textData;
+        }
       });
       setFilteredData(newData);
       setMember(member);
     } else {
-      if(activityStatus){
+      if (activityStatus) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(activities);
       }
       setMember(member);
     }
 
     if (activityStatus) {
-      newData = newData.filter(
-        function (item) {
-          if (item.status) {
-            const itemData = item.status.toUpperCase();
-            const textData = activityStatus.id.toUpperCase();
-            return itemData.indexOf(textData) > -1;
-          }
+      newData = newData.filter(function (item) {
+        if (item.status) {
+          const itemData = item.status.toUpperCase();
+          const textData = activityStatus.id.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
       });
       setFilteredData(newData);
       setActivityStatus(activityStatus);
     } else {
-      if(member){
+      if (member) {
         setFilteredData(newData);
-      }else{
-        setFilteredData(masterData);
+      } else {
+        setFilteredData(activities);
       }
       setActivityStatus(activityStatus);
     }
-
-  },[member, activityStatus])
+  }, [member, activityStatus, activities.length, reload]);
 
   return (
     <>
@@ -179,7 +162,7 @@ export function Activities() {
             <TotalCardHighlight>{total}</TotalCardHighlight>
           </TotalCardContainer>
 
-          <TotalCardButton activeOpacity={0.8}>
+          <TotalCardButton activeOpacity={0.8} onPress={() => handleNavigateToDetails()}>
             <Ionicons name="add-outline" size={40} color={styles.colors.text} />
           </TotalCardButton>
         </TotalCard>
@@ -205,10 +188,22 @@ export function Activities() {
           style={{
             marginBottom: -16,
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={loadActivities}
+              progressBackgroundColor={styles.colors.background}
+              colors={[styles.colors.text]}
+            />
+          }
         />
       </Container>
 
-      <ActivityStatusModal modalRef={statusRef} selectedActivityStatus={activityStatus} setSelectedActivityStatus={setActivityStatus} />
+      <ActivityStatusModal
+        modalRef={statusRef}
+        selectedActivityStatus={activityStatus}
+        setSelectedActivityStatus={setActivityStatus}
+      />
       <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
     </>
   );
@@ -218,10 +213,15 @@ export function Activities() {
 
 type ActivityProps = {
   id: string;
-  member: string;
+  member: {
+    id: string;
+    name: string;
+  };
   totalItems: number;
-  seller: string;
-  value: number;
+  seller: {
+    name: string;
+  };
+  total: number;
   status: string;
   createdAt: string;
   cancelledAt?: string;
@@ -240,7 +240,7 @@ function ActivityCard({ activity, index, total, handleNavigateToDetails }: Activ
   const finishedAt = moment(activity.finishedAt).format("DD/MM/YYYY");
   const cancelledAt = moment(activity.cancelledAt).format("DD/MM/YYYY");
 
-  const value = formatCurrency(activity.value);
+  const value = formatCurrency(activity.total);
 
   const activityStatusName: { [key: string]: string } = {
     open: "Aberta",
@@ -250,13 +250,13 @@ function ActivityCard({ activity, index, total, handleNavigateToDetails }: Activ
 
   return (
     <ActivityCardContainer activeOpacity={0.6} onPress={() => handleNavigateToDetails(activity)}>
-      <ActivityCardTitle>{activity.member}</ActivityCardTitle>
+      <ActivityCardTitle>{activity.member.name}</ActivityCardTitle>
 
       <ActivityCardSeparator />
 
       <ActivityCardRow>
         <ActivityCardText>Itens: {activity.totalItems}</ActivityCardText>
-        <ActivityCardText>Vendedor: {activity.seller}</ActivityCardText>
+        <ActivityCardText>Vendedor: {activity.seller.name}</ActivityCardText>
       </ActivityCardRow>
 
       <ActivityCardRow>

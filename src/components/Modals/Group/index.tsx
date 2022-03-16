@@ -1,18 +1,12 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
-import { ModalHeader } from "../../ModalHeader";
 
+import { api } from "../../../services/api.service";
+
+import { ModalHeader } from "../../ModalHeader";
 import { ModalView } from "../../ModalView";
 
-import {
-
-  Container,
-  GroupCardContainer,
-  GroupCardIndex,
-  GroupCardTitle,
-  Row,
-  Separator,
-} from "./styles";
+import { Container, GroupCardContainer, GroupCardIndex, GroupCardTitle, Row, Separator } from "./styles";
 
 type GroupProps = {
   id: string;
@@ -25,22 +19,9 @@ type GroupsModalProps = {
   setSelectedGroup: (group: GroupProps | null) => void;
 };
 
-const groups = [
-  {
-    id: "1",
-    name: "Munições",
-  },
-  {
-    id: "2",
-    name: "Seviços",
-  },
-  {
-    id: "3",
-    name: "Camisetas",
-  },
-];
-
 export function GroupsModal({ modalRef, selectedGroup, setSelectedGroup }: GroupsModalProps) {
+  const [groups, setGroups] = useState<GroupProps[]>([]);
+
   function handleSelectStatus(group: GroupProps) {
     if (selectedGroup?.id !== group.id) {
       setSelectedGroup(group);
@@ -57,10 +38,19 @@ export function GroupsModal({ modalRef, selectedGroup, setSelectedGroup }: Group
     modalRef.current?.close();
   }
 
+  useEffect(() => {
+    async function loadGroups() {
+      const response = await api.get("/groups");
+      setGroups(response.data);
+    }
+
+    loadGroups();
+  }, []);
+
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
-      <ModalHeader title="Selecione um grupo" onCleanFilter={handleCleanStatus} />
+        <ModalHeader title="Selecione um grupo" onCleanFilter={handleCleanStatus} />
 
         <Separator />
 
@@ -97,7 +87,6 @@ type GroupCardProps = {
 };
 
 function GroupCard({ group, index, total, selectGroup, selectedGroupId }: GroupCardProps) {
-
   return (
     <GroupCardContainer selected={selectedGroupId === group.id} activeOpacity={0.7} onPress={() => selectGroup(group)}>
       <Row>
@@ -106,7 +95,6 @@ function GroupCard({ group, index, total, selectGroup, selectedGroupId }: GroupC
           {index + 1} / {total}
         </GroupCardIndex>
       </Row>
-      
     </GroupCardContainer>
   );
 }

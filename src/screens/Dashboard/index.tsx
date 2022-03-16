@@ -1,24 +1,49 @@
+import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+
 import { Header } from "../../components/Header";
 import { useAuth } from "../../contexts/AuthContext";
+
 import { formatCurrency } from "../../helpers/strings.helper";
+
+import { api } from "../../services/api.service";
 
 import { Container, FullCard, HalfCard, Row, Title, Value, Highlight, Message, VerticalScroll } from "./styles";
 
-const data = {
-  total: 2332.81,
-  totalActivities: 83,
-  activeMembers: 362,
-  activeUsers: 19,
-  activePlans: 3,
-  activeProducts: 243,
-  openActivities: 9,
+type TotalsProps = {
+  activitiesTotal: number;
+  activitiesCount: number;
+  membersCount: number;
+  usersCount: number;
+  plansCount: number;
+  productsCount: number;
+  activitiesOpen: number;
 };
 
 export function Dashboard() {
   const { isMember } = useAuth();
+  const navigation = useNavigation();
 
-  const total = formatCurrency(data.total);
-  const ticket = formatCurrency(data.total / data.totalActivities);
+  const [data, setData] = useState<TotalsProps | null>(null);
+  const [reload, setReload] = useState(false);
+
+  const ticket = formatCurrency((data?.activitiesTotal || 0) / (data?.activitiesCount || 1));
+
+  useEffect(() => {
+    async function loadTotals() {
+      const response = await api.get("/totals");
+
+      setData(response.data);
+    }
+
+    loadTotals();
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      setReload(!reload);
+    });
+
+    return unsubscribe;
+  }, [reload]);
 
   return (
     <Container>
@@ -34,36 +59,36 @@ export function Dashboard() {
           </Message>
         )}
         <FullCard>
-          <Title>Valor total{"\n"}das atividades</Title>
-          <Value>{total}</Value>
+          <Title>Valor total das{"\n"}atividades fechadas</Title>
+          <Value>{formatCurrency(data?.activitiesTotal || 0)}</Value>
         </FullCard>
 
         <FullCard>
           <Title>Atividades{"\n"}cadastradas</Title>
-          <Value>{data.totalActivities}</Value>
+          <Value>{data?.activitiesCount || 0}</Value>
         </FullCard>
 
         <Row>
           <HalfCard>
-            <Title mb>Membros{"\n"}ativos</Title>
-            <Value>{data.activeMembers}</Value>
+            <Title mb>Membros{"\n"}cadastrados</Title>
+            <Value>{data?.membersCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title mb>Usuários{"\n"}ativos</Title>
-            <Value>{data.activeUsers}</Value>
+            <Title mb>Usuários{"\n"}cadastrados</Title>
+            <Value>{data?.usersCount || 0}</Value>
           </HalfCard>
         </Row>
 
         <Row>
           <HalfCard>
-            <Title mb>Planos{"\n"}Ativos</Title>
-            <Value>{data.activePlans}</Value>
+            <Title mb>Planos{"\n"}cadastrados</Title>
+            <Value>{data?.plansCount || 0}</Value>
           </HalfCard>
 
           <HalfCard>
-            <Title mb>Produtos{"\n"}ativos</Title>
-            <Value>{data.activeProducts}</Value>
+            <Title mb>Produtos{"\n"}cadastrados</Title>
+            <Value>{data?.productsCount || 0}</Value>
           </HalfCard>
         </Row>
 
@@ -74,7 +99,7 @@ export function Dashboard() {
 
         <FullCard>
           <Title>Atividades{"\n"}em aberto</Title>
-          <Value>{data.openActivities}</Value>
+          <Value>{data?.activitiesOpen || 0}</Value>
         </FullCard>
       </VerticalScroll>
     </Container>
