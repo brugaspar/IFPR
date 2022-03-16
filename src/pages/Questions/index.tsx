@@ -1,5 +1,9 @@
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IoTrashBinOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
+
+import { api } from "../../services/api.service";
 
 import { QuestionModal } from "../../components/QuestionModal";
 import { Separator } from "../../components/Separator";
@@ -11,58 +15,32 @@ type QuestionTypeDifficulty = {
   [key: string]: string;
 };
 
+type QuestionType = "open" | "single" | "multiple";
+type QuestionDifficulty = "easy" | "medium" | "hard";
+type QuestionAlternative = {
+  id: string;
+  title: string;
+  isCorrect: boolean;
+};
+
+type QuestionData = {
+  id: string;
+  title: string;
+  description: string;
+  type: QuestionType;
+  difficulty: QuestionDifficulty;
+  createdAt: string;
+  alternatives: QuestionAlternative[];
+  tag: {
+    id: string;
+    name: string;
+  };
+};
+
 export function Questions() {
   const [questionModalIsOpen, setQuestionModalIsOpen] = useState(false);
-
-  const questions = [
-    {
-      id: "1",
-      title: "O que é um padrão de projeto?",
-      description: "Conteúdo: padrões de projeto, matéria do último semestre.",
-      type: "open",
-      difficulty: "medium",
-      tag: {
-        id: "1",
-        name: "Padrões de Projeto",
-      },
-    },
-    {
-      id: "2",
-      title: "Quais desses são padrões de projetos?",
-      description: "Conteúdo: padrões de projeto, matéria do último semestre.",
-      type: "single",
-      difficulty: "medium",
-      createdAt: "2022-02-20",
-      tag: {
-        id: "1",
-        name: "Padrões de Projeto",
-      },
-    },
-    {
-      id: "3",
-      title: "O padrão Factory pode ser definido como:",
-      description: "Conteúdo: padrões de projeto, matéria do último semestre.",
-      type: "multiple",
-      difficulty: "hard",
-      createdAt: "2022-03-14",
-      tag: {
-        id: "1",
-        name: "Padrões de Projeto",
-      },
-    },
-    {
-      id: "4",
-      title: "Cite 3 comandos de DDL.",
-      description: "",
-      type: "open",
-      difficulty: "easy",
-      createdAt: "2022-01-11",
-      tag: {
-        id: "2",
-        name: "Banco de Dados",
-      },
-    },
-  ];
+  const [questions, setQuestions] = useState<QuestionData[]>([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<QuestionData | null>(null);
 
   const questionType: QuestionTypeDifficulty = {
     open: "Aberta",
@@ -76,13 +54,51 @@ export function Questions() {
     hard: "Difícil",
   };
 
+  function handleSelectQuestion(question: QuestionData) {
+    setSelectedQuestion(question);
+    handleOpenQuestionModal();
+  }
+
   function handleOpenQuestionModal() {
     setQuestionModalIsOpen(true);
   }
 
+  function handleCloseQuestionModal() {
+    setSelectedQuestion(null);
+    setQuestionModalIsOpen(false);
+  }
+
+  async function handleDeleteQuestion(id: string) {
+    console.log(questionModalIsOpen);
+    try {
+      await api.delete(`/questions/${id}`);
+
+      toast.success("Questão excluída com sucesso!");
+
+      await loadQuestions();
+    } catch (error: any) {
+      if (error.response.data) {
+        toast.error(error.response.data.message, { toastId: "error" });
+      } else {
+        toast.error("Problemas internos", { toastId: "error" });
+      }
+    }
+  }
+
+  async function loadQuestions() {
+    const response = await api.get("/questions");
+    setQuestions(response.data);
+  }
+
+  useEffect(() => {
+    if (!questionModalIsOpen) {
+      loadQuestions();
+    }
+  }, [questionModalIsOpen]);
+
   return (
     <Container>
-      <QuestionModal isOpen={questionModalIsOpen} setIsOpen={setQuestionModalIsOpen} />
+      <QuestionModal isOpen={questionModalIsOpen} setIsOpen={handleCloseQuestionModal} selectedQuestion={selectedQuestion} />
       <div className="flex-div">
         <h1>Lista de questões</h1>
         <Button onClick={handleOpenQuestionModal}>Nova questão</Button>
@@ -91,6 +107,7 @@ export function Questions() {
       <table>
         <thead>
           <tr>
+            <th>#</th>
             <th>Enunciado</th>
             <th>Descrição</th>
             <th>Tipo</th>
@@ -102,16 +119,19 @@ export function Questions() {
         <tbody>
           {questions.map((question) => (
             <tr key={question.id}>
-              <td className="ellipsis-text" title={question.title}>
+              <td className="delete-trash" onClick={() => handleDeleteQuestion(question.id)}>
+                <IoTrashBinOutline />
+              </td>
+              <td onClick={() => handleSelectQuestion(question)} className="ellipsis-text" title={question.title}>
                 {question.title}
               </td>
-              <td className="ellipsis-text" title={question.description}>
+              <td onClick={() => handleSelectQuestion(question)} className="ellipsis-text" title={question.description}>
                 {question.description}
               </td>
-              <td>{questionType[question.type]}</td>
-              <td>{questionDifficulty[question.difficulty]}</td>
-              <td>{question.tag.name}</td>
-              <td>{moment(question.createdAt).format("DD/MM/YYYY")}</td>
+              <td onClick={() => handleSelectQuestion(question)}>{questionType[question.type]}</td>
+              <td onClick={() => handleSelectQuestion(question)}>{questionDifficulty[question.difficulty]}</td>
+              <td onClick={() => handleSelectQuestion(question)}>{question.tag.name}</td>
+              <td onClick={() => handleSelectQuestion(question)}>{moment(question.createdAt).format("DD/MM/YYYY")}</td>
             </tr>
           ))}
         </tbody>

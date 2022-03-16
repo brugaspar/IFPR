@@ -8,7 +8,7 @@ type ButtonProps = HTMLProps<HTMLButtonElement> & {
 
 export function Button({ children, ...rest }: ButtonProps) {
   return (
-    <MyButton {...(rest as any)} type="button">
+    <MyButton {...(rest as any)} type={rest.type || "button"}>
       {children}
     </MyButton>
   );
