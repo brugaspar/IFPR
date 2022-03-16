@@ -87,7 +87,7 @@ export const DialogContent = styled(DialogPrimitive.Content)`
       textarea,
       select {
         border: none;
-        border-bottom: 2px solid var(--primary);
+        border-bottom: 2px solid #d1d1d1;
         background: transparent;
         color: var(--primary);
         font-size: 1.25rem;
@@ -114,6 +114,7 @@ export const DialogContent = styled(DialogPrimitive.Content)`
         background: var(--green);
         color: var(--background);
         padding: 0.2rem;
+        position: relative;
 
         display: flex;
         align-items: center;
@@ -127,6 +128,17 @@ export const DialogContent = styled(DialogPrimitive.Content)`
 
         &:hover {
           filter: brightness(0.8);
+        }
+
+        &::after {
+          content: "(Ctrl + Enter)";
+          width: 100%;
+          position: absolute;
+          top: 0.2rem;
+          left: 2.3rem;
+          font-size: 0.8rem;
+          color: var(--green);
+          white-space: nowrap;
         }
       }
 

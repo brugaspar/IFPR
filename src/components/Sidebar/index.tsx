@@ -10,6 +10,7 @@ export function Sidebar() {
       <img src={ifprLogo} />
       <div>
         <Link to="/">Provas</Link>
+        <Link to="/tags">Tags</Link>
         <Link to="questions">Questões</Link>
       </div>
       <div className="footer-text">

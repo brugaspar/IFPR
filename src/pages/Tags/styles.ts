@@ -51,7 +51,6 @@ export const Container = styled.div`
         border-bottom-right-radius: 0.25rem;
       }
     }
-
     tbody tr {
       transition: background 0.2s;
       cursor: pointer;
@@ -79,7 +78,7 @@ export const Container = styled.div`
 
       &:last-of-type {
         border-bottom: 5px solid var(--green);
-        border-radius: 0;
+        border-radius: 5px;
       }
 
       &:hover {

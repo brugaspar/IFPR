@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 
 import { api } from "../../services/api.service";
 
@@ -8,25 +9,6 @@ import { Dialog, DialogContent, DialogOverlay } from "./styles";
 
 type QuestionType = "open" | "single" | "multiple";
 type QuestionDifficulty = "easy" | "medium" | "hard";
-
-type QuestionData = {
-  id: string;
-  title: string;
-  description: string;
-  type: QuestionType;
-  difficulty: QuestionDifficulty;
-  createdAt: string;
-  tag: {
-    id: string;
-    name: string;
-  };
-};
-
-type QuestionModalProps = {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  selectedQuestion: QuestionData | null;
-};
 
 type TagData = {
   id: string;
@@ -37,6 +19,27 @@ type AlternativeData = {
   id: string;
   title: string;
   isCorrect: boolean;
+  toDelete?: boolean;
+};
+
+type QuestionData = {
+  id: string;
+  title: string;
+  description: string;
+  type: QuestionType;
+  difficulty: QuestionDifficulty;
+  createdAt: string;
+  alternatives: AlternativeData[];
+  tag: {
+    id: string;
+    name: string;
+  };
+};
+
+type QuestionModalProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  selectedQuestion: QuestionData | null;
 };
 
 const types = [
@@ -55,8 +58,7 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
   const [tags, setTags] = useState<TagData[]>([]);
   const [alternatives, setAlternatives] = useState<AlternativeData[]>([]);
 
-  const [value, setValue] = useState("");
-  const [editingValue, setEditingValue] = useState("");
+  const [autoFocus, setAutoFocus] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -64,22 +66,26 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
   const [difficulty, setDifficulty] = useState("");
   const [type, setType] = useState("");
 
-  function handleEditAlternative({ index, title, isCorrect }: { index: number; title?: string; isCorrect?: boolean }) {
-    if (title) {
-      alternatives[index].title = title;
+  function handleEditAlternative({ id, title, isCorrect }: { id: string; title?: string; isCorrect?: boolean }) {
+    const alternativeIndex = alternatives.findIndex((alternative) => alternative.id === id);
+
+    if (title || title === "") {
+      alternatives[alternativeIndex].title = title ?? "";
     }
 
     if (isCorrect === true) {
-      alternatives[index].isCorrect = true;
+      alternatives[alternativeIndex].isCorrect = true;
     } else {
-      alternatives[index].isCorrect = false;
+      alternatives[alternativeIndex].isCorrect = false;
     }
 
     setAlternatives([...alternatives]);
   }
 
-  function handleRemoveAlternative(index: number) {
-    alternatives.splice(index, 1);
+  function handleRemoveAlternative(id: string) {
+    // alternatives.splice(index, 1);
+    const alternativeIndex = alternatives.findIndex((alternative) => alternative.id === id);
+    alternatives[alternativeIndex].toDelete = true;
     setAlternatives([...alternatives]);
   }
 
@@ -90,47 +96,91 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
     setDifficulty("");
     setType("");
     setAlternatives([]);
+    setAutoFocus(false);
   }
 
   function handleCloseModal() {
     setIsOpen(false);
-
     resetFields();
   }
 
   async function handleCreateOrUpdateQuestion() {
+    if (alternatives.length && type !== "open") {
+      if (alternatives.filter((alternative) => !alternative.toDelete).find((alternative) => alternative.title === "")) {
+        alert("Preencha todas as alternativas!");
+        return;
+      }
+    }
+
     try {
       if (selectedQuestion) {
+        const parsedAlternatives = alternatives.map((alternative) => {
+          return {
+            id: alternative.id,
+            title: alternative.title,
+            isCorrect: alternative.isCorrect,
+            toDelete: alternative.toDelete,
+          };
+        });
         await api.put(`/questions/${selectedQuestion.id}`, {
           title,
           description,
           type,
           difficulty,
           tagId: tag,
+          alternatives: parsedAlternatives,
         });
       } else {
+        const parsedAlternatives = alternatives.map((alternative) => {
+          return {
+            title: alternative.title,
+            isCorrect: alternative.isCorrect,
+            toDelete: alternative.toDelete,
+          };
+        });
         await api.post("/questions", {
           title,
           description,
           type,
           difficulty,
           tagId: tag,
+          alternatives: parsedAlternatives.filter((alternative) => !alternative.toDelete),
         });
       }
+
+      toast.dismiss("error");
+
+      if (selectedQuestion) {
+        toast.success("Questão editada com sucesso!");
+      } else {
+        toast.success("Questão salva com sucesso!");
+      }
+
       handleCloseModal();
-    } catch (error) {
-      console.log(error);
-      alert("ALGO DEU ERRADO");
+    } catch (error: any) {
+      if (error.response.data) {
+        toast.error(error.response.data.message, { toastId: "error" });
+      } else {
+        toast.error("Problemas internos", { toastId: "error" });
+      }
     }
   }
 
   function handleCreateNewAlternative() {
-    setAlternatives([...alternatives, { id: "", title: "", isCorrect: false }]);
+    setAutoFocus(true);
+    const random = Math.random().toString(36).substring(7);
+    setAlternatives([...alternatives, { id: random, title: "", isCorrect: false }]);
   }
 
   document.onkeydown = function (event) {
-    if (event.key === "Escape") {
-      handleCloseModal();
+    if (isOpen) {
+      if (event.key === "Escape") {
+        handleCloseModal();
+      }
+
+      if (event.ctrlKey && event.key === "Enter") {
+        handleCreateNewAlternative();
+      }
     }
   };
 
@@ -154,7 +204,9 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
       setTags(response.data);
     }
 
-    loadTags();
+    if (isOpen) {
+      loadTags();
+    }
 
     if (selectedQuestion) {
       setTitle(selectedQuestion.title);
@@ -162,14 +214,15 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
       setTag(selectedQuestion.tag.id);
       setDifficulty(selectedQuestion.difficulty);
       setType(selectedQuestion.type);
+      setAlternatives(selectedQuestion.alternatives);
     }
-  }, [selectedQuestion]);
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen}>
       <DialogOverlay />
       <DialogContent>
-        <h1>Nova questão</h1>
+        <h1>{selectedQuestion ? "Editando questão" : "Nova questão"}</h1>
 
         <form>
           <div className="input-container">
@@ -180,6 +233,7 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
               placeholder="Informe o enunciado da questão"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              autoFocus
             />
           </div>
           <div className="input-container">
@@ -248,41 +302,44 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
                   <IoAdd />
                 </button>
               </div>
-              {alternatives.map((alternative, index) => {
-                return (
-                  <div className="alternatives">
-                    <span>{index + 1}</span>
-                    <textarea
-                      key={index.toString()}
-                      rows={1}
-                      value={alternative.title}
-                      onChange={(event) =>
-                        handleEditAlternative({
-                          index,
-                          title: event.target.value,
-                        })
-                      }
-                      placeholder="Informe a alternativa"
-                    />
-
-                    <div className="checkbox-container">
-                      <input
-                        type="checkbox"
-                        checked={alternative.isCorrect}
+              {alternatives
+                .filter((alternative) => !alternative.toDelete)
+                .map((alternative, index) => {
+                  return (
+                    <div className="alternatives">
+                      <span>{index + 1}</span>
+                      <textarea
+                        key={index.toString()}
+                        rows={1}
+                        value={alternative.title}
                         onChange={(event) =>
                           handleEditAlternative({
-                            index,
-                            isCorrect: event.target.checked,
+                            id: alternative.id,
+                            title: event.target.value,
                           })
                         }
+                        placeholder="Informe a alternativa"
+                        autoFocus={autoFocus}
                       />
-                      <span>Alternativa correta</span>
-                    </div>
 
-                    <IoTrashBinOutline onClick={() => handleRemoveAlternative(index)} />
-                  </div>
-                );
-              })}
+                      <div className="checkbox-container">
+                        <input
+                          type="checkbox"
+                          checked={alternative.isCorrect}
+                          onChange={(event) =>
+                            handleEditAlternative({
+                              id: alternative.id,
+                              isCorrect: event.target.checked,
+                            })
+                          }
+                        />
+                        <span>Alternativa correta</span>
+                      </div>
+
+                      <IoTrashBinOutline onClick={() => handleRemoveAlternative(alternative.id)} />
+                    </div>
+                  );
+                })}
             </div>
           )}
         </form>
