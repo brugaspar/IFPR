@@ -72,6 +72,7 @@ type Member = {
   last_disabled_by: string;
   last_updated_by: string;
   created_by: string;
+  plan_name: string;
 };
 
 type UpdateMemberProps = {
@@ -188,9 +189,12 @@ class MembersRepository {
         m.last_disabled_by,
         m.last_updated_by,
         m.created_by,
-        (select u.name from users u where u.id = m.last_disabled_by) disabled_by_user
+        (select u.name from users u where u.id = m.last_disabled_by) disabled_by_user,
+        p.name plan_name
       from
         members m
+      left join
+        members_plans p on p.id = m.plan_id
       ${whereClause}
       ${orderClause}
     `;
@@ -238,6 +242,10 @@ class MembersRepository {
         birthDate: member.birth_date,
         createdBy: member.created_by,
         disabledByUser: member.disabled_by_user,
+        plan: {
+          id: member.plan_id,
+          name: member.plan_name,
+        },
       };
     });
 
