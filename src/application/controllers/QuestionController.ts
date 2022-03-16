@@ -57,7 +57,7 @@ export class QuestionController {
     const { props } = QuestionFactory.create(type, {
       title: title.trim(),
       description: description && description.trim(),
-      difficulty,
+      difficulty: difficulty || "easy",
       tagId,
     });
 
@@ -130,7 +130,7 @@ export class QuestionController {
     }
 
     const { props } = QuestionFactory.create(parsedType, {
-      title: title && title.trim(),
+      title: (title && title.trim()) || questionExists.title,
       description: description && description.trim(),
       difficulty,
       tagId,
