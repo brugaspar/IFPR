@@ -1,8 +1,10 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppLoading from "expo-app-loading";
+import styled from "styled-components/native";
 
 import { api } from "../services/api.service";
+import { styles } from "../styles/global";
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -48,6 +50,7 @@ const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [signInLoading, setSignInLoading] = useState(false);
 
   const [memberCpf, setMemberCpf] = useState("");
   const [memberHasPassword, setMemberHasPassword] = useState(false);
@@ -72,6 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function signIn({ username, password, keepConnected, isMember = false }: SignInPayload) {
+    setSignInLoading(true);
     const response = await api.post("authenticate", {
       username,
       password,
@@ -93,6 +97,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsMember(false);
       await AsyncStorage.removeItem("@mark-one:isMember");
     }
+    setSignInLoading(false);
   }
 
   async function signOut() {
@@ -130,6 +135,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return <AppLoading />;
   }
 
+  if (signInLoading) {
+    return <BackgroundScreen />;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -150,3 +159,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 }
 
 export const useAuth = () => useContext(AuthContext);
+
+const BackgroundScreen = styled.View`
+  flex: 1;
+  background: ${styles.colors.background};
+`;
