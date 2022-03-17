@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
+import { useAuth } from "../../../contexts/AuthContext";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
 import { api } from "../../../services/api.service";
@@ -22,6 +23,7 @@ type MembersModalProps = {
 };
 
 export function MemberModal({ modalRef, selectedMember, setSelectedMember }: MembersModalProps) {
+  const { isMember } = useAuth();
   const [text, setText] = useState("");
 
   const [members, setMembers] = useState<MemberProps[]>([]);
@@ -66,7 +68,9 @@ export function MemberModal({ modalRef, selectedMember, setSelectedMember }: Mem
       setMembers(response.data);
       setFilteredData(response.data);
     }
-    loadMembers();
+    if (!isMember) {
+      loadMembers();
+    }
   }, []);
 
   return (

@@ -11,7 +11,6 @@ import { handleKeyboardDismiss } from "../../helpers/device.helper";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { expo } from "../../../app.json";
-import { styles } from "../../styles/global";
 
 import logoImage from "../../assets/logo.png";
 
@@ -100,6 +99,7 @@ export function MemberPasswordRegister() {
           </Message>
 
           <Input
+            type="password"
             label="Senha"
             placeholder="Informe sua senha"
             icon="md-lock-closed-outline"
@@ -109,6 +109,7 @@ export function MemberPasswordRegister() {
           />
           {!memberHasPassword && (
             <Input
+              type="password"
               label="Confirme sua senha"
               placeholder="Confirme sua senha"
               icon="md-lock-closed-outline"

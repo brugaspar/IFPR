@@ -10,6 +10,8 @@ import { Button } from "../../components/Button";
 
 import {
   BackButton,
+  ConfirmButton,
+  ConfirmButtonText,
   Container,
   ItemCardContainer,
   ItemCardText,
@@ -22,51 +24,77 @@ import {
 } from "./styles";
 import { styles } from "../../styles/global";
 
+type Item = {
+  id: string;
+  name: string;
+  price: number;
+  productId: string;
+  quantity: number;
+  subtotal: number;
+};
+
+type Member = {
+  id: string;
+  name: string;
+};
+type Seller = {
+  id: string;
+  name: string;
+};
+
 type RouteProps = {
   activity: {
     id: string;
     status: "open" | "cancelled" | "closed";
+    member: Member | null;
+    seller: Seller | null;
+    observation: string;
+    items: Item[];
   };
 };
 
-const items = [
-  {
-    id: "1",
-    name: "Munição 9mm",
-    quantity: 50,
-    price: 3.15,
-  },
-  {
-    id: "2",
-    name: "Munição .40",
-    quantity: 24,
-    price: 4,
-  },
-  {
-    id: "3",
-    name: "Camiseta M",
-    quantity: 1,
-    price: 29.99,
-  },
-  {
-    id: "4",
-    name: "Curso de Tiro",
-    quantity: 1,
-    price: 50,
-  },
-  {
-    id: "5",
-    name: "Munição .45",
-    quantity: 20,
-    price: 3.99,
-  },
-];
+// const items = [
+//   {
+//     id: "1",
+//     name: "Munição 9mm",
+//     quantity: 50,
+//     price: 3.15,
+//   },
+//   {
+//     id: "2",
+//     name: "Munição .40",
+//     quantity: 24,
+//     price: 4,
+//   },
+//   {
+//     id: "3",
+//     name: "Camiseta M",
+//     quantity: 1,
+//     price: 29.99,
+//   },
+//   {
+//     id: "4",
+//     name: "Curso de Tiro",
+//     quantity: 1,
+//     price: 50,
+//   },
+//   {
+//     id: "5",
+//     name: "Munição .45",
+//     quantity: 20,
+//     price: 3.99,
+//   },
+// ];
 
 export function ActivitiesDetails() {
   const route = useRoute();
   const navigation = useNavigation();
   const [activityId, setActivityId] = useState("");
   const [activityStatus, setActivityStatus] = useState("open");
+
+  const [member, setMember] = useState<Member | null>(null);
+  const [seller, setSeller] = useState<Seller | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
 
   const [observation, setObservation] = useState("");
 
@@ -79,6 +107,10 @@ export function ActivitiesDetails() {
       if (activity) {
         setActivityStatus(activity.status);
         setActivityId(activity.id);
+        setMember(activity.member);
+        setSeller(activity.seller);
+        setObservation(activity.observation);
+        setItems(activity.items);
       }
     }
   }, []);
@@ -92,9 +124,9 @@ export function ActivitiesDetails() {
         <Title>{activityId ? activityLabel : "Nova atividade"}</Title>
       </Row>
 
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <Input label="Membro" placeholder="Selecione o membro" type="modal" editable={canEdit} />
-        <Input label="Vendedor" placeholder="Selecione o vendedor" type="modal" editable={canEdit} />
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 52 }} showsVerticalScrollIndicator={false}>
+        <Input value={member?.name || ""} label="Membro" placeholder={"Selecione o membro"} type="modal" editable={canEdit} />
+        <Input value={seller?.name || ""} label="Vendedor" placeholder={"Selecione o vendedor"} type="modal" editable={canEdit} />
 
         <Input
           label={`Observações | ${observation.length}/255`}
@@ -103,6 +135,7 @@ export function ActivitiesDetails() {
           maxLength={255}
           onChangeText={setObservation}
           editable={canEdit}
+          value={observation}
         />
 
         <Input label="Produto" placeholder="Selecione o produto" type="modal" editable={canEdit} />
@@ -150,6 +183,10 @@ export function ActivitiesDetails() {
           })}
         </Items>
       </ScrollView>
+
+      <ConfirmButton activeOpacity={0.8}>
+        <ConfirmButtonText>Salvar</ConfirmButtonText>
+      </ConfirmButton>
     </Container>
   );
 }
