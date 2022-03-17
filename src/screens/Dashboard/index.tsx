@@ -99,13 +99,26 @@ export function Dashboard() {
                 <Value>{data?.productsCount || 0}</Value>
               </HalfCard>
             </Row>
+            <FullCard>
+              <Title>Ticket{"\n"}médio</Title>
+              <Value>{ticket}</Value>
+            </FullCard>
           </>
         )}
 
-        <FullCard>
-          <Title>Ticket{"\n"}médio</Title>
-          <Value>{ticket}</Value>
-        </FullCard>
+        {isMember && (
+          <Row>
+            <HalfCard>
+              <Title>Ticket{"\n"}médio</Title>
+              <Value>{ticket}</Value>
+            </HalfCard>
+
+            <HalfCard>
+              <Title mb>Plano{"\n"}atual</Title>
+              <Value>{user?.plan?.name || ""}</Value>
+            </HalfCard>
+          </Row>
+        )}
 
         <FullCard>
           <Title>Atividades{"\n"}em aberto</Title>

@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { TextInputMask } from "react-native-masked-text";
 
 import { styles } from "../../styles/global";
 
@@ -49,6 +50,17 @@ export const IconContainer = styled.View<{ hasMargin: boolean }>`
 `;
 
 export const StyledInput = styled.TextInput<InputProps>`
+  height: ${(props) => (props.multilineStyle ? 80 : inputHeight)}px;
+  width: ${(props) => (props.width ? props.width : 100)}%;
+
+  font-family: ${styles.fonts.epilogueRegular};
+  font-size: 14px;
+  color: ${styles.colors.text};
+
+  padding: 0 ${(props) => (props.padding ? props.padding : 10)}px;
+`;
+
+export const StyledMaskInput = styled(TextInputMask)<InputProps>`
   height: ${(props) => (props.multilineStyle ? 80 : inputHeight)}px;
   width: ${(props) => (props.width ? props.width : 100)}%;
 

@@ -23,6 +23,7 @@ type User = {
   lastDisabledBy: string;
   lastUpdatedBy: string;
   createdBy: string;
+  plan?: any;
 };
 
 type SignInPayload = {

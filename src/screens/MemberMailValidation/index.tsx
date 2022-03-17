@@ -88,6 +88,7 @@ export function MemberMailValidation() {
             value={cpf}
             onChangeText={(text) => handleInputChangeText(text, "e-mail")}
             error={cpfError}
+            type="cpf"
           />
 
           <Button title="Continuar" onPress={handleCpfValidation} />

@@ -4,7 +4,16 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { handlePhoneVibration } from "../../helpers/device.helper";
 
-import { Container, ErrorText, IconContainer, InputContainer, Label, PasswordButton, StyledInput } from "./styles";
+import {
+  Container,
+  ErrorText,
+  IconContainer,
+  InputContainer,
+  Label,
+  PasswordButton,
+  StyledInput,
+  StyledMaskInput,
+} from "./styles";
 
 import { styles } from "../../styles/global";
 
@@ -12,7 +21,7 @@ type InputProps = TextInputProps & {
   label: string;
   hasLabel?: boolean;
   icon?: keyof typeof Ionicons.glyphMap;
-  type?: "default" | "password" | "modal";
+  type?: "default" | "password" | "modal" | "cpf";
   iconHasMargin?: boolean;
   error?: boolean;
   width?: number;
@@ -71,17 +80,31 @@ export function Input({
           </IconContainer>
         )}
 
-        <StyledInput
-          {...rest}
-          editable={rest.editable && type !== "modal"}
-          multilineStyle={rest.multiline}
-          width={inputWidth}
-          padding={inputPadding}
-          placeholderTextColor="#a1a1a1"
-          secureTextEntry={type === "password" ? secureTextEntry : false}
-          selectionColor="#616161"
-          textAlignVertical={rest.multiline ? "top" : "auto"}
-        />
+        {type === "cpf" ? (
+          <StyledMaskInput
+            {...rest}
+            type="cpf"
+            editable={rest.editable}
+            multilineStyle={rest.multiline}
+            width={inputWidth}
+            padding={inputPadding}
+            placeholderTextColor="#a1a1a1"
+            selectionColor="#616161"
+            textAlignVertical={rest.multiline ? "top" : "auto"}
+          />
+        ) : (
+          <StyledInput
+            {...rest}
+            editable={rest.editable && type !== "modal"}
+            multilineStyle={rest.multiline}
+            width={inputWidth}
+            padding={inputPadding}
+            placeholderTextColor="#a1a1a1"
+            secureTextEntry={type === "password" ? secureTextEntry : false}
+            selectionColor="#616161"
+            textAlignVertical={rest.multiline ? "top" : "auto"}
+          />
+        )}
 
         {type === "password" && (
           <PasswordButton activeOpacity={0.6} onPress={toggleSecureTextEntry} disabled={!rest.editable}>
