@@ -37,6 +37,7 @@ import {
 import { api } from "../../services/api.service";
 import { useAuth } from "../../contexts/AuthContext";
 import { ErrorModal } from "../../components/ErrorModal";
+import { checkPermission } from "../../helpers/permissions.helper";
 
 type MemberProps = {
   id: string;
@@ -107,10 +108,18 @@ export function Activities() {
     statusName = "Status";
   }
 
-  function handleNavigateToDetails(params?: any) {
+  async function handleNavigateToDetails(params?: any) {
     if (isMember) {
       return;
     }
+
+    if (user) {
+      if (!checkPermission("create_activities", user.permissions)) {
+        setError("Sem permissão de incluir/editar atividades");
+        return;
+      }
+    }
+
     handleSelectActivity(null);
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
@@ -131,6 +140,20 @@ export function Activities() {
     if (activity.status !== "open") {
       setError("A atividade já está fechada ou cancelada");
       return;
+    }
+
+    if (user) {
+      if (status === "cancelled") {
+        if (!checkPermission("cancel_activities", user.permissions)) {
+          setError("Sem permissão para cancelar atividades");
+          return;
+        }
+      } else {
+        if (!checkPermission("edit_activities", user.permissions)) {
+          setError("Sem permissão para encerrar atividades");
+          return;
+        }
+      }
     }
 
     const parsedItems = activity.items.map((item) => {
