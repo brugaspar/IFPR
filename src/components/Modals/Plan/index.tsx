@@ -1,7 +1,8 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
+import { api } from "../../../services/api.service";
 import { ModalHeader } from "../../ModalHeader";
 
 import { ModalView } from "../../ModalView";
@@ -20,7 +21,7 @@ type PlansModalProps = {
   setSelectedPlan: (plan: PlanProps | null) => void;
 };
 
-const plans = [
+/*const plans = [
   {
     id: "gold-plan",
     name: "Plano Ouro",
@@ -36,10 +37,13 @@ const plans = [
     name: "Plano Bronze",
     value: 1000,
   },
-];
+];*/
 
 export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansModalProps) {
-  function handleSelectStatus(plan: PlanProps) {
+  
+  const [plans, setPlans] = useState<PlanProps[]>([]);
+  
+  function handleSelectPlan(plan: PlanProps) {
     if (selectedPlan?.id !== plan.id) {
       setSelectedPlan(plan);
     }
@@ -47,7 +51,7 @@ export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansMod
     modalRef.current?.close();
   }
 
-  function handleCleanStatus() {
+  function handleCleanPlan() {
     if (selectedPlan !== null) {
       setSelectedPlan(null);
     }
@@ -55,10 +59,21 @@ export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansMod
     modalRef.current?.close();
   }
 
+  async function loadPlans() {
+    const response = await api.get("/plans");
+
+    setPlans(response.data);
+    
+  }
+
+  useEffect(() => {
+    loadPlans();
+  }, []);
+
   return (
     <ModalView modalRef={modalRef} height={500}>
       <Container>
-        <ModalHeader title="Selecione um plano" onCleanFilter={handleCleanStatus} />
+        <ModalHeader title="Selecione um plano" onCleanFilter={handleCleanPlan} />
 
         <Separator />
 
@@ -68,7 +83,7 @@ export function PlansModal({ modalRef, selectedPlan, setSelectedPlan }: PlansMod
           renderItem={({ item, index }) => (
             <PlanCard
               selectedPlanId={selectedPlan ? selectedPlan.id : null}
-              selectPlan={handleSelectStatus}
+              selectPlan={handleSelectPlan}
               plan={item}
               index={index}
               total={plans.length}

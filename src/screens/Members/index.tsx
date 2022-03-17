@@ -115,6 +115,7 @@ export function Members() {
         if (item.plan.id) {
           const itemData = item.plan.id.toUpperCase();
           const textData = plan.id.toUpperCase();
+
           return itemData.indexOf(textData) > -1;
         }
       });
@@ -129,6 +130,8 @@ export function Members() {
       setPlan(plan);
     }
   }, [name, status, plan, members.length, reload]);
+
+
 
   return (
     <>
