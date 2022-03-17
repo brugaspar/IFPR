@@ -51,8 +51,6 @@ export function Dashboard() {
     return unsubscribe;
   }, [reload]);
 
-  setTimeout(() => setReload(!reload), 500);
-
   return (
     <Container>
       <VerticalScroll>

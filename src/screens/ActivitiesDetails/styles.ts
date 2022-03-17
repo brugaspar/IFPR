@@ -82,6 +82,6 @@ export const ConfirmButton = styled.TouchableOpacity`
 
 export const ConfirmButtonText = styled.Text`
   font-family: ${styles.fonts.epilogueMedium};
-  font-size: 16px;
+  font-size: 18px;
   color: ${styles.colors.background};
 `;

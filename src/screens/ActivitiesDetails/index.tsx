@@ -184,9 +184,11 @@ export function ActivitiesDetails() {
         </Items>
       </ScrollView>
 
-      <ConfirmButton activeOpacity={0.8}>
-        <ConfirmButtonText>Salvar</ConfirmButtonText>
-      </ConfirmButton>
+      {canEdit && (
+        <ConfirmButton activeOpacity={0.8}>
+          <ConfirmButtonText>Salvar</ConfirmButtonText>
+        </ConfirmButton>
+      )}
     </Container>
   );
 }
