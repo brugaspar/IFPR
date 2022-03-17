@@ -40,7 +40,7 @@ Sumario
   
 
 ## Equipe
-  A time de desenvolvimento da Mark One, é composta pelos 3(três) acadêmicos do Instituto Federal do Paraná - Campus Foz do Iguaçu
+  O time de desenvolvimento da Mark One, é composta pelos 3(três) acadêmicos do Instituto Federal do Paraná - Campus Foz do Iguaçu:
   <div align="center">
 	<img src="https://user-images.githubusercontent.com/53586550/158857889-08294966-5a49-403d-a4b7-6c9716f65ca6.png" height="200px" padding="50px">
 </div>
