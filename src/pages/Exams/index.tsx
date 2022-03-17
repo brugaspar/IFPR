@@ -1,11 +1,13 @@
 import moment from "moment";
-
+import { useEffect, useState } from "react";
 import { Button } from "../../components/Button";
 import { Separator } from "../../components/Separator";
+import { ExamsModal } from "../../components/ExamsModal";
 
 import { Container } from "./styles";
 
 export function Exams() {
+  const [ examsModalIsOpen, setExamsModalIsOpen] = useState(false);
   const exams = [
     {
       id: "1",
@@ -32,11 +34,20 @@ export function Exams() {
     },
   ];
 
+  function handleExamsModal() {
+    setExamsModalIsOpen(true);
+  }
+
+  function handleCloseExamsModal() {
+    setExamsModalIsOpen(false);
+  }
+
   return (
     <Container>
+      <ExamsModal isOpen={examsModalIsOpen} setIsOpen={handleCloseExamsModal} />
       <div className="flex-div">
         <h1>Lista de provas</h1>
-        <Button>Nova prova</Button>
+        <Button onClick={handleExamsModal} >Nova prova</Button>
       </div>
       <Separator />
       <table>
