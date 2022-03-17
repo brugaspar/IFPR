@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
@@ -23,6 +23,10 @@ import {
   Title,
 } from "./styles";
 import { styles } from "../../styles/global";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { MemberModal } from "../../components/Modals/Member";
+import { UserModal } from "../../components/Modals/User";
+import { ProductModal } from "../../components/Modals/Product";
 
 type Item = {
   id: string;
@@ -40,6 +44,13 @@ type Member = {
 type Seller = {
   id: string;
   name: string;
+};
+
+type ProductProps = {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
 };
 
 type RouteProps = {
@@ -92,11 +103,34 @@ export function ActivitiesDetails() {
   const [activityId, setActivityId] = useState("");
   const [activityStatus, setActivityStatus] = useState("open");
 
+  const memberRef = useRef<RBSheet>(null);
+  const sellerRef = useRef<RBSheet>(null);
+  const productRef = useRef<RBSheet>(null);
+
   const [member, setMember] = useState<Member | null>(null);
   const [seller, setSeller] = useState<Seller | null>(null);
   const [items, setItems] = useState<Item[]>([]);
+  const [product, setProduct] = useState<ProductProps | null>(null);
 
   const [observation, setObservation] = useState("");
+
+
+  function handleOpenModal(modal: "member" | "seller" | "product") {
+    switch (modal) {
+      case "seller": {
+        sellerRef.current?.open();
+        break;
+      }
+      case "product": {
+        productRef.current?.open();
+        break;
+      }
+      case "member": {
+        memberRef.current?.open();
+        break;
+      }
+    }
+  }
 
   const activityLabel = activityStatus === "open" ? "Editando atividade" : "Visualizando atividade";
   const canEdit = activityStatus === "open";
@@ -116,6 +150,7 @@ export function ActivitiesDetails() {
   }, []);
 
   return (
+    <>
     <Container>
       <Row mb>
         <BackButton activeOpacity={0.6} onPress={navigation.goBack}>
@@ -125,8 +160,8 @@ export function ActivitiesDetails() {
       </Row>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 52 }} showsVerticalScrollIndicator={false}>
-        <Input value={member?.name || ""} label="Membro" placeholder={"Selecione o membro"} type="modal" editable={canEdit} />
-        <Input value={seller?.name || ""} label="Vendedor" placeholder={"Selecione o vendedor"} type="modal" editable={canEdit} />
+        <Input value={member?.name || ""} label="Membro" placeholder={"Selecione o membro"} type="modal" editable={canEdit}  onPress={() => handleOpenModal("member")} />
+        <Input value={seller?.name || ""} label="Vendedor" placeholder={"Selecione o vendedor"} type="modal" editable={canEdit} onPress={() => handleOpenModal("seller")} />
 
         <Input
           label={`Observações | ${observation.length}/255`}
@@ -138,7 +173,7 @@ export function ActivitiesDetails() {
           value={observation}
         />
 
-        <Input label="Produto" placeholder="Selecione o produto" type="modal" editable={canEdit} />
+        <Input value={product?.name || ""} label="Produto" placeholder="Selecione o produto" type="modal" editable={canEdit} onPress={() => handleOpenModal("product")}/>
 
         <Row>
           <Input label="Preço" placeholder="Informe o preço" width={48.5} keyboardType="numeric" editable={canEdit} />
@@ -188,5 +223,10 @@ export function ActivitiesDetails() {
         <ConfirmButtonText>Salvar</ConfirmButtonText>
       </ConfirmButton>
     </Container>
+
+  <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
+  <UserModal modalRef={sellerRef} selectedUser={seller} setSelectedUser={setSeller} />
+  <ProductModal modalRef={productRef} selectedProduct={product} setSelectedProduct={setProduct} />
+  </>
   );
 }

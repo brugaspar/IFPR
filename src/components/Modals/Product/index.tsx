@@ -13,6 +13,8 @@ import { Container, ProductCardContainer, ProductCardIndex, ProductCardText, Pro
 type ProductProps = {
   id: string;
   name: string;
+  quantity: number;
+  price: number;
 };
 
 type ProductsModalProps = {
