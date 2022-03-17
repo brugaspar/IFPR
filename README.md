@@ -1,8 +1,11 @@
-# MARK ONE - Mobile
-<!-- LOGO MARK ONE -->
+<!-- # MARK ONE - Mobile -->
+<div align="center">
+<img src="https://user-images.githubusercontent.com/53586550/158836261-f427c2a5-c802-40e4-9c2d-1b6c30da7fe5.png" width="700px" />
+</div>
+
 
 ## Descrição do Projeto
-  <p>Sistema administrativo para clubes de tiro</p>
+  <p>Sistema administrativo para clubes de tiro - aplicação mobile</p>
 
 Sumario
 =================
@@ -17,6 +20,7 @@ Sumario
 
 
   ## Sobre
+  
   <p>
     O Mark One - Mobile trata-se de um aplicativo multiplataforma, para complementar e auxiliar a gestão de um clube de tiro. 
   </p> 
@@ -26,18 +30,21 @@ Sumario
 	    A atuação de um clube de tiro no mercado é de vital dependência de uma estrutura burocrática e administrativa que requer um controle bem específico e rigoroso de 
     seus membros, bem como as atividades exercidas por eles dentro das dependências do clube. Além disso, existem ainda outras atividades dentro desse ramo que 
     necessitam de um gerenciamento que possibilite maior eficácia e agilidade em meio à seus respectivos processos, como por exemplo, a venda de produtos.
-	</p> 
+</p> 
   <p>  
     O objetivo de criar o aplicativo é para trazer facilidade no dia a dia dos colaboradores, onde poderão usar o aplicativo em qualquer lugar dentro do clube, não sendo
     necessário um computador para consultar dados ou incluir atividades para os membros. O desenvolvimento dessa ferramenta,  tem a proposta de gerir e suprir as 
     necessidades identificadas, a fim de levar ao mercado uma plataforma de gestão flexível que atenda a diversidade de situações que possam surgir nesse ramo, como 
     o controle dos produtos, planos oferecidos, membros assim como, suas atividades exercidas dentro do clube.
-	</p>
+</p>
   
 
 ## A Equipe
   A time de desenvolvimento da Mark One, é composta pelos 3(três) acadêmicos do Instituto Federal do Paraná - Campus Foz do Iguaçu
-  
+  <div align="center">
+	<img src="https://user-images.githubusercontent.com/53586550/158848733-45e048cf-f332-4d43-bda6-f55d8766aa6d.png" height="200px" padding="50px">
+</div>
+
 ## Pre-requisitos
 
 Antes de começar, verifique se você atendeu aos seguintes requisitos:
