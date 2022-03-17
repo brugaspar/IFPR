@@ -189,6 +189,7 @@ class MembersRepository {
         m.last_disabled_by,
         m.last_updated_by,
         m.created_by,
+        m.plan_id,
         (select u.name from users u where u.id = m.last_disabled_by) disabled_by_user,
         p.name plan_name
       from
