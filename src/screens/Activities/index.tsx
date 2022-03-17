@@ -31,9 +31,12 @@ import {
   TotalCardHighlight,
   TotalCardContainer,
   TotalCardButton,
+  SelectedContainer,
+  SelectedContainerRow,
 } from "./styles";
 import { api } from "../../services/api.service";
 import { useAuth } from "../../contexts/AuthContext";
+import { ErrorModal } from "../../components/ErrorModal";
 
 type MemberProps = {
   id: string;
@@ -62,6 +65,17 @@ export function Activities() {
 
   const activitiesTotal = filteredData?.reduce((acc, activity) => acc + activity.total, 0) || 0;
   const total = formatCurrency(activitiesTotal);
+
+  const [selectedActivity, setSelectActivity] = useState<ActivityProps | null>(null);
+  const [error, setError] = useState("");
+
+  function handleSelectActivity(activity: ActivityProps | null) {
+    if (activity?.id === selectedActivity?.id) {
+      setSelectActivity(null);
+    } else {
+      setSelectActivity(activity);
+    }
+  }
 
   function handleOpenModal(modal: "status" | "date" | "member") {
     switch (modal) {
@@ -97,6 +111,7 @@ export function Activities() {
     if (isMember) {
       return;
     }
+    handleSelectActivity(null);
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
@@ -112,9 +127,34 @@ export function Activities() {
     setReload(!reload);
   }
 
+  async function handleUpdateActivity(activity: ActivityProps, status: "cancelled" | "closed") {
+    if (activity.status !== "open") {
+      setError("A atividade já está fechada ou cancelada");
+      return;
+    }
+
+    const parsedItems = activity.items.map((item) => {
+      return {
+        id: item.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        subtotal: item.subtotal,
+        activityId: item.activityId,
+      };
+    });
+
+    await api.put(`activities/${activity.id}`, {
+      status,
+      items: parsedItems,
+    });
+    setSelectActivity(null);
+    setReload(!reload);
+  }
+
   useEffect(() => {
     loadActivities();
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     let newData = activities;
@@ -178,7 +218,7 @@ export function Activities() {
         <FilterWrapper>
           <Filter title={activityStatus ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
           {!isMember && <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />}
-          <Filter title="Data" ml />
+          {/* <Filter title="Data" ml /> */}
         </FilterWrapper>
 
         <FlatList
@@ -190,11 +230,13 @@ export function Activities() {
               index={index}
               total={activities.length}
               handleNavigateToDetails={handleNavigateToDetails}
+              handleSelectActivity={handleSelectActivity}
+              selectedActivity={selectedActivity}
             />
           )}
           showsVerticalScrollIndicator={false}
           style={{
-            marginBottom: -16,
+            marginBottom: selectedActivity ? 46 : -16,
           }}
           refreshControl={
             <RefreshControl
@@ -205,6 +247,27 @@ export function Activities() {
             />
           }
         />
+
+        {selectedActivity && (
+          <SelectedContainer>
+            <Ionicons name="close" color={styles.colors.red} size={40} onPress={() => handleSelectActivity(null)} />
+            <SelectedContainerRow>
+              <Ionicons
+                name="trash-bin-outline"
+                color={styles.colors.red}
+                size={30}
+                onPress={() => handleUpdateActivity(selectedActivity, "cancelled")}
+              />
+              <Ionicons
+                style={{ marginLeft: 16, marginBottom: 3 }}
+                name="checkmark"
+                color={styles.colors.green}
+                size={40}
+                onPress={() => handleUpdateActivity(selectedActivity, "closed")}
+              />
+            </SelectedContainerRow>
+          </SelectedContainer>
+        )}
       </Container>
 
       <ActivityStatusModal
@@ -213,6 +276,7 @@ export function Activities() {
         setSelectedActivityStatus={setActivityStatus}
       />
       <MemberModal modalRef={memberRef} selectedMember={member} setSelectedMember={setMember} />
+      <ErrorModal error={error} setError={setError} />
     </>
   );
 }
@@ -234,16 +298,34 @@ type ActivityProps = {
   createdAt: string;
   cancelledAt?: string;
   finishedAt?: string;
+  items: {
+    id: string;
+    productId: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+    name: string;
+    activityId: string;
+  }[];
 };
 
 type ActivityCardProps = {
   activity: ActivityProps;
+  selectedActivity: ActivityProps | null;
   index: number;
   total: number;
   handleNavigateToDetails: (params: any) => void;
+  handleSelectActivity: (activity: ActivityProps | null) => void;
 };
 
-function ActivityCard({ activity, index, total, handleNavigateToDetails }: ActivityCardProps) {
+function ActivityCard({
+  activity,
+  index,
+  total,
+  handleNavigateToDetails,
+  handleSelectActivity,
+  selectedActivity,
+}: ActivityCardProps) {
   const createdAt = moment(activity.createdAt).format("DD/MM/YYYY");
   const finishedAt = moment(activity.finishedAt).format("DD/MM/YYYY");
   const cancelledAt = moment(activity.cancelledAt).format("DD/MM/YYYY");
@@ -256,8 +338,15 @@ function ActivityCard({ activity, index, total, handleNavigateToDetails }: Activ
     closed: "Encerrada",
   };
 
+  const selected = selectedActivity?.id === activity.id;
+
   return (
-    <ActivityCardContainer activeOpacity={0.6} onPress={() => handleNavigateToDetails(activity)}>
+    <ActivityCardContainer
+      activeOpacity={0.6}
+      onPress={() => (selectedActivity ? handleSelectActivity(null) : handleNavigateToDetails(activity))}
+      onLongPress={() => handleSelectActivity(activity)}
+      style={{ borderWidth: 1, borderColor: selected ? styles.colors.green : "transparent" }}
+    >
       <ActivityCardTitle>{activity.member.name}</ActivityCardTitle>
 
       <ActivityCardSeparator />

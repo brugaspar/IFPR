@@ -16,18 +16,31 @@ type ProductProps = {
   quantity: number;
   price: number;
 };
+type Item = {
+  id: string;
+  activityId: string;
+  productId: string;
+  quantity: string;
+  price: string;
+  subtotal: string;
+  product: {
+    name?: string;
+    quantity?: string;
+  };
+  name?: string;
+};
 
 type ProductsModalProps = {
   modalRef: MutableRefObject<any>;
-  selectedProduct: ProductProps | null;
-  setSelectedProduct: (product: ProductProps | null) => void;
+  selectedProduct: Item | null;
+  setSelectedProduct: (product: Item | null) => void;
 };
 
 export function ProductModal({ modalRef, selectedProduct, setSelectedProduct }: ProductsModalProps) {
   const [text, setText] = useState("");
 
-  const [products, setProducts] = useState<ProductProps[]>([]);
-  const [filteredData, setFilteredData] = useState<ProductProps[] | null>(null);
+  const [products, setProducts] = useState<Item[]>([]);
+  const [filteredData, setFilteredData] = useState<Item[] | null>(null);
 
   const searchFilter = (text: string) => {
     if (text) {
@@ -46,7 +59,7 @@ export function ProductModal({ modalRef, selectedProduct, setSelectedProduct }: 
     }
   };
 
-  function handleSelectStatus(product: ProductProps) {
+  function handleSelectStatus(product: Item) {
     if (selectedProduct?.id !== product.id) {
       setSelectedProduct(product);
     }
@@ -115,15 +128,14 @@ export function ProductModal({ modalRef, selectedProduct, setSelectedProduct }: 
 // PlanCard
 
 type ProductCardProps = {
-  product: ProductProps;
+  product: Item;
   index: number;
   total: number;
   selectedProductId: string | null;
-  selectProduct: (Product: ProductProps) => void;
+  selectProduct: (Product: Item) => void;
 };
 
 function ProductCard({ product, index, total, selectProduct, selectedProductId }: ProductCardProps) {
-
   return (
     <ProductCardContainer selected={selectedProductId === product.id} activeOpacity={0.7} onPress={() => selectProduct(product)}>
       <Row>

@@ -32,6 +32,26 @@ export const TotalCardHighlight = styled.Text`
 
 export const TotalCardButton = styled.TouchableOpacity``;
 
+export const SelectedContainer = styled.View`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: ${styles.colors.background};
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-top-width: 1px;
+  border-color: ${styles.colors.line};
+`;
+
+export const SelectedContainerRow = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
 // ActivityCard
 
 type ActivityCardStatusCircleProps = {

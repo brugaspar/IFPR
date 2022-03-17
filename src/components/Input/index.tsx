@@ -89,7 +89,7 @@ export function Input({
           </PasswordButton>
         )}
         {type === "modal" && (
-          <PasswordButton activeOpacity={0.6} onPress={toggleSecureTextEntry} disabled={!rest.editable}>
+          <PasswordButton activeOpacity={0.6} onPress={onPress} disabled={!rest.editable}>
             <Ionicons name="chevron-down" color={styles.colors.text} size={18} />
           </PasswordButton>
         )}
