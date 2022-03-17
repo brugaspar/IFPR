@@ -1,8 +1,9 @@
 {
   "v1.0.0": {
-    "description": "Primeira versão, apenas com dados estáticos. Finalizado todas as listagens e navegação.",
-    "majorVersion": "1.0.0 (2022.2.21.1)",
-    "released": "2022-02-21",
-    "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default"
+    "description": "Primeira versão utilizável em produção. Finalizado todos os módulos.",
+    "majorVersion": "1.0.0 (2022.3.17.1)",
+    "released": "2022-03-17",
+    "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default",
+    "download": ""
   }
 }

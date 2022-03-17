@@ -29,7 +29,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#131313"
-      }
+      },
+      "package": "com.markone.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
