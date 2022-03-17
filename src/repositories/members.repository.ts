@@ -308,6 +308,9 @@ class MembersRepository {
       where: {
         cpf,
       },
+      include: {
+        plan: true,
+      },
     });
 
     return member;
