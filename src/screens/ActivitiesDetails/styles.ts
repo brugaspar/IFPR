@@ -68,3 +68,20 @@ export const ItemsButton = styled.TouchableOpacity.attrs({
   padding: 5px;
   margin: 0 0 4px 8px;
 `;
+
+export const ConfirmButton = styled.TouchableOpacity`
+  background: ${styles.colors.green};
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ConfirmButtonText = styled.Text`
+  font-family: ${styles.fonts.epilogueMedium};
+  font-size: 16px;
+  color: ${styles.colors.background};
+`;

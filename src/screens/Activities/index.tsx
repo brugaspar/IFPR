@@ -33,6 +33,7 @@ import {
   TotalCardButton,
 } from "./styles";
 import { api } from "../../services/api.service";
+import { useAuth } from "../../contexts/AuthContext";
 
 type MemberProps = {
   id: string;
@@ -46,6 +47,7 @@ type ActivityStatusProps = {
 
 export function Activities() {
   const navigation = useNavigation();
+  const { isMember, user } = useAuth();
 
   const [activities, setActivities] = useState<ActivityProps[]>([]);
 
@@ -53,7 +55,7 @@ export function Activities() {
   const memberRef = useRef<RBSheet>(null);
 
   const [activityStatus, setActivityStatus] = useState<ActivityStatusProps | null>({ id: "open", name: "Aberta" });
-  const [member, setMember] = useState<MemberProps | null>(null);
+  const [member, setMember] = useState<MemberProps | null>(isMember ? user : null);
   const [reload, setReload] = useState(false);
 
   const [filteredData, setFilteredData] = useState<ActivityProps[] | null>(null);
@@ -92,11 +94,15 @@ export function Activities() {
   }
 
   function handleNavigateToDetails(params?: any) {
+    if (isMember) {
+      return;
+    }
     navigation.navigate("ActivitiesDetails" as never, { activity: params } as never);
   }
 
   async function loadActivities() {
-    const response = await api.get("/activities", {
+    const uri = isMember ? "/activities-members" : "/activities";
+    const response = await api.get(uri, {
       params: {
         onlyEnabled: false,
       },
@@ -162,14 +168,16 @@ export function Activities() {
             <TotalCardHighlight>{total}</TotalCardHighlight>
           </TotalCardContainer>
 
-          <TotalCardButton activeOpacity={0.8} onPress={() => handleNavigateToDetails()}>
-            <Ionicons name="add-outline" size={40} color={styles.colors.text} />
-          </TotalCardButton>
+          {!isMember && (
+            <TotalCardButton activeOpacity={0.8} onPress={() => handleNavigateToDetails()}>
+              <Ionicons name="add-outline" size={40} color={styles.colors.text} />
+            </TotalCardButton>
+          )}
         </TotalCard>
 
         <FilterWrapper>
           <Filter title={activityStatus ? statusName : "Status"} onPress={() => handleOpenModal("status")} />
-          <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />
+          {!isMember && <Filter title={member ? member.name : "Membro"} ml onPress={() => handleOpenModal("member")} />}
           <Filter title="Data" ml />
         </FilterWrapper>
 

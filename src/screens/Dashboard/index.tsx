@@ -21,17 +21,23 @@ type TotalsProps = {
 };
 
 export function Dashboard() {
-  const { isMember } = useAuth();
+  const { isMember, user } = useAuth();
   const navigation = useNavigation();
 
   const [data, setData] = useState<TotalsProps | null>(null);
   const [reload, setReload] = useState(false);
 
-  const ticket = formatCurrency((data?.activitiesTotal || 0) / (data?.activitiesCount || 1));
+  const activitiesCount = (data?.activitiesCount || 0) - (data?.activitiesOpen || 0);
+
+  const ticket = formatCurrency((data?.activitiesTotal || 0) / (activitiesCount || 1));
 
   useEffect(() => {
     async function loadTotals() {
-      const response = await api.get("/totals");
+      const response = await api.get("/totals", {
+        params: {
+          memberId: isMember ? user?.id : null,
+        },
+      });
 
       setData(response.data);
     }
@@ -68,29 +74,33 @@ export function Dashboard() {
           <Value>{data?.activitiesCount || 0}</Value>
         </FullCard>
 
-        <Row>
-          <HalfCard>
-            <Title mb>Membros{"\n"}cadastrados</Title>
-            <Value>{data?.membersCount || 0}</Value>
-          </HalfCard>
+        {!isMember && (
+          <>
+            <Row>
+              <HalfCard>
+                <Title mb>Membros{"\n"}cadastrados</Title>
+                <Value>{data?.membersCount || 0}</Value>
+              </HalfCard>
 
-          <HalfCard>
-            <Title mb>Usuários{"\n"}cadastrados</Title>
-            <Value>{data?.usersCount || 0}</Value>
-          </HalfCard>
-        </Row>
+              <HalfCard>
+                <Title mb>Usuários{"\n"}cadastrados</Title>
+                <Value>{data?.usersCount || 0}</Value>
+              </HalfCard>
+            </Row>
 
-        <Row>
-          <HalfCard>
-            <Title mb>Planos{"\n"}cadastrados</Title>
-            <Value>{data?.plansCount || 0}</Value>
-          </HalfCard>
+            <Row>
+              <HalfCard>
+                <Title mb>Planos{"\n"}cadastrados</Title>
+                <Value>{data?.plansCount || 0}</Value>
+              </HalfCard>
 
-          <HalfCard>
-            <Title mb>Produtos{"\n"}cadastrados</Title>
-            <Value>{data?.productsCount || 0}</Value>
-          </HalfCard>
-        </Row>
+              <HalfCard>
+                <Title mb>Produtos{"\n"}cadastrados</Title>
+                <Value>{data?.productsCount || 0}</Value>
+              </HalfCard>
+            </Row>
+          </>
+        )}
 
         <FullCard>
           <Title>Ticket{"\n"}médio</Title>
