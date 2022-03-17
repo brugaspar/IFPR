@@ -1,6 +1,6 @@
 <!-- # MARK ONE - Mobile -->
 <div align="center">
-<img src="https://user-images.githubusercontent.com/53586550/158836261-f427c2a5-c802-40e4-9c2d-1b6c30da7fe5.png" width="700px" />
+<img src="https://user-images.githubusercontent.com/53586550/158857723-acd102b8-abb7-4a01-a7de-59ce4d7a044e.png" width="700px" />
 </div>
 
 
@@ -42,7 +42,7 @@ Sumario
 ## A Equipe
   A time de desenvolvimento da Mark One, é composta pelos 3(três) acadêmicos do Instituto Federal do Paraná - Campus Foz do Iguaçu
   <div align="center">
-	<img src="https://user-images.githubusercontent.com/53586550/158848733-45e048cf-f332-4d43-bda6-f55d8766aa6d.png" height="200px" padding="50px">
+	<img src="https://user-images.githubusercontent.com/53586550/158857889-08294966-5a49-403d-a4b7-6c9716f65ca6.png" height="200px" padding="50px">
 </div>
 
 ## Pre-requisitos
