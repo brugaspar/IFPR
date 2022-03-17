@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
+import { useAuth } from "../../../contexts/AuthContext";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
 import { api } from "../../../services/api.service";
@@ -22,6 +23,8 @@ type UsersModalProps = {
 };
 
 export function UserModal({ modalRef, selectedUser, setSelectedUser }: UsersModalProps) {
+  const { isMember } = useAuth();
+
   const [text, setText] = useState("");
 
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -66,7 +69,9 @@ export function UserModal({ modalRef, selectedUser, setSelectedUser }: UsersModa
       setUsers(response.data);
       setFilteredData(response.data);
     }
-    loadUsers();
+    if (!isMember) {
+      loadUsers();
+    }
   }, []);
 
   return (

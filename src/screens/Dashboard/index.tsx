@@ -49,7 +49,7 @@ export function Dashboard() {
     });
 
     return unsubscribe;
-  }, [reload]);
+  }, [reload, isMember]);
 
   return (
     <Container>

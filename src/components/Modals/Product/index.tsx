@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect, useState } from "react";
 import { FlatList } from "react-native";
+import { useAuth } from "../../../contexts/AuthContext";
 
 import { formatCurrency } from "../../../helpers/strings.helper";
 import { api } from "../../../services/api.service";
@@ -37,6 +38,7 @@ type ProductsModalProps = {
 };
 
 export function ProductModal({ modalRef, selectedProduct, setSelectedProduct }: ProductsModalProps) {
+  const { isMember } = useAuth();
   const [text, setText] = useState("");
 
   const [products, setProducts] = useState<Item[]>([]);
@@ -81,7 +83,9 @@ export function ProductModal({ modalRef, selectedProduct, setSelectedProduct }: 
       setProducts(response.data);
       setFilteredData(response.data);
     }
-    loadProducts();
+    if (!isMember) {
+      loadProducts();
+    }
   }, []);
 
   return (

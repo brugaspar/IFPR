@@ -75,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function signIn({ username, password, keepConnected, isMember = false }: SignInPayload) {
-    setSignInLoading(true);
+    // setSignInLoading(true);
     const response = await api.post("authenticate", {
       username,
       password,
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsMember(false);
       await AsyncStorage.removeItem("@mark-one:isMember");
     }
-    setSignInLoading(false);
+    // setSignInLoading(false);
   }
 
   async function signOut() {

@@ -71,6 +71,10 @@ export function Activities() {
   const [error, setError] = useState("");
 
   function handleSelectActivity(activity: ActivityProps | null) {
+    if (isMember) {
+      return;
+    }
+
     if (activity?.id === selectedActivity?.id) {
       setSelectActivity(null);
     } else {
@@ -109,11 +113,7 @@ export function Activities() {
   }
 
   async function handleNavigateToDetails(params?: any) {
-    if (isMember) {
-      return;
-    }
-
-    if (user) {
+    if (!isMember && user) {
       if (!checkPermission("create_activities", user.permissions)) {
         setError("Sem permissão de incluir/editar atividades");
         return;
@@ -172,12 +172,13 @@ export function Activities() {
       items: parsedItems,
     });
     setSelectActivity(null);
-    setReload(!reload);
+    // setReload(!reload);
+    loadActivities();
   }
 
   useEffect(() => {
     loadActivities();
-  }, [reload]);
+  }, []);
 
   useEffect(() => {
     let newData = activities;

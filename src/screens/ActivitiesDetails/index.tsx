@@ -29,6 +29,7 @@ import { UserModal } from "../../components/Modals/User";
 import { ProductModal } from "../../components/Modals/Product";
 import { ErrorModal } from "../../components/ErrorModal";
 import { api } from "../../services/api.service";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Item = {
   id: string;
@@ -74,6 +75,8 @@ type RouteProps = {
 export function ActivitiesDetails() {
   const route = useRoute();
   const navigation = useNavigation();
+  const { isMember } = useAuth();
+
   const [activityId, setActivityId] = useState("");
   const [activityStatus, setActivityStatus] = useState("open");
   const [error, setError] = useState("");
@@ -252,7 +255,7 @@ export function ActivitiesDetails() {
   }
 
   const activityLabel = activityStatus === "open" ? "Editando atividade" : "Visualizando atividade";
-  const canEdit = activityStatus === "open";
+  const canEdit = !isMember && activityStatus === "open";
 
   useEffect(() => {
     if (route.params) {
@@ -359,12 +362,16 @@ export function ActivitiesDetails() {
                   <Row>
                     <ItemCardTitle />
                     <Row>
-                      <ItemsButton onPress={() => handleEditItem(item)} disabled={!canEdit}>
-                        <Ionicons name="brush" size={15} color={styles.colors.blue} />
-                      </ItemsButton>
-                      <ItemsButton onPress={() => handleRemoveItem(item)} disabled={!canEdit}>
-                        <Ionicons name="trash-bin" size={15} color={styles.colors.red} />
-                      </ItemsButton>
+                      {!isMember && (
+                        <>
+                          <ItemsButton onPress={() => handleEditItem(item)} disabled={!canEdit}>
+                            <Ionicons name="brush" size={15} color={styles.colors.blue} />
+                          </ItemsButton>
+                          <ItemsButton onPress={() => handleRemoveItem(item)} disabled={!canEdit}>
+                            <Ionicons name="trash-bin" size={15} color={styles.colors.red} />
+                          </ItemsButton>
+                        </>
+                      )}
                     </Row>
                   </Row>
                   <Row>
