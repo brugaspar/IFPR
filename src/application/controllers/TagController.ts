@@ -40,7 +40,7 @@ export class TagController {
       throw new AppError("Essa tag não existe");
     }
 
-    if (name) {
+    if (name && name !== tagExists.name) {
       const nameAlreadyExists = await this.tagRepository.findByName(name.trim());
 
       if (nameAlreadyExists) {

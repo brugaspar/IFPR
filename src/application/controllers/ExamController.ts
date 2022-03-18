@@ -43,27 +43,27 @@ export class ExamController {
 
     let difficulties: QuestionDifficulty[] = ["easy", "medium", "hard"];
 
-    if (questionsDifficulties) {
+    if (questionsDifficulties.length > 0) {
       difficulties = questionsDifficulties;
     }
 
     let tags: string[];
 
-    if (questionsTags) {
+    if (questionsTags.length > 0) {
       tags = questionsTags;
     }
 
     let types: QuestionType[] = ["open", "single", "multiple"];
 
-    if (questionsTypes) {
+    if (questionsTypes.length > 0) {
       types = questionsTypes;
     }
 
     const count = await this.questionRepository.findCount();
 
-    let records = questionsQuantity;
+    let records = Number(questionsQuantity);
 
-    if (count < questionsQuantity) {
+    if (count < Number(questionsQuantity)) {
       records = count;
     }
 
