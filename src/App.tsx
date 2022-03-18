@@ -10,7 +10,7 @@ function App() {
       <GlobalStyle />
       <MyRoutes />
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop
@@ -20,7 +20,7 @@ function App() {
         draggable
         closeButton={false}
         pauseOnHover={false}
-        theme="colored"
+        theme="dark"
         style={{
           zIndex: 2147483647,
         }}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { IoAdd, IoTrashBinOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 
@@ -104,7 +104,11 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
     resetFields();
   }
 
-  async function handleCreateOrUpdateQuestion() {
+  async function handleCreateOrUpdateQuestion(event?: FormEvent) {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (alternatives.length && type !== "open") {
       if (alternatives.filter((alternative) => !alternative.toDelete).find((alternative) => alternative.title === "")) {
         alert("Preencha todas as alternativas!");
@@ -181,6 +185,10 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
       if (event.ctrlKey && event.key === "Enter") {
         handleCreateNewAlternative();
       }
+
+      if (event.shiftKey && event.key === "Enter") {
+        handleCreateOrUpdateQuestion();
+      }
     }
   };
 
@@ -224,7 +232,7 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
       <DialogContent>
         <h1>{selectedQuestion ? "Editando questão" : "Nova questão"}</h1>
 
-        <form>
+        <form onSubmit={handleCreateOrUpdateQuestion}>
           <div className="input-container">
             <label htmlFor="title">Enunciado</label>
             <textarea
@@ -342,14 +350,14 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
                 })}
             </div>
           )}
-        </form>
 
-        <div className="row" style={{ alignSelf: "flex-end" }}>
-          <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
-            Cancelar
-          </Button>
-          <Button onClick={handleCreateOrUpdateQuestion}>Confirmar</Button>
-        </div>
+          <div className="row end">
+            <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
+              Cancelar
+            </Button>
+            <Button type="submit">Confirmar</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
