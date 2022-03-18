@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { api } from "../../services/api.service";
@@ -32,7 +32,11 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
     resetFields();
   }
 
-  async function handleCreateOrUpdateTag() {
+  async function handleCreateOrUpdateTag(event?: FormEvent) {
+    if (event) {
+      event.preventDefault();
+    }
+
     try {
       if (selectedTag) {
         await api.put(`/tags/${selectedTag.id}`, {
@@ -68,6 +72,10 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
     if (event.key === "Escape") {
       handleCloseModal();
     }
+
+    if (event.shiftKey + event.key === "Enter") {
+      handleCreateOrUpdateTag();
+    }
   };
 
   useEffect(() => {
@@ -83,7 +91,7 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
       <DialogContent>
         <h1>{selectedTag ? "Editando tag" : "Nova tag"}</h1>
 
-        <form>
+        <form onSubmit={handleCreateOrUpdateTag}>
           <div className="input-container">
             <label htmlFor="name">Nome</label>
             <input
@@ -107,14 +115,14 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
               onChange={(event) => setDescription(event.target.value)}
             />
           </div>
-        </form>
 
-        <div className="row" style={{ alignSelf: "flex-end" }}>
-          <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
-            Cancelar
-          </Button>
-          <Button onClick={handleCreateOrUpdateTag}>Confirmar</Button>
-        </div>
+          <div className="row end">
+            <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
+              Cancelar
+            </Button>
+            <Button type="submit">Confirmar</Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

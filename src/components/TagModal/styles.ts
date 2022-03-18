@@ -92,10 +92,16 @@ export const DialogContent = styled(DialogPrimitive.Content)`
         margin-top: 1.5rem;
       }
     }
-  }
 
-  .row {
-    display: flex;
-    gap: 1rem;
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      &.end {
+        margin-top: 2rem;
+        justify-content: flex-end;
+      }
+    }
   }
 `;

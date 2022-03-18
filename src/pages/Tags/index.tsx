@@ -37,7 +37,6 @@ export function Tags() {
   }
 
   async function handleDeleteTag(id: string) {
-    console.log(tagModalIsOpen);
     try {
       await api.delete(`/tags/${id}`);
 

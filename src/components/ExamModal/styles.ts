@@ -79,13 +79,15 @@ export const DialogContent = styled(DialogPrimitive.Content)`
         max-height: 7.5rem;
       }
 
-      select {
+      select,
+      .select {
         width: 100%;
       }
 
       input,
       textarea,
-      select {
+      select,
+      .select {
         border: none;
         border-bottom: 2px solid #d1d1d1;
         background: transparent;
@@ -105,101 +107,133 @@ export const DialogContent = styled(DialogPrimitive.Content)`
       }
     }
 
-    .alternatives-container {
+    .questions-container {
       margin-top: 3rem;
 
-      .add-button {
-        border: none;
-        border-radius: 0.25rem;
-        background: var(--green);
-        color: var(--background);
-        padding: 0.2rem;
-        position: relative;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        transition: filter 0.2s;
-
-        svg {
-          font-size: 1.5rem;
-        }
-
-        &:hover {
-          filter: brightness(0.8);
-        }
-
-        &::after {
-          content: "(Ctrl + Enter)";
-          width: 100%;
-          position: absolute;
-          top: 0.2rem;
-          left: 2.3rem;
-          font-size: 0.8rem;
-          color: var(--green);
-          white-space: nowrap;
-        }
-      }
-
-      .alternatives {
+      .question-container {
         margin-top: 1rem;
-        display: grid;
-        align-items: center;
-        grid-template-columns: 0.3fr 7fr 3fr 1fr;
 
         border: 1px solid #a1a1a1;
         border-radius: 0.25rem;
         padding: 1rem;
 
-        span:first-child {
-          font-weight: 700;
-        }
-
-        textarea {
-          border: none;
-          background: transparent;
-          font-size: 1.15rem;
-          outline: 0;
-          resize: none;
-          min-height: 2rem;
-          max-height: 7.5rem;
-          border: 1px solid #a1a1a1;
-          padding-top: 2.5px;
-          border-radius: 0.25rem;
-          padding: 0.5rem;
-        }
-
-        .checkbox-container {
+        .question-header {
+          margin-bottom: 1rem;
           display: flex;
-          justify-content: center;
           align-items: center;
-          justify-self: flex-end;
+          gap: 1rem;
 
-          input {
-            margin-right: 0.5rem;
-            height: 30px;
-            width: 30px;
+          .question-card {
+            background: var(--green);
+            color: var(--background);
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
           }
         }
 
-        svg {
-          justify-self: flex-end;
-          cursor: pointer;
-          color: var(--red);
-          font-size: 1.5rem;
+        span {
+          font-weight: 600;
+        }
+
+        .alternatives-container {
+          margin: 0.5rem 0 0 0.5rem;
+
+          .alternative {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.3rem 0;
+          }
+        }
+      }
+    }
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &.diff {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      align-items: center;
+
+      .input-container {
+        margin: 0;
+
+        &:last-child {
+          margin-top: 0.08rem;
         }
       }
     }
 
-    .row {
+    &.end {
+      margin-top: 2rem;
+      justify-content: flex-end;
+    }
+  }
+
+  .tags-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 4rem;
+
+    padding: 0 0.5rem;
+
+    .tag {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.5rem;
 
-      &.end {
-        margin-top: 2rem;
-        justify-content: flex-end;
+      input {
+        height: 30px;
+        width: 30px;
+      }
+
+      label {
+        padding: 0;
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .options-row {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+
+    .input-container {
+      margin: 0;
+
+      &:last-child {
+        margin-top: 0.08rem;
+      }
+    }
+  }
+
+  .options-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 0.5rem;
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      input {
+        height: 30px;
+        width: 30px;
+      }
+
+      label {
+        padding: 0;
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
       }
     }
   }

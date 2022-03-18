@@ -55,6 +55,23 @@ export const Container = styled.div`
       transition: background 0.2s;
       cursor: pointer;
 
+      .delete-trash {
+        width: 10px;
+        cursor: pointer;
+        color: var(--red);
+        font-size: 1.3rem;
+
+        transition: background 0.2s;
+
+        svg {
+          margin: 0.2rem 0 0;
+        }
+
+        &:hover {
+          background: var(--red);
+        }
+      }
+
       &:nth-of-type(even) {
         background: #d1d1d1;
       }
@@ -67,6 +84,10 @@ export const Container = styled.div`
       &:hover {
         background: var(--green);
         color: var(--background);
+
+        .delete-trash {
+          color: var(--background);
+        }
       }
     }
 

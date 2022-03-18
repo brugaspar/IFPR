@@ -1,47 +1,84 @@
 import moment from "moment";
+import { useEffect, useState } from "react";
 
 import { Button } from "../../components/Button";
 import { Separator } from "../../components/Separator";
+import { ExamModal } from "../../components/ExamModal";
+
+import { api } from "../../services/api.service";
 
 import { Container } from "./styles";
+import { IoTrashBinOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
+
+type ExamData = {
+  id: string;
+  title: string;
+  description: string;
+  grade: number;
+  createdAt: string;
+  finishedAt: string;
+  questions: [];
+};
 
 export function Exams() {
-  const exams = [
-    {
-      id: "1",
-      status: "Rascunho",
-      title: "Prova IFPR - Estrutura de Dados 2022",
-      description: "Prova de conhecimentos em Árvores Binárias.",
-      createdAt: "2022-03-09",
-    },
-    {
-      id: "2",
-      status: "Criada",
-      title: "Prova IFPR - Padrões de Projetos e Framework 2022",
-      description: "Prova de conhecimentos em Padrões de Projetos.",
-      createdAt: "2022-03-09",
-    },
-    {
-      id: "3",
-      status: "Encerrada",
-      title: "Prova IFPR - Desenvolvimento Web IV 2022",
-      description: "Prova de conhecimentos em API.",
-      grade: 7.5,
-      createdAt: "2022-01-20",
-      finishedAt: "2022-02-13",
-    },
-  ];
+  const [exams, setExams] = useState<ExamData[]>([]);
+  const [examModalIsOpen, setExamModalIsOpen] = useState(false);
+  const [selectedExam, setSelectedExam] = useState<ExamData | null>(null);
+
+  function handleSelectExam(exam: ExamData | null) {
+    setSelectedExam(exam);
+    handleOpenExamModal();
+  }
+
+  async function handleDeleteExam(id: string) {
+    try {
+      await api.delete(`/exams/${id}`);
+
+      toast.success("Prova excluída com sucesso!");
+
+      await loadExams();
+    } catch (error: any) {
+      if (error.response.data) {
+        toast.error(error.response.data.message, { toastId: "error" });
+      } else {
+        toast.error("Problemas internos", { toastId: "error" });
+      }
+    }
+  }
+
+  function handleOpenExamModal() {
+    setExamModalIsOpen(true);
+  }
+
+  function handleCloseExamsModal() {
+    handleSelectExam(null);
+    setExamModalIsOpen(false);
+  }
+
+  async function loadExams() {
+    const response = await api.get("/exams");
+    setExams(response.data);
+  }
+
+  useEffect(() => {
+    if (!examModalIsOpen) {
+      loadExams();
+    }
+  }, [examModalIsOpen]);
 
   return (
     <Container>
+      <ExamModal isOpen={examModalIsOpen} setIsOpen={handleCloseExamsModal} selectedExam={selectedExam} />
       <div className="flex-div">
         <h1>Lista de provas</h1>
-        <Button>Nova prova</Button>
+        <Button onClick={handleOpenExamModal}>Nova prova</Button>
       </div>
       <Separator />
       <table>
         <thead>
           <tr>
+            <th>#</th>
             <th>Titulo</th>
             <th>Descrição</th>
             <th>Nota</th>
@@ -52,17 +89,24 @@ export function Exams() {
         <tbody>
           {exams.map((exam) => (
             <tr key={exam.id}>
-              <td className="ellipsis-text" title={exam.title}>
+              <td className="delete-trash" onClick={() => handleDeleteExam(exam.id)}>
+                <IoTrashBinOutline />
+              </td>
+              <td onClick={() => handleSelectExam(exam)} className="ellipsis-text" title={exam.title}>
                 {exam.title}
               </td>
-              <td className="ellipsis-text" title={exam.description}>
+              <td onClick={() => handleSelectExam(exam)} className="ellipsis-text" title={exam.description}>
                 {exam.description}
               </td>
-              <td title={String(exam.grade)}>
+              <td onClick={() => handleSelectExam(exam)} title={String(exam.grade)}>
                 {exam.grade ? new Intl.NumberFormat("pt-BR", { maximumSignificantDigits: 2 }).format(exam.grade) : null}
               </td>
-              <td title={exam.createdAt}>{moment(exam.createdAt).format("DD/MM/YYYY")}</td>
-              <td title={exam.finishedAt}>{exam.finishedAt ? moment(exam.finishedAt).format("DD/MM/YYYY") : null}</td>
+              <td onClick={() => handleSelectExam(exam)} title={exam.createdAt}>
+                {moment(exam.createdAt).format("DD/MM/YYYY")}
+              </td>
+              <td onClick={() => handleSelectExam(exam)} title={exam.finishedAt}>
+                {exam.finishedAt ? moment(exam.finishedAt).format("DD/MM/YYYY") : null}
+              </td>
             </tr>
           ))}
         </tbody>
