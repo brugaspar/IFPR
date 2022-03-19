@@ -44,7 +44,7 @@ export const DialogContent = styled(DialogPrimitive.Content)`
 
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 800px;
+  max-height: 600px;
 
   form {
     min-width: 800px;

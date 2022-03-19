@@ -153,16 +153,17 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
           questionsDifficulties: selectedDifficulties,
           questionsTypes: selectedTypes,
           questionsTags: selectedTags,
+          status: "published",
         });
       }
 
       toast.dismiss("error");
 
-      if (selectedExam) {
-        toast.success("Prova editada com sucesso!");
-      } else {
-        toast.success("Prova salva com sucesso!");
-      }
+      // if (selectedExam) {
+      //   toast.success("Prova editada com sucesso!");
+      // } else {
+      //   toast.success("Prova salva com sucesso!");
+      // }
 
       handleCloseModal();
     } catch (error: any) {
@@ -264,6 +265,7 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
                   min={1}
                   value={questionsQuantity}
                   onChange={(event) => setQuestionsQuantity(event.target.value)}
+                  disabled={!!selectedExam}
                 />
               </div>
             </div>

@@ -111,7 +111,7 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
 
     if (alternatives.length && type !== "open") {
       if (alternatives.filter((alternative) => !alternative.toDelete).find((alternative) => alternative.title === "")) {
-        alert("Preencha todas as alternativas!");
+        toast.error("Preencha todas as alternativas!");
         return;
       }
     }
@@ -119,8 +119,9 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
     try {
       if (selectedQuestion) {
         const parsedAlternatives = alternatives.map((alternative) => {
+          const alternativeId = alternative.id.length !== 36 ? undefined : alternative.id;
           return {
-            id: alternative.id,
+            id: alternativeId,
             title: alternative.title,
             isCorrect: alternative.isCorrect,
             toDelete: alternative.toDelete,
@@ -154,11 +155,11 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
 
       toast.dismiss("error");
 
-      if (selectedQuestion) {
-        toast.success("Questão editada com sucesso!");
-      } else {
-        toast.success("Questão salva com sucesso!");
-      }
+      // if (selectedQuestion) {
+      //   toast.success("Questão editada com sucesso!");
+      // } else {
+      //   toast.success("Questão salva com sucesso!");
+      // }
 
       handleCloseModal();
     } catch (error: any) {

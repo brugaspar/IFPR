@@ -52,11 +52,11 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
 
       toast.dismiss("error");
 
-      if (selectedTag) {
-        toast.success("Tag editada com sucesso!");
-      } else {
-        toast.success("Tag salva com sucesso!");
-      }
+      // if (selectedTag) {
+      //   toast.success("Tag editada com sucesso!");
+      // } else {
+      //   toast.success("Tag salva com sucesso!");
+      // }
 
       handleCloseModal();
     } catch (error: any) {

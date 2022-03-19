@@ -9,6 +9,7 @@ export const GlobalStyle = styled.createGlobalStyle`
     --contrast: #232323;
     --green: #2f9e41;
     --red: #e53e3e;
+    --blue: #076eab;
   }
 
   * {
@@ -17,14 +18,14 @@ export const GlobalStyle = styled.createGlobalStyle`
     box-sizing: border-box;
 
     &::-webkit-scrollbar {
-      width: 0.35rem;
+      width: 0.5rem;
     }
     &::-webkit-scrollbar-track {
       background: var(--background);
     }
     &::-webkit-scrollbar-thumb {
-      background: var(--green);
-      border: 3px solid var(--green);
+      background: var(--contrast);
+      border: 3px solid var(--contrast);
     }
   }
 

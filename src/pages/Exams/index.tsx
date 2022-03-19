@@ -8,7 +8,7 @@ import { ExamModal } from "../../components/ExamModal";
 import { api } from "../../services/api.service";
 
 import { Container } from "./styles";
-import { IoTrashBinOutline } from "react-icons/io5";
+import { IoLink, IoTrashBinOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 
 type ExamData = {
@@ -26,6 +26,14 @@ export function Exams() {
   const [examModalIsOpen, setExamModalIsOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<ExamData | null>(null);
 
+  function handleGenerateLink(id: string) {
+    const link = `${window.location.origin}/exams/${id}`;
+
+    navigator.clipboard.writeText(link);
+
+    toast.success("Link copiado para a área de transferência!");
+  }
+
   function handleSelectExam(exam: ExamData | null) {
     setSelectedExam(exam);
     handleOpenExamModal();
@@ -35,7 +43,7 @@ export function Exams() {
     try {
       await api.delete(`/exams/${id}`);
 
-      toast.success("Prova excluída com sucesso!");
+      // toast.success("Prova excluída com sucesso!");
 
       await loadExams();
     } catch (error: any) {
@@ -79,11 +87,12 @@ export function Exams() {
         <thead>
           <tr>
             <th>#</th>
-            <th>Titulo</th>
+            <th>Título</th>
             <th>Descrição</th>
             <th>Nota</th>
             <th>Dt. Criado</th>
             <th>Dt. Finalizado</th>
+            <th>Link</th>
           </tr>
         </thead>
         <tbody>
@@ -106,6 +115,9 @@ export function Exams() {
               </td>
               <td onClick={() => handleSelectExam(exam)} title={exam.finishedAt}>
                 {exam.finishedAt ? moment(exam.finishedAt).format("DD/MM/YYYY") : null}
+              </td>
+              <td className="link" onClick={() => handleGenerateLink(exam.id)}>
+                <IoLink />
               </td>
             </tr>
           ))}

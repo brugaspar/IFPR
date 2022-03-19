@@ -73,7 +73,7 @@ export function Questions() {
     try {
       await api.delete(`/questions/${id}`);
 
-      toast.success("Questão excluída com sucesso!");
+      // toast.success("Questão excluída com sucesso!");
 
       await loadQuestions();
     } catch (error: any) {
