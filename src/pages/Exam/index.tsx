@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "../../components/Button";
 
@@ -49,17 +49,36 @@ export function Exam() {
 
   const [exam, setExam] = useState<ExamData | null>(null);
 
-  const [answer, setAnswer] = useState<Answer | null>(null);
-
-  function handleAnswer(index: number) {}
-
-  function handleMarkAlternative(alternative: AlternativeData, checked: boolean) {
-    const question = exam?.questions.find((question) => question.question.id === alternative.questionId);
-    // question?.alternatives.push(alternative.id);
-    // setExam({ ...exam, questions: [...question, alternatives: ] });
+  function handleSubmitExam(event: FormEvent) {
+    event.preventDefault();
+    console.log(exam);
   }
 
-  console.log(exam);
+  function handleMarkAlternative(question: QuestionData, alternativeId: string, answer: string) {
+    if (!exam) {
+      return;
+    }
+
+    const selectedQuestion = exam.questions.find((q) => q.id === question.id)?.question;
+
+    if (selectedQuestion?.type === "open") {
+      question.answer = answer;
+      return;
+    }
+
+    if (question.alternatives && selectedQuestion?.type === "multiple") {
+      const findIndex = question.alternatives.findIndex((a) => a === alternativeId);
+      if (findIndex === -1) {
+        question.alternatives.push(alternativeId);
+      } else {
+        question.alternatives.splice(findIndex, 1);
+      }
+    } else {
+      question.alternatives = [alternativeId];
+    }
+
+    setExam({ ...exam });
+  }
 
   setTimeout(() => {
     function onTextAreaInput(this: HTMLTextAreaElement) {
@@ -91,7 +110,7 @@ export function Exam() {
       <Separator />
       <h2>Questões</h2>
 
-      <form className="content">
+      <form className="content" onSubmit={handleSubmitExam}>
         {exam?.questions.map((question, index) => (
           <div className="question" key={question.id}>
             <div>
@@ -101,19 +120,19 @@ export function Exam() {
             </div>
 
             {question.question.type === "open" ? (
-              <textarea placeholder="Resposta..." />
+              <textarea placeholder="Resposta..." onChange={(event) => handleMarkAlternative(question, "", event.target.value)} />
             ) : (
               <div className="alternatives">
                 {question.question.alternatives.map((alternative) => (
                   <div key={alternative.id}>
                     {question.question.type === "single" ? (
                       <input
-                        onChange={(event) => handleMarkAlternative(alternative, event.target.checked)}
+                        onChange={() => handleMarkAlternative(question, alternative.id, "")}
                         name={question.id}
                         type="radio"
                       />
                     ) : (
-                      <input type="checkbox" />
+                      <input type="checkbox" onChange={() => handleMarkAlternative(question, alternative.id, "")} />
                     )}
                     <span>{alternative.title}</span>
                   </div>
