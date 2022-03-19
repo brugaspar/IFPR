@@ -32,6 +32,7 @@ router.delete("/questions/:id", (request, response) => questionController.delete
 // Exam routes
 router.post("/exams", (request, response) => examController.create(request, response));
 router.get("/exams", (request, response) => examController.findAll(request, response));
+router.get("/exams/:id", (request, response) => examController.findById(request, response));
 router.put("/exams/:id", (request, response) => examController.update(request, response));
 router.delete("/exams/:id", (request, response) => examController.delete(request, response));
 

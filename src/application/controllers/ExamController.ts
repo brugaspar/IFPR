@@ -110,9 +110,9 @@ export class ExamController {
       throw new AppError("Prova não encontrada");
     }
 
-    if (examExists.status !== "draft") {
-      throw new AppError("Prova não pode ser alterada, já foi publicada ou está finalizada");
-    }
+    // if (examExists.status !== "draft") {
+    //   throw new AppError("Prova não pode ser alterada, já foi publicada ou está finalizada");
+    // }
 
     const { props } = Exam.create({
       title: title.trim(),
@@ -130,6 +130,18 @@ export class ExamController {
   async findAll(request: Request, response: Response) {
     const exams = await this.examRepository.findAll();
     return response.status(200).json(exams);
+  }
+
+  async findById(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const exam = await this.examRepository.findById(id);
+
+    if (!exam) {
+      throw new AppError("Prova não encontrada");
+    }
+
+    return response.status(200).json(exam);
   }
 
   async delete(request: Request, response: Response) {

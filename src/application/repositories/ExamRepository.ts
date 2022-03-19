@@ -59,6 +59,7 @@ export class ExamRepository {
             question: {
               include: {
                 alternatives: true,
+                tag: true,
               },
             },
           },
