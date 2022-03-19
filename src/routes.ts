@@ -35,5 +35,6 @@ router.get("/exams", (request, response) => examController.findAll(request, resp
 router.get("/exams/:id", (request, response) => examController.findById(request, response));
 router.put("/exams/:id", (request, response) => examController.update(request, response));
 router.delete("/exams/:id", (request, response) => examController.delete(request, response));
+router.post("/exams/submit", (request, response) => examController.submit(request, response));
 
 export { router };

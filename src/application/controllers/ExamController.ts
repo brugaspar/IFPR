@@ -9,6 +9,11 @@ import { ExamRepository } from "../repositories/ExamRepository";
 import { QuestionDifficulty, QuestionRepository, QuestionType } from "../repositories/QuestionRepository";
 import { ExamQuestionRepository } from "../repositories/ExamQuestionRepository";
 
+import { CorrectQuestionStrategy } from "../../domain/strategies/CorrectQuestionStrategy";
+import { CorrectSingle } from "../../domain/strategies/CorrectSingle";
+import { CorrectMultiple } from "../../domain/strategies/CorrectMultiple";
+import { Context } from "../../domain/strategies/Context";
+
 type ExamRequest = {
   title: string;
   description: string;
@@ -17,6 +22,14 @@ type ExamRequest = {
   questionsDifficulties: QuestionDifficulty[];
   questionsTypes: QuestionType[];
   questionsTags: string[];
+};
+
+export type Question = {
+  id: string;
+  alternatives: string[];
+  answer: string;
+  examId: string;
+  questionId: string;
 };
 
 export class ExamController {
@@ -125,6 +138,75 @@ export class ExamController {
     const storedExam = await this.examRepository.findById(id);
 
     return response.status(201).json(storedExam);
+  }
+
+  async submit(request: Request, response: Response) {
+    const { questions } = request.body as { questions: Question[] };
+
+    let grades: { id: string; grade: number }[] = [];
+
+    for (const question of questions) {
+      let questionGrade = 0;
+
+      const storedQuestion = await this.questionRepository.findById(question.questionId);
+
+      // if (question.alternatives?.length > 0) {
+      if (storedQuestion.type !== "open") {
+        // if (!question.alternatives?.length) {
+        //   question.alternatives = [];
+        // }
+
+        if (storedQuestion) {
+          const context = new Context();
+          let strategy: CorrectQuestionStrategy;
+          switch (storedQuestion.type) {
+            case "single": {
+              strategy = new CorrectSingle();
+              break;
+            }
+            case "multiple": {
+              strategy = new CorrectMultiple();
+              break;
+            }
+          }
+          context.setStrategy(strategy);
+          const isCorrect = context.correct(storedQuestion, question);
+          if (storedQuestion.type === "single") {
+            questionGrade = isCorrect[0] ? 100 : 0;
+          } else {
+            for (const answer of isCorrect) {
+              let questionAverage = 100 / isCorrect.length;
+              questionGrade += answer ? questionAverage : 0;
+            }
+          }
+        }
+      }
+
+      await this.examQuestionRepository.update({
+        alternatives: question.alternatives || [],
+        answer: question.answer,
+        id: question.id,
+        examId: question.examId,
+        questionId: question.questionId,
+        grade: questionGrade,
+      });
+
+      grades.push({
+        id: question.id,
+        grade: questionGrade,
+      });
+    }
+
+    const exam = await this.examRepository.findById(questions[0].examId);
+
+    await this.examRepository.update({
+      status: "waiting_for_review",
+      id: questions[0].examId,
+      title: exam.title,
+      description: exam.description,
+    });
+
+    return response.status(201).json({ grades });
   }
 
   async findAll(request: Request, response: Response) {

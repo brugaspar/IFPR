@@ -3,6 +3,9 @@ import { prisma } from "../../configuration/PrismaConfiguration";
 export type ExamQuestionProps = {
   examId: string;
   questionId: string;
+  alternatives?: string[];
+  answer?: string;
+  grade?: number;
 };
 
 export class ExamQuestionRepository {
