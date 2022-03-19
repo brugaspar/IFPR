@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 type ExamData = {
   id: string;
   title: string;
+  status: "draft" | "published" | "waiting_for_review" | "finished";
   description: string;
   grade: number;
   createdAt: string;
@@ -25,6 +26,13 @@ export function Exams() {
   const [exams, setExams] = useState<ExamData[]>([]);
   const [examModalIsOpen, setExamModalIsOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<ExamData | null>(null);
+
+  const examStatus: { [key: string]: string } = {
+    draft: "Rascunho",
+    published: "Publicado",
+    waiting_for_review: "Aguardando revisão",
+    finished: "Finalizado",
+  };
 
   function handleGenerateLink(id: string) {
     const link = `${window.location.origin}/exams/${id}`;
@@ -89,6 +97,7 @@ export function Exams() {
             <th>#</th>
             <th>Título</th>
             <th>Descrição</th>
+            <th>Status</th>
             <th>Nota</th>
             <th>Dt. Criado</th>
             <th>Dt. Finalizado</th>
@@ -106,6 +115,9 @@ export function Exams() {
               </td>
               <td onClick={() => handleSelectExam(exam)} className="ellipsis-text" title={exam.description}>
                 {exam.description}
+              </td>
+              <td onClick={() => handleSelectExam(exam)} title={examStatus[exam.status]}>
+                {examStatus[exam.status]}
               </td>
               <td onClick={() => handleSelectExam(exam)} title={String(exam.grade)}>
                 {exam.grade ? new Intl.NumberFormat("pt-BR", { maximumSignificantDigits: 2 }).format(exam.grade) : null}

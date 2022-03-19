@@ -25,6 +25,10 @@ export const Container = styled.div`
         padding-bottom: 1rem;
       }
 
+      .grade {
+        margin-left: 0.5rem;
+      }
+
       > textarea {
         margin: 1rem 0 0;
         width: 100%;

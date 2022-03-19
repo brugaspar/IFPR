@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { api } from "../../services/api.service";
 
 import { Button } from "../Button";
+import { QuestionModal } from "../QuestionModal";
 import { Dialog, DialogContent, DialogOverlay } from "./styles";
 
 type QuestionTypeDifficulty = {
@@ -37,6 +38,9 @@ type QuestionItemData = {
 type QuestionData = {
   id: string;
   question: QuestionItemData;
+  grade: number;
+  answer: string;
+  alternatives: string[];
 };
 
 type ExamData = {
@@ -273,7 +277,6 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
 
           {!selectedExam && (
             <>
-              {" "}
               <div className="input-container">
                 <label htmlFor="tag">Tags</label>
                 <div className="tags-list">
@@ -327,7 +330,7 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
             <div className="questions-container">
               <h2>Visualize as questões</h2>
 
-              {questions.map(({ question }, index) => (
+              {questions.map(({ question, grade, answer, alternatives: alt }, index) => (
                 <div className="question-container">
                   <div className="question-header">
                     <div className="question-card">{questionDifficulty[question.difficulty]}</div>
@@ -337,15 +340,21 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
                   <span>
                     {index + 1}. {question.title}
                   </span>
+                  <span className="grade">Nota: {Number(grade).toFixed(0)}</span>
 
-                  {question.alternatives.length > 0 && (
+                  {question.alternatives.length > 0 ? (
                     <div className="alternatives-container">
                       {question.alternatives.map((alternative) => (
                         <div className="alternative">
                           {alternative.isCorrect ? <IoCheckboxOutline /> : <IoSquareOutline />}
                           <p>{alternative.title}</p>
+                          <span>{alt.includes(alternative.id) ? "✓" : "✕"}</span>
                         </div>
                       ))}
+                    </div>
+                  ) : (
+                    <div className="answer">
+                      <p>{answer}</p>
                     </div>
                   )}
                 </div>

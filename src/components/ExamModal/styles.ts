@@ -135,6 +135,17 @@ export const DialogContent = styled(DialogPrimitive.Content)`
           font-weight: 600;
         }
 
+        .grade {
+          margin-left: 0.5rem;
+        }
+
+        .answer {
+          border: 1px solid #a1a1a1;
+          border-radius: 0.25rem;
+          padding: 1rem;
+          margin-top: 0.5rem;
+        }
+
         .alternatives-container {
           margin: 0.5rem 0 0 0.5rem;
 
