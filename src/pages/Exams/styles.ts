@@ -81,7 +81,7 @@ export const Container = styled.div`
         transition: background 0.2s;
 
         svg {
-          margin: 0.2rem 0 0 0.2rem;
+          margin: 0.2rem 0 0 0.3rem;
         }
 
         &:hover {

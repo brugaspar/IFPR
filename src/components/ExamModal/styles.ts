@@ -137,6 +137,13 @@ export const DialogContent = styled(DialogPrimitive.Content)`
 
         .grade {
           margin-left: 0.5rem;
+
+          input {
+            width: 60px;
+            border-radius: 4px;
+            border: 1px solid #a1a1a1;
+            padding: 0.2rem;
+          }
         }
 
         .answer {
@@ -144,6 +151,32 @@ export const DialogContent = styled(DialogPrimitive.Content)`
           border-radius: 0.25rem;
           padding: 1rem;
           margin-top: 0.5rem;
+        }
+
+        .commentary {
+          margin-top: 0.5rem;
+
+          textarea {
+            margin: 0.5rem 0 0;
+            width: 100%;
+            max-height: 200px;
+            min-height: 48px;
+            resize: vertical;
+            padding: 0.5rem;
+          }
+
+          &.optional {
+            position: relative;
+
+            &::after {
+              content: "(opcional)";
+              position: absolute;
+              top: 0.1rem;
+              left: 6.1rem;
+              font-size: 0.8rem;
+              color: var(--green);
+            }
+          }
         }
 
         .alternatives-container {

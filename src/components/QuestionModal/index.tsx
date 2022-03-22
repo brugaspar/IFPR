@@ -188,7 +188,10 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
       }
 
       if (event.shiftKey && event.key === "Enter") {
-        handleCreateOrUpdateQuestion();
+        const button = document.getElementsByTagName("button").namedItem("confirm");
+        if (!(button === document.activeElement)) {
+          handleCreateOrUpdateQuestion();
+        }
       }
     }
   };
@@ -356,7 +359,9 @@ export function QuestionModal({ isOpen, setIsOpen, selectedQuestion }: QuestionM
             <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
               Cancelar
             </Button>
-            <Button type="submit">Confirmar</Button>
+            <Button name="confirm" type="submit">
+              Confirmar
+            </Button>
           </div>
         </form>
       </DialogContent>

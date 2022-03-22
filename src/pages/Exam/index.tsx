@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { spacing } from "react-select/dist/declarations/src/theme";
 import { Button } from "../../components/Button";
 
 import { Separator } from "../../components/Separator";
@@ -44,6 +45,8 @@ export function Exam() {
 
   const [exam, setExam] = useState<ExamData | null>(null);
   const [reload, setReload] = useState(false);
+
+  const isClosed = exam && ["waiting_for_review", "finished"].includes(exam.status);
 
   const disabled = exam?.status !== "published";
   let status = "";
@@ -121,22 +124,46 @@ export function Exam() {
     loadExam();
   }, [reload]);
 
+  if (!exam) {
+    return (
+      <Container>
+        <div className="content">
+          <h2
+            style={{
+              color: "var(--red)",
+            }}
+          >
+            404 - PROVA NÃO ENCONTRADA
+          </h2>
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <h1>{exam?.title}</h1>
       <h3>{status}</h3>
-      <p>{exam?.description}</p>
+
+      {exam.description && <p>{exam.description}</p>}
+
+      {exam.grade && (
+        <span className="grade">Nota: {new Intl.NumberFormat("pt-BR", { maximumSignificantDigits: 2 }).format(exam.grade)}</span>
+      )}
+
       <Separator />
+
       <h2>Questões</h2>
 
       <form className="content" onSubmit={handleSubmitExam}>
         {exam?.questions.map((question, index) => (
           <div className="question" key={question.id}>
+            {isClosed && <span className="grade">Nota: {Number(question.grade).toFixed(0)}</span>}
             <div>
               <span>
                 {index + 1}. {question.question.title}
               </span>
-              {exam?.status === "waiting_for_review" && <span className="grade">Nota: {Number(question.grade).toFixed(0)}</span>}
+              {/* {isClosed && <span className="grade">Nota: {Number(question.grade).toFixed(0)}</span>} */}
             </div>
 
             {question.question.type === "open" ? (
@@ -148,30 +175,38 @@ export function Exam() {
               />
             ) : (
               <div className="alternatives">
-                {question.question.alternatives.map((alternative) => (
-                  <div key={alternative.id}>
-                    {question.question.type === "single" ? (
-                      <>
-                        <input
-                          onChange={() => handleMarkAlternative(question, alternative.id, "")}
-                          name={question.id}
-                          type="radio"
-                          disabled={disabled}
-                          checked={question.alternatives?.includes(alternative.id)}
-                        />
-                      </>
-                    ) : (
-                      <input
-                        disabled={disabled}
-                        type="checkbox"
-                        onChange={() => handleMarkAlternative(question, alternative.id, "")}
-                        checked={question.alternatives?.includes(alternative.id)}
-                      />
-                    )}
-                    <span>{alternative.title}</span>
-                    {exam?.status === "waiting_for_review" && <span>{alternative.isCorrect ? "✓" : "✕"}</span>}
-                  </div>
-                ))}
+                {question.question.alternatives.map((alternative) => {
+                  return (
+                    <div key={alternative.id}>
+                      <div>
+                        {question.question.type === "single" ? (
+                          <input
+                            onChange={() => handleMarkAlternative(question, alternative.id, "")}
+                            name={question.id}
+                            type="radio"
+                            disabled={disabled}
+                            checked={question.alternatives?.includes(alternative.id)}
+                          />
+                        ) : (
+                          <input
+                            disabled={disabled}
+                            type="checkbox"
+                            onChange={() => handleMarkAlternative(question, alternative.id, "")}
+                            checked={question.alternatives?.includes(alternative.id)}
+                          />
+                        )}
+                        <span>{alternative.title}</span>
+                      </div>
+                      {isClosed && <span>{alternative.isCorrect ? "✓" : "✕"}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {question.commentary && (
+              <div className="commentary">
+                <h4>Comentário</h4>
+                <span>{question.commentary}</span>
               </div>
             )}
           </div>

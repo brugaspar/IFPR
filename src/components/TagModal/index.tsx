@@ -74,7 +74,10 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
     }
 
     if (event.shiftKey + event.key === "Enter") {
-      handleCreateOrUpdateTag();
+      const button = document.getElementsByTagName("button").namedItem("confirm");
+      if (!(button === document.activeElement)) {
+        handleCreateOrUpdateTag();
+      }
     }
   };
 
@@ -120,7 +123,9 @@ export function TagModal({ isOpen, setIsOpen, selectedTag }: TagModalProps) {
             <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
               Cancelar
             </Button>
-            <Button type="submit">Confirmar</Button>
+            <Button name="confirm" type="submit">
+              Confirmar
+            </Button>
           </div>
         </form>
       </DialogContent>
