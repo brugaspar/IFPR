@@ -4,6 +4,7 @@ export type ExamProps = {
   title: string;
   description: string;
   status: "draft" | "published" | "waiting_for_review" | "finished";
+  grade?: number;
 };
 
 export class ExamRepository {
@@ -16,11 +17,15 @@ export class ExamRepository {
   }
 
   async update(exam: ExamProps & { id: string }) {
+    const finishedAt = exam.status === "finished" ? new Date() : undefined;
     const updatedExam = await prisma.exam.update({
       where: {
         id: exam.id,
       },
-      data: exam,
+      data: {
+        ...exam,
+        finishedAt,
+      },
     });
 
     return updatedExam;

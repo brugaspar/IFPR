@@ -115,7 +115,7 @@ export class ExamController {
 
   async update(request: Request, response: Response) {
     const { id } = request.params;
-    const { title, description, status } = request.body;
+    const { title, description, status, selectedExam } = request.body;
 
     const examExists = await this.examRepository.findById(id);
 
@@ -134,6 +134,34 @@ export class ExamController {
     });
 
     await this.examRepository.update({ id, ...props });
+
+    if (selectedExam) {
+      for (const question of selectedExam.questions) {
+        const storedQuestion = examExists.questions.find((q) => q.questionId === question.questionId);
+        await this.examQuestionRepository.update({
+          grade: question.grade,
+          commentary: question.commentary,
+          examId: id,
+          questionId: storedQuestion.questionId,
+          id: storedQuestion.id,
+        });
+      }
+    }
+
+    if (status === "finished") {
+      const storedExam = await this.examRepository.findById(id);
+      const questionsCount = storedExam.questions.length;
+      const grade = storedExam.questions.map((q) => q.grade).reduce((acc, value) => acc + Number(value), 0) / questionsCount;
+
+      const { props } = Exam.create({
+        title: title.trim(),
+        description: description && description.trim(),
+        status,
+        grade: status === "finished" ? grade : undefined,
+      });
+
+      await this.examRepository.update({ id, ...props });
+    }
 
     const storedExam = await this.examRepository.findById(id);
 
@@ -174,9 +202,14 @@ export class ExamController {
           if (storedQuestion.type === "single") {
             questionGrade = isCorrect[0] ? 100 : 0;
           } else {
+            // const correctAlternatives = storedQuestion.alternatives.filter((a) => a.isCorrect).length;
             for (const answer of isCorrect) {
               let questionAverage = 100 / isCorrect.length;
+              // let questionAverage = 100 / correctAlternatives;
               questionGrade += answer ? questionAverage : 0;
+            }
+            if (isCorrect.some((a) => a === false)) {
+              questionGrade = 0;
             }
           }
         }

@@ -6,6 +6,7 @@ export type ExamQuestionProps = {
   alternatives?: string[];
   answer?: string;
   grade?: number;
+  commentary?: string;
 };
 
 export class ExamQuestionRepository {
