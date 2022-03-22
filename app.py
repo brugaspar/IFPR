@@ -1,9 +1,11 @@
+# type: ignore
 # app.py
 
 import os
 import jwt
 import datetime
 
+from flask_cors import cross_origin
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
@@ -12,7 +14,7 @@ from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-database_uri = 'postgresql://postgres:postgres@localhost/flask_auth'
+database_uri = 'postgresql://postgres:postgres@localhost/python_api'
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -57,11 +59,12 @@ def encode_auth_token(user_id):
 
 @staticmethod
 def decode_auth_token(auth_token):
-    payload = jwt.decode(auth_token, SECRET_KEY)
+    payload = jwt.decode(auth_token, SECRET_KEY, algorithms=["HS256"])
     return payload['sub']
 
 
 @app.route('/authenticate', methods=['POST'])
+@cross_origin()
 def authenticate():
     email = request.json['email']
     password = request.json['password']
@@ -87,6 +90,7 @@ def authenticate():
 
 
 @app.route('/users', methods=['POST'])
+@cross_origin()
 def add_user():
     name = request.json['name']
     email = request.json['email']
@@ -107,6 +111,7 @@ def add_user():
 
 
 @app.route('/users', methods=['GET'])
+@cross_origin()
 def get_users():
     users = User.query.all()
     result = users_schema.dump(users)
@@ -114,6 +119,7 @@ def get_users():
 
 
 @app.route('/users/<id>', methods=['GET'])
+@cross_origin()
 def get_user(id):
     user = User.query.get(id)
 
@@ -126,6 +132,7 @@ def get_user(id):
 
 
 @app.route('/users/<id>', methods=['PUT'])
+@cross_origin()
 def update_user(id):
     user = User.query.get(id)
 
@@ -148,6 +155,7 @@ def update_user(id):
 
 
 @app.route('/users/<id>', methods=['DELETE'])
+@cross_origin()
 def delete_user(id):
     user = User.query.get(id)
 
@@ -163,4 +171,5 @@ def delete_user(id):
 
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True, port=3030)
