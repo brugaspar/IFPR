@@ -72,6 +72,23 @@ export const Container = styled.div`
         }
       }
 
+      .link {
+        width: 10px;
+        cursor: pointer;
+        color: var(--blue);
+        font-size: 1.3rem;
+
+        transition: background 0.2s;
+
+        svg {
+          margin: 0.2rem 0 0 0.3rem;
+        }
+
+        &:hover {
+          background: var(--blue);
+        }
+      }
+
       &:nth-of-type(even) {
         background: #d1d1d1;
       }
@@ -85,7 +102,8 @@ export const Container = styled.div`
         background: var(--green);
         color: var(--background);
 
-        .delete-trash {
+        .delete-trash,
+        .link {
           color: var(--background);
         }
       }

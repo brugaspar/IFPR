@@ -1,10 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { IoCheckboxOutline, IoCheckboxSharp, IoSquareOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { Exam } from "../../pages/Exam";
 
 import { api } from "../../services/api.service";
 
 import { Button } from "../Button";
+import { QuestionModal } from "../QuestionModal";
 import { Dialog, DialogContent, DialogOverlay } from "./styles";
 
 type QuestionTypeDifficulty = {
@@ -37,6 +39,10 @@ type QuestionItemData = {
 type QuestionData = {
   id: string;
   question: QuestionItemData;
+  grade: number;
+  answer: string;
+  commentary: string;
+  alternatives: string[];
 };
 
 type ExamData = {
@@ -44,6 +50,7 @@ type ExamData = {
   title: string;
   description: string;
   questions: QuestionData[];
+  status: "draft" | "published" | "waiting_for_review" | "finished";
 };
 
 type ExamModalProps = {
@@ -76,6 +83,8 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<string[]>([]);
+
+  const isClosed = selectedExam && ["waiting_for_review", "finished"].includes(selectedExam.status);
 
   const questionType: QuestionTypeDifficulty = {
     open: "Aberta",
@@ -134,6 +143,17 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
     resetFields();
   }
 
+  function handleUpdateQuestionGradeOrCommentary(data: string, content: "grade" | "commentary", index: number) {
+    const question = questions[index];
+
+    if (content === "commentary") {
+      question.commentary = data;
+    } else {
+      question.grade = Number(data);
+    }
+    setQuestions([...questions]);
+  }
+
   async function handleCreateOrUpdateExam(event?: FormEvent) {
     if (event) {
       event.preventDefault();
@@ -144,6 +164,8 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
         await api.put(`/exams/${selectedExam.id}`, {
           title,
           description,
+          selectedExam,
+          status: isClosed ? "finished" : selectedExam.status,
         });
       } else {
         await api.post("/exams", {
@@ -153,16 +175,17 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
           questionsDifficulties: selectedDifficulties,
           questionsTypes: selectedTypes,
           questionsTags: selectedTags,
+          status: "published",
         });
       }
 
       toast.dismiss("error");
 
-      if (selectedExam) {
-        toast.success("Prova editada com sucesso!");
-      } else {
-        toast.success("Prova salva com sucesso!");
-      }
+      // if (selectedExam) {
+      //   toast.success("Prova editada com sucesso!");
+      // } else {
+      //   toast.success("Prova salva com sucesso!");
+      // }
 
       handleCloseModal();
     } catch (error: any) {
@@ -181,7 +204,10 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
       }
 
       if (event.shiftKey && event.key === "Enter") {
-        handleCreateOrUpdateExam();
+        const button = document.getElementsByTagName("button").namedItem("confirm");
+        if (!(button === document.activeElement)) {
+          handleCreateOrUpdateExam();
+        }
       }
     }
   };
@@ -234,6 +260,7 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               autoFocus
+              disabled={isClosed || false}
             />
           </div>
 
@@ -250,11 +277,11 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
                   placeholder="Informe a descrição da prova"
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
+                  disabled={isClosed || false}
                 />
               </div>
 
               <div className="input-container">
-                {" "}
                 <label htmlFor="numQuestion">Qtde. de Questões</label>
                 <input
                   type="number"
@@ -264,6 +291,7 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
                   min={1}
                   value={questionsQuantity}
                   onChange={(event) => setQuestionsQuantity(event.target.value)}
+                  disabled={!!selectedExam}
                 />
               </div>
             </div>
@@ -271,7 +299,6 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
 
           {!selectedExam && (
             <>
-              {" "}
               <div className="input-container">
                 <label htmlFor="tag">Tags</label>
                 <div className="tags-list">
@@ -325,7 +352,7 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
             <div className="questions-container">
               <h2>Visualize as questões</h2>
 
-              {questions.map(({ question }, index) => (
+              {questions.map(({ question, grade, commentary, answer, alternatives: alt }, index) => (
                 <div className="question-container">
                   <div className="question-header">
                     <div className="question-card">{questionDifficulty[question.difficulty]}</div>
@@ -335,15 +362,52 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
                   <span>
                     {index + 1}. {question.title}
                   </span>
+                  <span className="grade">
+                    Nota:{" "}
+                    {question.type !== "open" ? (
+                      Number(grade).toFixed(0)
+                    ) : (
+                      <input
+                        value={grade}
+                        onChange={(event) => handleUpdateQuestionGradeOrCommentary(event.target.value, "grade", index)}
+                        type="number"
+                        disabled={!(selectedExam?.status === "waiting_for_review")}
+                      />
+                    )}
+                  </span>
 
-                  {question.alternatives.length > 0 && (
+                  {question.alternatives.length > 0 ? (
                     <div className="alternatives-container">
                       {question.alternatives.map((alternative) => (
                         <div className="alternative">
                           {alternative.isCorrect ? <IoCheckboxOutline /> : <IoSquareOutline />}
                           <p>{alternative.title}</p>
+                          {alt && <span>{alt.includes(alternative.id) ? "✓" : ""}</span>}
+                          {/* ✓ ✕ */}
                         </div>
                       ))}
+                    </div>
+                  ) : (
+                    selectedExam &&
+                    isClosed && (
+                      <div className="answer">
+                        <p>{answer || "Não respondida"}</p>
+                      </div>
+                    )
+                  )}
+
+                  {isClosed && (
+                    <div className="commentary optional">
+                      <span>Comentário</span>
+                      <textarea
+                        name="commentary"
+                        id="commentary"
+                        rows={1}
+                        placeholder="Informe um comentário para a questão"
+                        value={commentary}
+                        onChange={(event) => handleUpdateQuestionGradeOrCommentary(event.target.value, "commentary", index)}
+                        disabled={selectedExam.status === "finished"}
+                      />
                     </div>
                   )}
                 </div>
@@ -355,7 +419,9 @@ export function ExamModal({ isOpen, setIsOpen, selectedExam }: ExamModalProps) {
             <Button style={{ background: "var(--red)" }} onClick={handleCloseModal}>
               Cancelar
             </Button>
-            <Button type="submit">Confirmar</Button>
+            <Button name="confirm" type="submit">
+              Confirmar
+            </Button>
           </div>
         </form>
       </DialogContent>

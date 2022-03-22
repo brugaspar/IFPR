@@ -40,7 +40,7 @@ export function Tags() {
     try {
       await api.delete(`/tags/${id}`);
 
-      toast.success("Questão excluída com sucesso!");
+      // toast.success("Tag excluída com sucesso!");
 
       await loadTags();
     } catch (error: any) {
