@@ -136,9 +136,11 @@ def update_user(id):
 
     name = request.json['name']
     email = request.json['email']
+    password = request.json['password']
 
     user.name = name
     user.email = email
+    user.password = bcrypt.generate_password_hash(password, 10).decode()
 
     db.session.commit()
 
