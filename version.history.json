@@ -5,5 +5,12 @@
     "released": "2022-03-17",
     "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default",
     "download": ""
+  },
+  "v1.0.1": {
+    "description": "Ajustado permissões de encerramento de atividades.",
+    "majorVersion": "1.0.1 (2022.3.23.1)",
+    "released": "2022-03-23",
+    "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default",
+    "download": ""
   }
 }

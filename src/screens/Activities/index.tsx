@@ -115,7 +115,11 @@ export function Activities() {
   async function handleNavigateToDetails(params?: any) {
     if (!isMember && user) {
       if (!checkPermission("create_activities", user.permissions)) {
-        setError("Sem permissão de incluir/editar atividades");
+        setError("Sem permissão de incluir atividades");
+        return;
+      }
+      if (!checkPermission("edit_activities", user.permissions)) {
+        setError("Sem permissão de editar atividades");
         return;
       }
     }
@@ -149,7 +153,7 @@ export function Activities() {
           return;
         }
       } else {
-        if (!checkPermission("edit_activities", user.permissions)) {
+        if (!checkPermission("finish_activities", user.permissions)) {
           setError("Sem permissão para encerrar atividades");
           return;
         }

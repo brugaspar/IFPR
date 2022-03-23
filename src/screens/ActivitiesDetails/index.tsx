@@ -313,37 +313,41 @@ export function ActivitiesDetails() {
             value={observation}
           />
 
-          <Input
-            value={product?.product?.name || product?.name || ""}
-            label="Produto"
-            placeholder="Selecione o produto"
-            type="modal"
-            editable={canEdit}
-            onPress={() => handleOpenModal("product")}
-          />
+          {!isMember && (
+            <>
+              <Input
+                value={product?.product?.name || product?.name || ""}
+                label="Produto"
+                placeholder="Selecione o produto"
+                type="modal"
+                editable={canEdit}
+                onPress={() => handleOpenModal("product")}
+              />
 
-          <Row>
-            <Input
-              value={price}
-              onChangeText={setPrice}
-              label="Preço"
-              placeholder="Informe o preço"
-              width={48.5}
-              keyboardType="numeric"
-              editable={canEdit}
-            />
-            <Input
-              value={quantity}
-              onChangeText={setQuantity}
-              label={product ? `Quantidade (${product.quantity})` : "Quantidade"}
-              placeholder="Informe a quantidade"
-              width={48.5}
-              keyboardType="numeric"
-              editable={canEdit}
-            />
-          </Row>
+              <Row>
+                <Input
+                  value={price}
+                  onChangeText={setPrice}
+                  label="Preço"
+                  placeholder="Informe o preço"
+                  width={48.5}
+                  keyboardType="numeric"
+                  editable={canEdit}
+                />
+                <Input
+                  value={quantity}
+                  onChangeText={setQuantity}
+                  label={product ? `Quantidade (${product.quantity})` : "Quantidade"}
+                  placeholder="Informe a quantidade"
+                  width={48.5}
+                  keyboardType="numeric"
+                  editable={canEdit}
+                />
+              </Row>
 
-          <Button onPress={handleAddItem} title="Adicionar" background={styles.colors.blue} disabled={!canEdit || !product} />
+              <Button onPress={handleAddItem} title="Adicionar" background={styles.colors.blue} disabled={!canEdit || !product} />
+            </>
+          )}
 
           <Separator />
 
