@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="head :: head"></div>
+
+<body>
+  <div th:replace="menu :: menu"></div>
+
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1>Filmes + Séries</h1>
+
+      <div th:switch="${category.id>0}">
+      	<p th:case="${true}">Atualização Cadastral</p>
+      	<p th:case="*">Novo Cadastro</p>
+      </div>
+
+      <form th:object="${category}" action="/categories/save" method="POST">
+		<input type="hidden" th:field="${category.id}" th:if="${category.id}">
+
+        <div class="mb-3">
+          <label class="form-label" for="name">Nome</label>
+
+          <input
+              id="name"
+              type="text"
+              th:field="*{name}"
+              class="form-control"
+              placeholder="Nome da categoria"
+              th:errorclass="inputError"
+              autocomplete="off"
+          >
+
+          <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Campo inválido</span>
+        </div>
+
+        <div class="mb-3">
+          <p th:switch="${category.id>0}">
+            <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+            <button type="submit" th:case="*" class="btn btn-primary" th:text="Adicionar"></button>
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

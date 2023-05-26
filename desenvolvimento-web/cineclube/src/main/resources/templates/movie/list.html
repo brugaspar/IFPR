@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="head :: head"></div>
+
+<body>
+  <div th:replace="menu :: menu"></div>
+
+  <main class="container">
+    <a class="btn btn-primary active" role="button" th:href="@{/movies/new}">
+      <i class="bi bi-plus-square"></i>
+      Filme
+    </a>
+
+    <div class="bg-light p-5 rounded">
+      <h3>Gerenciar Filmes + Séries</h3>
+
+<!--      <div class="row">-->
+<!--        <form th:action="@{/movies/category}" method="POST">-->
+<!--	        <div class="mb-2">-->
+<!--	          <label class="form-label" for="category">Filtrar por categoria: <span th:text="${category}"></span></label>-->
+<!--	        </div>-->
+
+<!--	        <div class="mb-2"> -->
+<!--	          <select id="category" class="form-select" th:name="cat" required="required" onchange="this.form.submit()">-->
+<!--	            <option th:text="${category}" th:value="${category}"></option>-->
+<!--	            <option th:each="cat: ${categories}" th:text="${cat.getName()}" th:value="${cat}" ></option>-->
+<!--	          </select>-->
+<!--	        </div>-->
+
+<!--	        <div class="mb-4">-->
+<!--	          <button class="btn btn-success" type="submit">Buscar</button>-->
+<!--	        </div>-->
+<!--        </form>-->
+<!--      </div>-->
+      
+      <div class="row">
+      <table class="table table-striped table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Lançamento</th>
+            <th>Categorias</th>
+            <th>Elenco</th>
+            <th>#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="movie: ${movieList}">
+            <td th:text="${movie.id}"></td>
+            <td>
+              <a th:href="@{/movies/edit/{id}(id=${movie.id})}" th:text="${movie.name}"></a>
+            </td>
+            <td th:text="${{movie.releaseDate}}"></td>
+            <td>
+                <p th:each="cat : ${movie.categories}" th:text="${cat.name}"></p>
+            </td>
+            <td>
+              <p th:each="actor : ${movie.persons}" th:text="${actor.name}"></p>
+            </td>
+            <td><a th:href="@{/movies/delete/{id}(id=${movie.id})}">
+              <i class="bi bi-dash-circle" title="delete"></i>
+            </a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
