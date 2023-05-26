@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Trabalho - Lista</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_new">Novo</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_edit">Editar</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="item">Item</string>
+</resources>
