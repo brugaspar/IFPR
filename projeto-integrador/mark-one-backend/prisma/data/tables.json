@@ -1,0 +1,44 @@
+[
+  {
+    "name": "general_tables"
+  },
+  {
+    "name": "general_logs"
+  },
+  {
+    "name": "permissions"
+  },
+  {
+    "name": "users"
+  },
+  {
+    "name": "states"
+  },
+  {
+    "name": "cities"
+  },
+  {
+    "name": "members_plans"
+  },
+  {
+    "name": "members"
+  },
+  {
+    "name": "members_addresses"
+  },
+  {
+    "name": "products_brands"
+  },
+  {
+    "name": "products_groups"
+  },
+  {
+    "name": "products"
+  },
+  {
+    "name": "activities"
+  },
+  {
+    "name": "activities_items"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "name": "mark-one-backend",
+  "version": "1.0.0",
+  "main": "src/server.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsnd --transpile-only --respawn --ignore-watch node_modules src/server.ts",
+    "start": "node src/server.js",
+    "generate-js": "tsc",
+    "exclude-js": "cd src && del /f /s /q *.js && cd ../prisma && del /f /s /q *.js"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.2.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "luxon": "^2.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.1",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/luxon": "^2.0.5",
+    "@types/morgan": "^1.9.3",
+    "@types/pg": "^8.6.1",
+    "prisma": "^3.2.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.3"
+  }
+}

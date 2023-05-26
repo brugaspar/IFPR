@@ -1,0 +1,206 @@
+[
+  {
+    "name": "Alterar permissões",
+    "slug": "alter_permissions",
+    "description": "Permite a alteração das permissões dos usuários cadastrados.",
+    "table": "permissions"
+  },
+  {
+    "name": "Visualizar usuários",
+    "slug": "list_users",
+    "description": "Permite a visualização da lista de usuários cadastrados.",
+    "table": "users"
+  },
+  {
+    "name": "Incluir usuários",
+    "slug": "create_users",
+    "description": "Permite a inclusão de um novo usuário no sistema.",
+    "table": "users"
+  },
+  {
+    "name": "Editar usuários",
+    "slug": "edit_users",
+    "description": "Permite a edição dos dados cadastrais dos usuários.",
+    "table": "users"
+  },
+  {
+    "name": "Ativar ou desativar usuários",
+    "slug": "disable_users",
+    "description": "Permite ativar ou desativar o cadastro de um usuário do sistema.",
+    "table": "users"
+  },
+  {
+    "name": "Visualizar membros",
+    "slug": "list_members",
+    "description": "Permite a visualização da lista de membros cadastrados.",
+    "table": "members"
+  },
+  {
+    "name": "Incluir membros",
+    "slug": "create_members",
+    "description": "Permite a inclusão de um novo membro no sistema.",
+    "table": "members"
+  },
+  {
+    "name": "Editar membros",
+    "slug": "edit_members",
+    "description": "Permite a edição dos dados cadastrais dos membros.",
+    "table": "members"
+  },
+  {
+    "name": "Ativar ou desativar membros",
+    "slug": "disable_members",
+    "description": "Permite ativar ou desativar o cadastro de um membro do sistema.",
+    "table": "members"
+  },
+  {
+    "name": "Visualizar planos",
+    "slug": "list_plans",
+    "description": "Permite a visualização da lista de planos cadastrados.",
+    "table": "members_plans"
+  },
+  {
+    "name": "Incluir planos",
+    "slug": "create_plans",
+    "description": "Permite a inclusão de um novo plano no sistema.",
+    "table": "members_plans"
+  },
+  {
+    "name": "Editar planos",
+    "slug": "edit_plans",
+    "description": "Permite a edição dos dados cadastrais dos planos.",
+    "table": "members_plans"
+  },
+  {
+    "name": "Ativar ou desativar planos",
+    "slug": "disable_plans",
+    "description": "Permite ativar ou desativar o cadastro de um plano do sistema.",
+    "table": "members_plans"
+  },
+  {
+    "name": "Listar LOG do sistema",
+    "slug": "list_logs",
+    "description": "Permite visualizar os LOG gerados pelo sistema",
+    "table": "general_logs"
+  },
+  {
+    "name": "Visualizar marcas de produtos",
+    "slug": "list_brands",
+    "description": "Permite a visualização da lista de marcas cadastradas.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Incluir marcas de produtos",
+    "slug": "create_brands",
+    "description": "Permite a inclusão de uma novo marca no sistema.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Editar marcas de produtos",
+    "slug": "edit_brands",
+    "description": "Permite a edição dos dados cadastrais das marcas.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Ativar ou desativar marcas de produtos",
+    "slug": "disable_brands",
+    "description": "Permite ativar ou desativar o cadastro de uma marca do sistema.",
+    "table": "products_brands"
+  },
+  {
+    "name": "Visualizar grupos de produtos",
+    "slug": "list_groups",
+    "description": "Permite a visualização da lista de grupos cadastrados.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Incluir grupos de produtos",
+    "slug": "create_groups",
+    "description": "Permite a inclusão de um novo grupo no sistema.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Editar grupos de produtos",
+    "slug": "edit_groups",
+    "description": "Permite a edição dos dados cadastrais dos grupos.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Ativar ou desativar grupos de produtos",
+    "slug": "disable_groups",
+    "description": "Permite ativar ou desativar o cadastro de um grupo do sistema.",
+    "table": "products_groups"
+  },
+  {
+    "name": "Visualizar produtos",
+    "slug": "list_products",
+    "description": "Permite a visualização da lista de produtos cadastrados.",
+    "table": "products"
+  },
+  {
+    "name": "Incluir produtos",
+    "slug": "create_products",
+    "description": "Permite a inclusão de um novo produto no sistema.",
+    "table": "products"
+  },
+  {
+    "name": "Editar produtos",
+    "slug": "edit_products",
+    "description": "Permite a edição dos dados cadastrais dos produtos.",
+    "table": "products"
+  },
+  {
+    "name": "Ativar ou desativar produtos",
+    "slug": "disable_products",
+    "description": "Permite ativar ou desativar o cadastro de um produto do sistema.",
+    "table": "products"
+  },
+  {
+    "name": "Visualizar atividades",
+    "slug": "list_activities",
+    "description": "Permite a visualização da lista de atividades cadastradas.",
+    "table": "activities"
+  },
+  {
+    "name": "Incluir atividades",
+    "slug": "create_activities",
+    "description": "Permite a inclusão de uma nova atividade no sistema.",
+    "table": "activities"
+  },
+  {
+    "name": "Editar atividades",
+    "slug": "edit_activities",
+    "description": "Permite a edição dos dados cadastrais das atividades.",
+    "table": "activities"
+  },
+  {
+    "name": "Encerrar atividades",
+    "slug": "finish_activities",
+    "description": "Permite encerrar atividades do sistema.",
+    "table": "activities"
+  },
+  {
+    "name": "Cancelar atividades",
+    "slug": "cancel_activities",
+    "description": "Permite cancelar atividades do sistema.",
+    "table": "activities"
+  },
+  {
+    "name": "Incluir endereços",
+    "slug": "create_addresses",
+    "description": "Permite a inclusão de um novo endereço no sistema.",
+    "table": "members_addresses"
+  },
+  {
+    "name": "Editar endereços",
+    "slug": "edit_addresses",
+    "description": "Permite a edição dos dados cadastrais dos endereços.",
+    "table": "members_addresses"
+  },
+  {
+    "name": "Remover endereços",
+    "slug": "remove_addresses",
+    "description": "Permite remover endereços do sistema.",
+    "table": "members_addresses"
+  }
+]
