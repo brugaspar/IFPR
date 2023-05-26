@@ -1,0 +1,18 @@
+*.class
+*.zip
+*.swp
+*.7z
+.idea/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata
+**/bin/**
+
+# Maven
+log/
+target/
+
+tests/
