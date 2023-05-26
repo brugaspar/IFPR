@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Exercício Dialog</string>
+    <string name="date">Definir Data</string>
+    <string name="hour">Definir Hora</string>
+</resources>
