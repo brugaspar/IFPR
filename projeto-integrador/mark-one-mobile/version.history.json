@@ -1,0 +1,16 @@
+{
+  "v1.0.0": {
+    "description": "Primeira versão utilizável em produção. Finalizado todos os módulos.",
+    "majorVersion": "1.0.0 (2022.3.17.1)",
+    "released": "2022-03-17",
+    "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default",
+    "download": ""
+  },
+  "v1.0.1": {
+    "description": "Ajustado permissões de encerramento de atividades.",
+    "majorVersion": "1.0.1 (2022.3.23.1)",
+    "released": "2022-03-23",
+    "url": "exp://exp.host/@brunogaspar/mark-one-mobile?release-channel=default",
+    "download": ""
+  }
+}
